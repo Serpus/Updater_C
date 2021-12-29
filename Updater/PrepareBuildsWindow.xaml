@@ -1,0 +1,73 @@
+﻿<Window x:Class="Updater.PrepareBuildsWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Updater"
+        mc:Ignorable="d"
+        Title="Подготовка билдов" MinHeight="450" Height="470" Width="640" MinWidth="640" ResizeMode="CanResize" WindowStartupLocation="CenterOwner">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition MaxHeight="60"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition MaxHeight="60"/>
+        </Grid.RowDefinitions>
+        <StackPanel Grid.Row="0" HorizontalAlignment="Center">
+            <Label Content="Предупреждение" HorizontalAlignment="Center" FontWeight="Bold" FontSize="15" Padding="0 0 0 5"/>
+            <Label Content="После подтверждения начнётся сборка билдов из ветки:" HorizontalAlignment="Center" VerticalAlignment="Stretch" Padding="0 0 0 0"/>
+            <Label Content="branch-x.x.x" x:Name="branchName" HorizontalAlignment="Center" Foreground="Green" Padding="0 0 0 0"/>
+        </StackPanel>
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="80"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="80"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="18"/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <Label Grid.Row="0" Grid.Column="1" Content="Затронутые билд-планы:" Padding="0"/>
+            <Border Grid.Row="1" Grid.Column="1" BorderBrush="Black" BorderThickness="1">
+                <ScrollViewer >
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="15" MaxHeight="15"/>
+                            <RowDefinition/>
+                            <RowDefinition Height="15" MaxHeight="15"/>
+                            <RowDefinition/>
+                            <RowDefinition Height="15" MaxHeight="15"/>
+                            <RowDefinition/>
+                            <RowDefinition Height="15" MaxHeight="15"/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+                        <CheckBox x:Name="fcsGroupCheckBox" Content="Билд-планы ЗЧ:" FontWeight="Bold" Grid.Row="0" Grid.Column="1" Click="CheckBox_Click"/>
+                        <StackPanel x:Name="fcsBuilds" Grid.Row="1" Grid.Column="1" Margin="0,0,0,10">
+                        </StackPanel>
+
+                        <CheckBox x:Name="lkpGroupCheckBox" Content="Билд-планы ЛКП:" FontWeight="Bold" Grid.Row="2" Grid.Column="1" Click="CheckBox_Click"/>
+                        <StackPanel x:Name="lkpBuilds" Grid.Row="3" Grid.Column="1" Margin="0,0,0,10">
+                        </StackPanel>
+
+                        <CheckBox x:Name="epzGroupCheckBox" Content="Билд-планы ОЧ:" FontWeight="Bold" Grid.Row="4" Grid.Column="1" Click="CheckBox_Click"/>
+                        <StackPanel x:Name="epzBuilds" Grid.Row="5" Grid.Column="1" Margin="0,0,0,10">
+                        </StackPanel>
+
+                        <CheckBox x:Name="otherGroupCheckBox" Content="Остальные билд-планы" FontWeight="Bold" Grid.Row="6" Grid.Column="1" Click="CheckBox_Click"/>
+                        <StackPanel x:Name="otherBuilds" Grid.Row="7" Grid.Column="1" Margin="0,0,0,10">
+                        </StackPanel>
+                    </Grid>
+                </ScrollViewer>
+            </Border>
+        </Grid>
+        <Grid Grid.Row="2" >
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition Width="70"/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <Button Grid.Column="0" Content="Отмена" Padding="5,0,5,0" Margin="0,17,0,17" HorizontalAlignment="Right" Click="CancelPrepareBuildsWindow"/>
+            <Button Grid.Column="2" Content="Подтвердить" HorizontalAlignment="Left" Padding="5,0,5,0" Margin="0,17,0,17" Click="StartBuilds"/>
+        </Grid>
+    </Grid>
+</Window>

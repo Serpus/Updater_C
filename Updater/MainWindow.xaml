@@ -1,0 +1,63 @@
+﻿<Window x:Class="Updater.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:gif="http://wpfanimatedgif.codeplex.com"
+        xmlns:local="clr-namespace:Updater"
+        mc:Ignorable="d"
+        Title="Updater" MinHeight="470" Height="470" Width="653" MinWidth="653" ResizeMode="CanResize" WindowStartupLocation="CenterScreen">
+    <TabControl Background="#FFE5E5E5">
+        <TabItem Header="Билды" MouseMove="buildsGeneralSettings">
+            <Grid Background="#FFE5E5E5" MinHeight="420" VerticalAlignment="Stretch">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="200"/>
+                    <ColumnDefinition Width="433*" MinWidth="430"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="200*"/>
+                </Grid.RowDefinitions>
+                <StackPanel Margin="10,50,10,10" MaxHeight="130" Height="130" Grid.Column="0" Grid.Row="0" VerticalAlignment="Top">
+                    <Label HorizontalAlignment="Center">Название ветки</Label>
+                    <TextBox Width="160" x:Name="branchName" Keyboard.KeyDown="branchName_KeyDown" Text="hotfix-11.3.12">
+                        <TextBox.ToolTip>
+                            <ToolTip Content="Введите название ветки"></ToolTip>
+                        </TextBox.ToolTip>
+                    </TextBox>
+                    <Label x:Name="resultLabel"></Label>
+                    <Button Content="Подготовить заданную ветку" Height="23" IsEnabled="False" x:Name="prepareBuildsButton" IsDefault="True" Click="prepareBuildsButton_Click">
+                    </Button>
+                </StackPanel>
+                <Grid Grid.Column="1" IsEnabled="False" VerticalAlignment="Stretch">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="35"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="20"/>
+                    </Grid.RowDefinitions>
+                    <StackPanel Grid.Row="0" VerticalAlignment="Top" Orientation="Horizontal" Height="32">
+                        <Label VerticalAlignment="Center">Статусы запущенных билдов</Label>
+                        <Button Content=" Обновить " Margin="10,3,0,3" />
+                        <Button Content=" Открыть все билды в списке " Margin="15,3,0,3" />
+                    </StackPanel>
+                    <ListBox Grid.Row="1" MinHeight="363" VerticalAlignment="Stretch" Margin="0,0,6,8"
+                             d:ItemsSource="{d:SampleData ItemCount=10}" x:Name="buildsList"/>
+                </Grid>
+
+                <Grid Grid.Column="0" Grid.ColumnSpan="2" x:Name="LoadingGrid" Visibility="Hidden">
+                    <StackPanel VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Background="#FFE5E5E5" Opacity="0.7" Visibility="Visible" x:Name="LoadingPanel">
+                    </StackPanel>
+                    <Grid x:Name="LoadingSpinner" Visibility="Visible">
+                        <Label Content="Выбираем билды с указанной веткой. Ожидайте" Margin="0,90,0,0" HorizontalAlignment="Center" FontWeight="Bold" FontSize="15"/>
+                        <Image Width="150" Height="150" gif:ImageBehavior.AnimatedSource="/spinner-icon-0.gif" Stretch="Fill" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                    </Grid>
+                </Grid>
+            </Grid>
+        </TabItem>
+        <TabItem Header="Деплои">
+            <Grid Background="#FFE5E5E5"/>
+        </TabItem>
+        <TabItem Header="Деплой ОЧ">
+            <Grid Background="#FFE5E5E5"/>
+        </TabItem>
+    </TabControl>
+</Window>
