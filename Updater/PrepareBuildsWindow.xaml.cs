@@ -41,10 +41,10 @@ namespace Updater
         public void PrepareBuilds()
         {
             Log.Info("Ветка: " + Data.branchName);
-            Log.Info("---Обработка билд-планов:---");
+            Log.Info("---Обработка билд-планов---");
             foreach (Project project in Data.projects)
             {
-                string url = Data.GetBranchesUrl(project.planKey.key);
+                string url = $"https://ci-sel.dks.lanit.ru/rest/api/latest/plan/{project.planKey.key}/branch";
                 string result = Requests.getRequest(url);
                 Log.Info(project.name);
 
@@ -74,6 +74,7 @@ namespace Updater
                 if (project.planKey.key.Contains("EIS"))
                 {
                     CheckBox checkBox1 = new CheckBox();
+                    checkBox1.Uid = project.branch.key;
                     checkBox1.Content = project.branch.name;
                     fcsBuilds.Children.Add(checkBox1);
                     continue;
@@ -82,6 +83,7 @@ namespace Updater
                 if (project.planKey.key.Contains("LKP"))
                 {
                     CheckBox checkBox1 = new CheckBox();
+                    checkBox1.Uid = project.branch.key;
                     checkBox1.Content = project.branch.name;
                     lkpBuilds.Children.Add(checkBox1);
                     continue;
@@ -90,12 +92,14 @@ namespace Updater
                 if (project.planKey.key.Contains("EPZ"))
                 {
                     CheckBox checkBox1 = new CheckBox();
+                    checkBox1.Uid = project.branch.key;
                     checkBox1.Content = project.branch.name;
                     epzBuilds.Children.Add(checkBox1);
                     continue;
                 }
 
                 CheckBox checkBox = new CheckBox();
+                checkBox.Uid = project.branch.key;
                 checkBox.Content = project.branch.name;
                 otherBuilds.Children.Add(checkBox);
             }
@@ -165,8 +169,52 @@ namespace Updater
 
         private void StartBuilds(object sender, RoutedEventArgs e)
         {
-
+            Log.Info("---Старт билдов---");
+            List<CheckBox> checkBoxes = getCheckedBoxes();
+            foreach (CheckBox checkBox in checkBoxes)
+            {
+                string startBuildUrl = $"https://ci-sel.dks.lanit.ru/rest/api/latest/queue/{checkBox.Uid}";
+                Log.Info(checkBox.Content + " с ключом " + checkBox.Uid + ": " + startBuildUrl);
+            }
         }
 
+        private List<CheckBox> getCheckedBoxes()
+        {
+            List<CheckBox> boxes = new List<CheckBox>();
+
+            foreach (CheckBox box in fcsBuilds.Children)
+            {
+                if (box.IsChecked == true)
+                {
+                    boxes.Add(box);
+                }
+            }
+
+            foreach (CheckBox box in lkpBuilds.Children)
+            {
+                if (box.IsChecked == true)
+                {
+                    boxes.Add(box);
+                }
+            }
+
+            foreach (CheckBox box in epzBuilds.Children)
+            {
+                if (box.IsChecked == true)
+                {
+                    boxes.Add(box);
+                }
+            }
+
+            foreach (CheckBox box in otherBuilds.Children)
+            {
+                if (box.IsChecked == true)
+                {
+                    boxes.Add(box);
+                }
+            }
+
+            return boxes;
+        }
     }
 }
