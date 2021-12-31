@@ -14,6 +14,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Threading;
+using System.Threading.Tasks;
 
 namespace Updater
 {
@@ -22,7 +23,9 @@ namespace Updater
     /// </summary>
     public partial class MainWindow : Window
     {
-        private readonly BackgroundWorker worker = new BackgroundWorker();
+        private static readonly NLog.Logger Log = NLog.LogManager.GetCurrentClassLogger();
+
+        private BackgroundWorker worker = new BackgroundWorker();
         private PrepareBuildsWindow prepareBuildsWindow = new PrepareBuildsWindow();
         private bool loading;
 
@@ -57,6 +60,18 @@ namespace Updater
             {
                 prepareBuildsButton.IsEnabled = false;
             }
+
+            if (Data.PrepareBuildsDone)
+            {
+                prepareBuildsButton.IsEnabled = false;
+                openBuildsWindow.IsEnabled = true;
+                branchName.IsEnabled = false;
+            }
+
+            if (Data.BuildsStarted)
+            {
+                buildsStatusGrid.IsEnabled = true;
+            }
         }
 
         private void branchName_KeyDown(object sender, KeyEventArgs e)
@@ -70,6 +85,26 @@ namespace Updater
             prepareBuildsWindow.Owner = this;
             worker.RunWorkerAsync();
         }
+
+        private void openBuildsWindow_Click(object sender, RoutedEventArgs e)
+        {
+            prepareBuildsWindow.ShowDialog();
+        }
+
+        private void RefreshBuildsStatus(object sender, RoutedEventArgs e)
+        {
+            foreach (Project project in Data.startedBuilds)
+            {
+                Label label = new Label();
+                label.Content = project.branch.name;
+                buildsList.Items.Add(label);
+            }
+        }
+
+
+
+
+
         private void startLoading()
         {
             LoadingGrid.Visibility = Visibility.Visible;
@@ -100,7 +135,6 @@ namespace Updater
         {
             stopLoading();
             prepareBuildsWindow.settingBranchInList();
-            prepareBuildsWindow.ShowDialog();
         }
     }
 

@@ -19,16 +19,17 @@
                 </Grid.RowDefinitions>
                 <StackPanel Margin="10,50,10,10" MaxHeight="130" Height="130" Grid.Column="0" Grid.Row="0" VerticalAlignment="Top">
                     <Label HorizontalAlignment="Center">Название ветки</Label>
-                    <TextBox Width="160" x:Name="branchName" Keyboard.KeyDown="branchName_KeyDown" Text="hotfix-11.3.12">
+                    <TextBox Width="160" x:Name="branchName" Keyboard.KeyDown="branchName_KeyDown" Text="release-12.0.0">
                         <TextBox.ToolTip>
                             <ToolTip Content="Введите название ветки"></ToolTip>
                         </TextBox.ToolTip>
                     </TextBox>
-                    <Label x:Name="resultLabel"></Label>
-                    <Button Content="Подготовить заданную ветку" Height="23" IsEnabled="False" x:Name="prepareBuildsButton" IsDefault="True" Click="prepareBuildsButton_Click">
-                    </Button>
+                    <Label/>
+                    <Button Content="Подготовить указанную ветку" Height="23" IsEnabled="False" x:Name="prepareBuildsButton" IsDefault="True" Click="prepareBuildsButton_Click"/>
+                    <Label/>
+                    <Button Content="Открыть окно выбора билдов" Height="23" IsEnabled="False" x:Name="openBuildsWindow" Click="openBuildsWindow_Click"/>
                 </StackPanel>
-                <Grid Grid.Column="1" IsEnabled="False" VerticalAlignment="Stretch">
+                <Grid Grid.Column="1" IsEnabled="False" VerticalAlignment="Stretch" x:Name="buildsStatusGrid">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="35"/>
                         <RowDefinition Height="*"/>
@@ -36,7 +37,7 @@
                     </Grid.RowDefinitions>
                     <StackPanel Grid.Row="0" VerticalAlignment="Top" Orientation="Horizontal" Height="32">
                         <Label VerticalAlignment="Center">Статусы запущенных билдов</Label>
-                        <Button Content=" Обновить " Margin="10,3,0,3" />
+                        <Button Content=" Обновить " Margin="10,3,0,3" Click="RefreshBuildsStatus"/>
                         <Button Content=" Открыть все билды в списке " Margin="15,3,0,3" />
                     </StackPanel>
                     <ListBox Grid.Row="1" MinHeight="363" VerticalAlignment="Stretch" Margin="0,0,6,8"
@@ -47,7 +48,7 @@
                     <StackPanel VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Background="#FFE5E5E5" Opacity="0.7" Visibility="Visible" x:Name="LoadingPanel">
                     </StackPanel>
                     <Grid x:Name="LoadingSpinner" Visibility="Visible">
-                        <Label Content="Выбираем билды с указанной веткой. Ожидайте" Margin="0,90,0,0" HorizontalAlignment="Center" FontWeight="Bold" FontSize="15"/>
+                        <Label x:Name="LoadingLabel" Content="Выбираем билды с указанной веткой. Ожидайте" Margin="0,90,0,0" HorizontalAlignment="Center" FontWeight="Bold" FontSize="15"/>
                         <Image Width="150" Height="150" gif:ImageBehavior.AnimatedSource="/spinner-icon-0.gif" Stretch="Fill" VerticalAlignment="Center" HorizontalAlignment="Center"/>
                     </Grid>
                 </Grid>

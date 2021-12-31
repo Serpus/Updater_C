@@ -11,6 +11,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using System.ComponentModel;
 using Newtonsoft.Json;
 
 namespace Updater
@@ -21,15 +22,19 @@ namespace Updater
     public partial class PrepareBuildsWindow : Window
     {
         private static readonly NLog.Logger Log = NLog.LogManager.GetCurrentClassLogger();
+        private BackgroundWorker worker = new BackgroundWorker();
 
-        private Project[] eisProjects;
-        private Project[] lkpProjects;
-        private Project[] epzProjects;
-        private Project[] otherProjects;
+        bool loading;
+
         public PrepareBuildsWindow()
         {
             InitializeComponent();
             this.Closing += cancelClosing;
+            worker.WorkerReportsProgress = true;
+            worker.WorkerSupportsCancellation = true;
+            worker.DoWork += worker_DoWork;
+            worker.ProgressChanged += worker_ProgressChanged;
+            worker.RunWorkerCompleted += worker_RunWorkerCompleted;
         }
 
         private void cancelClosing(object sender, System.ComponentModel.CancelEventArgs e)
@@ -73,8 +78,8 @@ namespace Updater
 
                 if (project.planKey.key.Contains("EIS"))
                 {
-                    CheckBox checkBox1 = new CheckBox();
-                    checkBox1.Uid = project.branch.key;
+                    ProjectCheckBox checkBox1 = new ProjectCheckBox();
+                    checkBox1.Project = project;
                     checkBox1.Content = project.branch.name;
                     fcsBuilds.Children.Add(checkBox1);
                     continue;
@@ -82,8 +87,8 @@ namespace Updater
 
                 if (project.planKey.key.Contains("LKP"))
                 {
-                    CheckBox checkBox1 = new CheckBox();
-                    checkBox1.Uid = project.branch.key;
+                    ProjectCheckBox checkBox1 = new ProjectCheckBox();
+                    checkBox1.Project = project;
                     checkBox1.Content = project.branch.name;
                     lkpBuilds.Children.Add(checkBox1);
                     continue;
@@ -91,20 +96,21 @@ namespace Updater
 
                 if (project.planKey.key.Contains("EPZ"))
                 {
-                    CheckBox checkBox1 = new CheckBox();
-                    checkBox1.Uid = project.branch.key;
+                    ProjectCheckBox checkBox1 = new ProjectCheckBox();
+                    checkBox1.Project = project;
                     checkBox1.Content = project.branch.name;
                     epzBuilds.Children.Add(checkBox1);
                     continue;
                 }
 
-                CheckBox checkBox = new CheckBox();
-                checkBox.Uid = project.branch.key;
+                ProjectCheckBox checkBox = new ProjectCheckBox();
+                checkBox.Project = project;
                 checkBox.Content = project.branch.name;
                 otherBuilds.Children.Add(checkBox);
             }
 
             setEnableDisableCheckBoxes();
+            Data.PrepareBuildsDone = true;
         }
 
         private void setEnableDisableCheckBoxes()
@@ -120,10 +126,11 @@ namespace Updater
 
         private void CancelPrepareBuildsWindow(object sender, RoutedEventArgs e)
         {
-            fcsBuilds.Children.Clear();
-            lkpBuilds.Children.Clear();
-            epzBuilds.Children.Clear();
-            otherBuilds.Children.Clear();
+            //fcsBuilds.Children.Clear();
+            //lkpBuilds.Children.Clear();
+            //epzBuilds.Children.Clear();
+            //otherBuilds.Children.Clear();
+
             this.Visibility = Visibility.Hidden;
         }
 
@@ -167,54 +174,97 @@ namespace Updater
             }
         }
 
+        internal void setCheckedBoxesInData()
+        {
+            List<ProjectCheckBox> boxes = new List<ProjectCheckBox>();
+
+            foreach (ProjectCheckBox box in fcsBuilds.Children)
+            {
+                if (box.IsChecked == true)
+                {
+                    boxes.Add(box);
+                }
+            }
+
+            foreach (ProjectCheckBox box in lkpBuilds.Children)
+            {
+                if (box.IsChecked == true)
+                {
+                    boxes.Add(box);
+                }
+            }
+
+            foreach (ProjectCheckBox box in epzBuilds.Children)
+            {
+                if (box.IsChecked == true)
+                {
+                    boxes.Add(box);
+                }
+            }
+
+            foreach (ProjectCheckBox box in otherBuilds.Children)
+            {
+                if (box.IsChecked == true)
+                {
+                    boxes.Add(box);
+                }
+            }
+
+            Data.checkedBoxes = boxes;
+        }
         private void StartBuilds(object sender, RoutedEventArgs e)
         {
             Log.Info("---Старт билдов---");
-            List<CheckBox> checkBoxes = getCheckedBoxes();
-            foreach (CheckBox checkBox in checkBoxes)
+            setCheckedBoxesInData();
+            worker.RunWorkerAsync();
+        }
+
+
+
+
+        private void startLoading()
+        {
+            LoadingGrid.Visibility = Visibility.Visible;
+            loading = true;
+        }
+
+        private void stopLoading()
+        {
+            LoadingGrid.Visibility = Visibility.Hidden;
+            loading = false;
+        }
+
+        private async void worker_DoWork(object sender, DoWorkEventArgs e)
+        {
+            List<Project> startedBuilds = new List<Project>(); 
+
+            worker.ReportProgress(50);
+
+            foreach (ProjectCheckBox checkBox in Data.checkedBoxes)
             {
-                string startBuildUrl = $"https://ci-sel.dks.lanit.ru/rest/api/latest/queue/{checkBox.Uid}";
-                Log.Info(checkBox.Content + " с ключом " + checkBox.Uid + ": " + startBuildUrl);
+                startedBuilds.Add(checkBox.Project);
+                string startBuildUrl = $"https://ci-sel.dks.lanit.ru/rest/api/latest/queue/{checkBox.Project.branch.key}";
+                Log.Info(checkBox.Content + " с ключом " + checkBox.Project.branch.key + ": " + startBuildUrl);
+                string result = await Requests.postRequest(startBuildUrl);
+                Log.Info(result);
+            }
+
+            Data.startedBuilds = startedBuilds;
+            Data.BuildsStarted = true;
+        }
+
+        private async void worker_ProgressChanged(object sender, ProgressChangedEventArgs e)
+        {
+            if (!loading)
+            {
+                startLoading();
             }
         }
 
-        private List<CheckBox> getCheckedBoxes()
+        private async void worker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            List<CheckBox> boxes = new List<CheckBox>();
-
-            foreach (CheckBox box in fcsBuilds.Children)
-            {
-                if (box.IsChecked == true)
-                {
-                    boxes.Add(box);
-                }
-            }
-
-            foreach (CheckBox box in lkpBuilds.Children)
-            {
-                if (box.IsChecked == true)
-                {
-                    boxes.Add(box);
-                }
-            }
-
-            foreach (CheckBox box in epzBuilds.Children)
-            {
-                if (box.IsChecked == true)
-                {
-                    boxes.Add(box);
-                }
-            }
-
-            foreach (CheckBox box in otherBuilds.Children)
-            {
-                if (box.IsChecked == true)
-                {
-                    boxes.Add(box);
-                }
-            }
-
-            return boxes;
+            stopLoading();
+            this.Close();
         }
     }
 }

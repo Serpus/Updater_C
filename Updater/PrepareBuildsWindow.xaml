@@ -3,6 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:gif="http://wpfanimatedgif.codeplex.com"
         xmlns:local="clr-namespace:Updater"
         mc:Ignorable="d"
         Title="Подготовка билдов" MinHeight="450" Height="470" Width="640" MinWidth="640" ResizeMode="CanResize" WindowStartupLocation="CenterOwner">
@@ -68,6 +69,14 @@
             </Grid.ColumnDefinitions>
             <Button Grid.Column="0" Content="Отмена" Padding="5,0,5,0" Margin="0,17,0,17" HorizontalAlignment="Right" Click="CancelPrepareBuildsWindow"/>
             <Button Grid.Column="2" Content="Подтвердить" HorizontalAlignment="Left" Padding="5,0,5,0" Margin="0,17,0,17" Click="StartBuilds"/>
+        </Grid>
+        <Grid Grid.Row="0" Grid.RowSpan="3" x:Name="LoadingGrid" Visibility="Hidden">
+            <StackPanel VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Background="#FFE5E5E5" Opacity="0.7" Visibility="Visible" x:Name="LoadingPanel">
+            </StackPanel>
+            <Grid x:Name="LoadingSpinner" Visibility="Visible">
+                <Label Content="Запускаем билды" Margin="0,90,0,0" HorizontalAlignment="Center" FontWeight="Bold" FontSize="15"/>
+                <Image Width="150" Height="150" gif:ImageBehavior.AnimatedSource="/spinner-icon-0.gif" Stretch="Fill" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+            </Grid>
         </Grid>
     </Grid>
 </Window>
