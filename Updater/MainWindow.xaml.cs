@@ -93,6 +93,7 @@ namespace Updater
 
         private void RefreshBuildsStatus(object sender, RoutedEventArgs e)
         {
+            buildsList.Items.Clear();
             foreach (Project project in Data.startedBuilds)
             {
                 Label label = new Label();
