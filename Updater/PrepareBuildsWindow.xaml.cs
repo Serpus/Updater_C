@@ -244,8 +244,11 @@ namespace Updater
             {
                 startedBuilds.Add(checkBox.Project);
                 string startBuildUrl = $"https://ci-sel.dks.lanit.ru/rest/api/latest/queue/{checkBox.Project.branch.key}";
-                Log.Info(checkBox.Content + " с ключом " + checkBox.Project.branch.key + ": " + startBuildUrl);
+                //Log.Info(checkBox.Content + " с ключом " + checkBox.Project.branch.key + ": " + startBuildUrl);
                 string result = await Requests.postRequest(startBuildUrl);
+                // Пример ответа:
+                // {"planKey":"EIS-EISBTKWF42","buildNumber":17,"buildResultKey":"EIS-EISBTKWF42-17","triggerReason":"Manual build",
+                // "link":{"href":"https://ci-sel.dks.lanit.ru/rest/api/latest/result/EIS-EISBTKWF42-17","rel":"self"}}
                 Log.Info(result);
             }
 
@@ -253,7 +256,7 @@ namespace Updater
             Data.BuildsStarted = true;
         }
 
-        private async void worker_ProgressChanged(object sender, ProgressChangedEventArgs e)
+        private void worker_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
             if (!loading)
             {
@@ -261,7 +264,7 @@ namespace Updater
             }
         }
 
-        private async void worker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        private void worker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             stopLoading();
             this.Close();
