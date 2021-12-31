@@ -130,7 +130,7 @@ namespace Updater
             //lkpBuilds.Children.Clear();
             //epzBuilds.Children.Clear();
             //otherBuilds.Children.Clear();
-
+            Log.Info("Закрываем окно с отобранными билд-планами");
             this.Visibility = Visibility.Hidden;
         }
 
@@ -214,8 +214,14 @@ namespace Updater
         }
         private void StartBuilds(object sender, RoutedEventArgs e)
         {
-            Log.Info("---Старт билдов---");
             setCheckedBoxesInData();
+            if (Data.checkedBoxes.Count == 0)
+            {
+                Log.Info("Не выбрали ни одного билда для запуска");
+                MessageBox.Show("Выберите хотя бы один билд-план для запуска сборки");
+                return;
+            }
+            Log.Info("---Старт билдов---");
             worker.RunWorkerAsync();
         }
 
@@ -242,14 +248,15 @@ namespace Updater
 
             foreach (ProjectCheckBox checkBox in Data.checkedBoxes)
             {
-                startedBuilds.Add(checkBox.Project);
                 string startBuildUrl = $"https://ci-sel.dks.lanit.ru/rest/api/latest/queue/{checkBox.Project.branch.key}";
-                //Log.Info(checkBox.Content + " с ключом " + checkBox.Project.branch.key + ": " + startBuildUrl);
                 string result = await Requests.postRequest(startBuildUrl);
                 // Пример ответа:
                 // {"planKey":"EIS-EISBTKWF42","buildNumber":17,"buildResultKey":"EIS-EISBTKWF42-17","triggerReason":"Manual build",
                 // "link":{"href":"https://ci-sel.dks.lanit.ru/rest/api/latest/result/EIS-EISBTKWF42-17","rel":"self"}}
                 Log.Info(result);
+                StartingBuildResult buildResult = JsonConvert.DeserializeObject<StartingBuildResult>(result);
+                checkBox.Project.startingBuildResult = buildResult;
+                startedBuilds.Add(checkBox.Project);
             }
 
             Data.startedBuilds = startedBuilds;

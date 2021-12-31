@@ -71,6 +71,7 @@ namespace Updater
             if (Data.BuildsStarted)
             {
                 buildsStatusGrid.IsEnabled = true;
+                openBuildsWindow.IsEnabled = false;
             }
         }
 
@@ -82,22 +83,26 @@ namespace Updater
         private void prepareBuildsButton_Click(object sender, RoutedEventArgs e)
         {
             Data.branchName = branchName.Text;
-            prepareBuildsWindow.Owner = this;
+            Log.Info("Начинаем отбор билд-планов с указанной веткой");
             worker.RunWorkerAsync();
         }
 
         private void openBuildsWindow_Click(object sender, RoutedEventArgs e)
         {
+            Log.Info("Открываем окно с отобранными билд-планами");
+            prepareBuildsWindow.Owner = this;
             prepareBuildsWindow.ShowDialog();
         }
 
         private void RefreshBuildsStatus(object sender, RoutedEventArgs e)
         {
+            Log.Info("Обновление статусов запущенных билдов");
             buildsList.Items.Clear();
             foreach (Project project in Data.startedBuilds)
             {
                 Label label = new Label();
-                label.Content = project.branch.name;
+                label.Content = $"{project.branch.name} - #{project.startingBuildResult.buildNumber}\n" +
+                    $"https://ci-sel.dks.lanit.ru/browse/{project.startingBuildResult.buildResultkey}";
                 buildsList.Items.Add(label);
             }
         }

@@ -14,5 +14,6 @@ namespace Updater
         public PlanKey planKey { get; set; }
         public Branch branch { get; set; }
         public EnvironmentBuild[] environments { get; set; }
+        public StartingBuildResult startingBuildResult { get; set; }
     }
 }

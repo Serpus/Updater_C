@@ -96,6 +96,7 @@
     <Compile Include="ProjectParser\BranchParser\BranchList.cs" />
     <Compile Include="ProjectParser\BranchParser\Branches.cs" />
     <Compile Include="ProjectParser\BranchParser\Branch.cs" />
+    <Compile Include="ProjectParser\BuildParser\StartingBuildResult.cs" />
     <Compile Include="ProjectParser\EnvironmentBuild.cs" />
     <Compile Include="ProjectParser\PlanKey.cs" />
     <Compile Include="ProjectParser\Key.cs" />
@@ -150,8 +151,6 @@
   <ItemGroup>
     <Resource Include="spinner-icon-0.gif" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="ProjectParser\BuildParser\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
