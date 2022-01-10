@@ -15,6 +15,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Threading;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace Updater
 {
@@ -97,13 +98,30 @@ namespace Updater
         private void RefreshBuildsStatus(object sender, RoutedEventArgs e)
         {
             Log.Info("Обновление статусов запущенных билдов");
-            buildsList.Items.Clear();
+            buildsStatusList.Items.Clear();
             foreach (Project project in Data.startedBuilds)
             {
+                string buildResultkey = project.startingBuildResult.buildResultkey;
+                string result = Requests.getRequest("https://ci-sel.dks.lanit.ru/rest/api/latest/result/" + buildResultkey);
+                BuildStatus buildStatus = JsonConvert.DeserializeObject<BuildStatus>(result);
+                project.buildStatus = buildStatus;
+
                 Label label = new Label();
-                label.Content = $"{project.branch.name} - #{project.startingBuildResult.buildNumber}\n" +
-                    $"https://ci-sel.dks.lanit.ru/browse/{project.startingBuildResult.buildResultkey}";
-                buildsList.Items.Add(label);
+                if (project.buildStatus.state.Equals("Successful")) 
+                {
+                    label.Background = (SolidColorBrush)new BrushConverter().ConvertFrom("#12BF0F");
+                } else if (project.buildStatus.state.Equals("Failed"))
+                {
+                    label.Background = (SolidColorBrush)new BrushConverter().ConvertFrom("#DF0E0E");
+                }
+
+                if (project.buildStatus.state.Equals("Unknown")) { project.buildStatus.state = "In Progress"; }
+
+                label.Content = $"{project.branch.name} - #{project.startingBuildResult.buildNumber} - {project.buildStatus.state}\n" +
+                    "https://ci-sel.dks.lanit.ru/browse/" + buildResultkey;
+                label.VerticalAlignment = VerticalAlignment.Stretch;
+                label.HorizontalAlignment = HorizontalAlignment.Stretch;
+                buildsStatusList.Items.Add(label);
             }
         }
 

@@ -15,5 +15,6 @@ namespace Updater
         public Branch branch { get; set; }
         public EnvironmentBuild[] environments { get; set; }
         public StartingBuildResult startingBuildResult { get; set; }
+        public BuildStatus buildStatus { get; set; }
     }
 }

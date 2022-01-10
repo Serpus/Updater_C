@@ -96,6 +96,7 @@
     <Compile Include="ProjectParser\BranchParser\BranchList.cs" />
     <Compile Include="ProjectParser\BranchParser\Branches.cs" />
     <Compile Include="ProjectParser\BranchParser\Branch.cs" />
+    <Compile Include="ProjectParser\BuildParser\BuildStatus.cs" />
     <Compile Include="ProjectParser\BuildParser\StartingBuildResult.cs" />
     <Compile Include="ProjectParser\EnvironmentBuild.cs" />
     <Compile Include="ProjectParser\PlanKey.cs" />
