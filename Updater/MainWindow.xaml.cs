@@ -194,17 +194,13 @@ namespace Updater
 
         private void SelectStands(object sender, RoutedEventArgs e)
         {
-            //selectStands.IsEnabled = false;
             List<Stand> stands = new List<Stand>();
 
             foreach (var children in selectStandsGrid.Children)
             {
-                ComboBox cb;
-                TextBlock tb;
                 if (children is ComboBox)
                 {
-                    cb = children as ComboBox;
-                    Console.WriteLine(cb.Text);
+                    ComboBox cb = children as ComboBox;
                     if (cb.Text != null)
                     {
                         switch (cb.Text)
@@ -228,7 +224,17 @@ namespace Updater
                     }
                 }
             }
+            if (stands.Count == 0)
+            {
+                Log.Info("Не выбрано ни одного стенда");
+                MessageBox.Show("Выберите хотя бы один стенд");
+                return;
+            }
+
+            selectStands.IsEnabled = false;
+            selectStandsGrid.IsEnabled = false;
             Data.stands = stands;
+            Log.Info("Выбранные стенды:" + stands);
         }
 
         private void refreshDeploysButton_Click(object sender, RoutedEventArgs e)

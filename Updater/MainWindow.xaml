@@ -117,7 +117,7 @@
                         </Button.Content>
                     </Button>
                 </StackPanel>
-                <Grid Grid.Column="1" Grid.RowSpan="3" IsEnabled="True" VerticalAlignment="Stretch" >
+                <Grid Grid.Column="1" Grid.RowSpan="3" IsEnabled="False" VerticalAlignment="Stretch">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="35"/>
                         <RowDefinition Height="*"/>
