@@ -62,14 +62,14 @@ namespace Updater
                 prepareBuildsButton.IsEnabled = false;
             }
 
-            if (Data.PrepareBuildsDone)
+            if (Data.IsPrepareBuildsDone)
             {
                 prepareBuildsButton.IsEnabled = false;
                 openBuildsWindow.IsEnabled = true;
                 branchName.IsEnabled = false;
             }
 
-            if (Data.BuildsStarted)
+            if (Data.IsBuildsStarted)
             {
                 buildsStatusGrid.IsEnabled = true;
                 openBuildsWindow.IsEnabled = false;
@@ -159,6 +159,81 @@ namespace Updater
         {
             stopLoading();
             prepareBuildsWindow.settingBranchInList();
+        }
+
+        private void Stand1Plus(object sender, RoutedEventArgs e)
+        {
+            Stand2.Visibility = Visibility.Visible;
+            Stand2Panel.Visibility = Visibility.Visible;
+            Stand1Panel.Visibility = Visibility.Hidden;
+        }
+
+        private void Stand2Plus(object sender, RoutedEventArgs e)
+        {
+            Stand3.Visibility = Visibility.Visible;
+            Stand3Panel.Visibility = Visibility.Visible;
+            Stand2Panel.Visibility= Visibility.Hidden;
+        }
+
+        private void Stand2Minus(object sender, RoutedEventArgs e)
+        {
+            Stand2.Visibility = Visibility.Hidden;
+            Stand2Panel.Visibility = Visibility.Hidden;
+            Stand1Panel.Visibility = Visibility.Visible;
+            Stand2.SelectedIndex = -1;
+        }
+
+        private void Stand3Minus(object sender, RoutedEventArgs e)
+        {
+            Stand2.Visibility = Visibility.Visible;
+            Stand2Panel.Visibility = Visibility.Visible;
+            Stand3Panel.Visibility= Visibility.Hidden;
+            Stand3.Visibility= Visibility.Hidden;
+            Stand3.SelectedIndex = -1;
+        }
+
+        private void SelectStands(object sender, RoutedEventArgs e)
+        {
+            //selectStands.IsEnabled = false;
+            List<Stand> stands = new List<Stand>();
+
+            foreach (var children in selectStandsGrid.Children)
+            {
+                ComboBox cb;
+                TextBlock tb;
+                if (children is ComboBox)
+                {
+                    cb = children as ComboBox;
+                    Console.WriteLine(cb.Text);
+                    if (cb.Text != null)
+                    {
+                        switch (cb.Text)
+                        {
+                            case "ЕИС-3":
+                                stands.Add(new EIS3());
+                                break;
+                            case "ЕИС-4":
+                                stands.Add(new EIS4());
+                                break;
+                            case "ЕИС-5":
+                                stands.Add(new EIS5());
+                                break;
+                            case "ЕИС-6":
+                                stands.Add(new EIS6());
+                                break;
+                            case "ЕИС-7":
+                                stands.Add(new EIS7());
+                                break;
+                        }
+                    }
+                }
+            }
+            Data.stands = stands;
+        }
+
+        private void refreshDeploysButton_Click(object sender, RoutedEventArgs e)
+        {
+            
         }
     }
 

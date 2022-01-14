@@ -55,8 +55,8 @@ namespace Updater
             Data.projects = JsonConvert.DeserializeObject<Project[]>(result);
 
             MainWindow mainWindow = new MainWindow();
-            mainWindow.Show();
             this.Close();
+            mainWindow.Show();
         }
     }
 }

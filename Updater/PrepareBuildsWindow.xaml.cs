@@ -110,7 +110,7 @@ namespace Updater
             }
 
             setEnableDisableCheckBoxes();
-            Data.PrepareBuildsDone = true;
+            Data.IsPrepareBuildsDone = true;
         }
 
         private void setEnableDisableCheckBoxes()
@@ -260,7 +260,7 @@ namespace Updater
             }
 
             Data.startedBuilds = startedBuilds;
-            Data.BuildsStarted = true;
+            Data.IsBuildsStarted = true;
         }
 
         private void worker_ProgressChanged(object sender, ProgressChangedEventArgs e)

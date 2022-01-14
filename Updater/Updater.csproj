@@ -80,6 +80,9 @@
     <Compile Include="Auth.xaml.cs">
       <DependentUpon>Auth.xaml</DependentUpon>
     </Compile>
+    <Compile Include="PrepareDeployWindow.xaml.cs">
+      <DependentUpon>PrepareDeployWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ProjectCheckBox.cs" />
     <Compile Include="PrepareBuildsWindow.xaml.cs">
       <DependentUpon>PrepareBuildsWindow.xaml</DependentUpon>
@@ -115,8 +118,18 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="PrepareDeployWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ProjectParser\Stands\EIS3.cs" />
+    <Compile Include="ProjectParser\Stands\EIS4.cs" />
+    <Compile Include="ProjectParser\Stands\EIS5.cs" />
+    <Compile Include="ProjectParser\Stands\EIS6.cs" />
+    <Compile Include="ProjectParser\Stands\EIS7.cs" />
+    <Compile Include="ProjectParser\Stands\Stand.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>

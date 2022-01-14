@@ -19,7 +19,7 @@
                 </Grid.RowDefinitions>
                 <StackPanel Margin="10,50,10,10" MaxHeight="130" Height="130" Grid.Column="0" Grid.Row="0" VerticalAlignment="Top">
                     <Label HorizontalAlignment="Center">Название ветки</Label>
-                    <TextBox Width="160" x:Name="branchName" Keyboard.KeyDown="branchName_KeyDown" Text="release-12.0.0">
+                    <TextBox Width="160" x:Name="branchName" Keyboard.KeyDown="branchName_KeyDown" Text="hotfix-12.0.1.3">
                         <TextBox.ToolTip>
                             <ToolTip Content="Введите название ветки"></ToolTip>
                         </TextBox.ToolTip>
@@ -55,7 +55,103 @@
             </Grid>
         </TabItem>
         <TabItem Header="Деплои">
-            <Grid Background="#FFE5E5E5"/>
+            <Grid Background="#FFE5E5E5">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="200"/>
+                    <ColumnDefinition Width="433*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="40"/>
+                    <RowDefinition Height="105"/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <Grid Grid.Row="1" Grid.Column="0" Height="100" VerticalAlignment="Top" x:Name="selectStandsGrid" >
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="130"/>
+                        <ColumnDefinition Width="70*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <ComboBox VerticalAlignment="Center" Height="25" Grid.Row="0" Name="Stand1">
+                        <TextBlock>ЕИС-3</TextBlock>
+                        <TextBlock>ЕИС-4</TextBlock>
+                        <TextBlock>ЕИС-5</TextBlock>
+                        <TextBlock>ЕИС-6</TextBlock>
+                        <TextBlock>ЕИС-7</TextBlock>
+                    </ComboBox>
+                    <StackPanel Orientation="Horizontal" Grid.Column="1" Margin="10,0,0,0" Grid.Row="0" Name="Stand1Panel">
+                        <Button Content="+" Grid.Column="1" Height="25" Width="25" Padding="0,-2,0,0" Click="Stand1Plus"/>
+                    </StackPanel>
+                    <ComboBox VerticalAlignment="Center" Height="25" Grid.Row="1" Name="Stand2" Visibility="Hidden">
+                        <TextBlock>ЕИС-3</TextBlock>
+                        <TextBlock>ЕИС-4</TextBlock>
+                        <TextBlock>ЕИС-5</TextBlock>
+                        <TextBlock>ЕИС-6</TextBlock>
+                        <TextBlock>ЕИС-7</TextBlock>
+                    </ComboBox>
+                    <StackPanel Orientation="Horizontal" Grid.Column="1" Margin="10,0,0,0" Grid.Row="1" Name="Stand2Panel" Visibility="Hidden">
+                        <Button Content="+" Grid.Column="1" Height="25" Width="25" Padding="0,-2,0,0" Click="Stand2Plus"/>
+                        <Label Width="5"/>
+                        <Button Content="-" Grid.Column="1" Height="25" Width="25" Padding="0,-2,0,0" Click="Stand2Minus"/>
+                    </StackPanel>
+                    <ComboBox VerticalAlignment="Center" Height="25" Grid.Row="2" Name="Stand3" Visibility="Hidden">
+                        <TextBlock>ЕИС-3</TextBlock>
+                        <TextBlock>ЕИС-4</TextBlock>
+                        <TextBlock>ЕИС-5</TextBlock>
+                        <TextBlock>ЕИС-6</TextBlock>
+                        <TextBlock>ЕИС-7</TextBlock>
+                    </ComboBox>
+                    <StackPanel Orientation="Horizontal" Grid.Column="1" Margin="10,0,0,0" Grid.Row="2" Name="Stand3Panel" Visibility="Hidden">
+                        <Button Content="-" Grid.Column="1" Height="25" Width="25" Padding="0,-2,0,0" Click="Stand3Minus"/>
+                    </StackPanel>
+                </Grid>
+                <StackPanel Grid.Row="2">
+                    <Button Content="Выбрать стенды" Height="30" Width="130" VerticalAlignment="Top" Click="SelectStands" Name="selectStands"/>
+                    <Label/>
+                    <Button Height="40" Width="180">
+                        <Button.Content>
+                            <AccessText TextWrapping="Wrap" Text="Просмотр успешных билдов для деплоя" TextAlignment="Center"/>
+                        </Button.Content>
+                    </Button>
+                </StackPanel>
+                <Grid Grid.Column="1" Grid.RowSpan="3" IsEnabled="True" VerticalAlignment="Stretch" >
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="35"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="20"/>
+                    </Grid.RowDefinitions>
+                    <StackPanel Grid.Row="0" VerticalAlignment="Top" Orientation="Horizontal" Height="32">
+                        <Label VerticalAlignment="Center">Статусы запущенных деплоев</Label>
+                        <Button Content=" Обновить " Margin="10,3,0,3" Name="refreshDeploysButton" Click="refreshDeploysButton_Click"/>
+                        <Button Content=" Открыть все билды в списке " Margin="15,3,0,3" />
+                    </StackPanel>
+                    <TabControl Grid.Row="1" TabStripPlacement="Bottom" Background="#FFE5E5E5">
+                        <TabItem Header="ЕИС-3">
+                            <ListView d:ItemsSource="{d:SampleData ItemCount=10}" Name="deploysEIS3">
+                            </ListView>
+                        </TabItem>
+                        <TabItem Header="ЕИС-4">
+                            <ListView d:ItemsSource="{d:SampleData ItemCount=10}" Name="deploysEIS4">
+                            </ListView>
+                        </TabItem>
+                        <TabItem Header="ЕИС-5">
+                            <ListView d:ItemsSource="{d:SampleData ItemCount=10}" Name="deploysEIS5">
+                            </ListView>
+                        </TabItem>
+                        <TabItem Header="ЕИС-6">
+                            <ListView d:ItemsSource="{d:SampleData ItemCount=10}" Name="deploysEIS6">
+                            </ListView>
+                        </TabItem>
+                        <TabItem Header="ЕИС-7">
+                            <ListView d:ItemsSource="{d:SampleData ItemCount=10}" Name="deploysEIS7">
+                            </ListView>
+                        </TabItem>
+                    </TabControl>
+                </Grid>
+            </Grid>
         </TabItem>
         <TabItem Header="Деплой ОЧ">
             <Grid Background="#FFE5E5E5"/>

@@ -14,7 +14,8 @@ namespace Updater
         public static List<ProjectCheckBox> checkedBoxes { get; set; }
         public static List<Project> startedBuilds { get; set; }
         public static string branchName { get; set; }
-        public static bool PrepareBuildsDone { get; set; }
-        public static bool BuildsStarted { get; set; }
+        public static bool IsPrepareBuildsDone { get; set; }
+        public static bool IsBuildsStarted { get; set; }
+        public static List<Stand> stands { get; set; }
     }
 }

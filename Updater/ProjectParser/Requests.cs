@@ -61,7 +61,6 @@ namespace Updater
             password = Data.password;
 
             string base64 = Convert.ToBase64String(Encoding.UTF8.GetBytes($"{username}:{password}"));
-            String s = "";
             var baseAddress = new Uri("https://ci-sel.dks.lanit.ru");
 
             CookieContainer cookies = new CookieContainer();
