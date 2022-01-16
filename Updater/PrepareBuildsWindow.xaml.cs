@@ -40,6 +40,10 @@ namespace Updater
         private void cancelClosing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             e.Cancel = true;
+            if (Data.IsCloseProgram)
+            {
+                e.Cancel = false;
+            }
             this.Visibility = Visibility.Hidden;
         }
 
@@ -244,7 +248,7 @@ namespace Updater
         {
             List<Project> startedBuilds = new List<Project>(); 
 
-            worker.ReportProgress(50);
+            worker.ReportProgress(1);
 
             foreach (ProjectCheckBox checkBox in Data.checkedBoxes)
             {
@@ -273,6 +277,10 @@ namespace Updater
 
         private void worker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
+            while (!Data.IsBuildsStarted)
+            {
+                
+            }
             stopLoading();
             this.Close();
         }

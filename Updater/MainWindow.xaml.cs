@@ -27,6 +27,7 @@ namespace Updater
         private static readonly NLog.Logger Log = NLog.LogManager.GetCurrentClassLogger();
 
         private BackgroundWorker worker = new BackgroundWorker();
+        private BackgroundWorker worker2 = new BackgroundWorker();
         private PrepareBuildsWindow prepareBuildsWindow = new PrepareBuildsWindow();
         private bool loading;
 
@@ -41,10 +42,17 @@ namespace Updater
             worker.DoWork += worker_DoWork;
             worker.ProgressChanged += worker_ProgressChanged;
             worker.RunWorkerCompleted += worker_RunWorkerCompleted;
+
+            worker2.WorkerReportsProgress = true;
+            worker2.WorkerSupportsCancellation = true;
+            worker2.DoWork += worker2_DoWork;
+            worker2.ProgressChanged += worker2_ProgressChanged;
+            worker2.RunWorkerCompleted += worker2_RunWorkerCompleted;
         }
 
         private void MainWindow_Closed(object sender, EventArgs e)
         {
+            Data.IsCloseProgram = true;
             foreach(Window window in Application.Current.Windows)
             {
                 window.Close();
@@ -99,18 +107,19 @@ namespace Updater
         {
             Log.Info("Обновление статусов запущенных билдов");
             buildsStatusList.Items.Clear();
+            worker2.RunWorkerAsync();
+        }
+
+        private void AddUpdatedBuilds()
+        {
             foreach (Project project in Data.startedBuilds)
             {
-                string buildResultkey = project.startingBuildResult.buildResultkey;
-                string result = Requests.getRequest("https://ci-sel.dks.lanit.ru/rest/api/latest/result/" + buildResultkey);
-                BuildStatus buildStatus = JsonConvert.DeserializeObject<BuildStatus>(result);
-                project.buildStatus = buildStatus;
-
                 Label label = new Label();
-                if (project.buildStatus.state.Equals("Successful")) 
+                if (project.buildStatus.state.Equals("Successful"))
                 {
                     label.Background = (SolidColorBrush)new BrushConverter().ConvertFrom("#12BF0F");
-                } else if (project.buildStatus.state.Equals("Failed"))
+                }
+                else if (project.buildStatus.state.Equals("Failed"))
                 {
                     label.Background = (SolidColorBrush)new BrushConverter().ConvertFrom("#DF0E0E");
                 }
@@ -118,7 +127,7 @@ namespace Updater
                 if (project.buildStatus.state.Equals("Unknown")) { project.buildStatus.state = "In Progress"; }
 
                 label.Content = $"{project.branch.name} - #{project.startingBuildResult.buildNumber} - {project.buildStatus.state}\n" +
-                    "https://ci-sel.dks.lanit.ru/browse/" + buildResultkey;
+                    "https://ci-sel.dks.lanit.ru/browse/" + project.startingBuildResult.buildResultkey;
                 label.VerticalAlignment = VerticalAlignment.Stretch;
                 label.HorizontalAlignment = HorizontalAlignment.Stretch;
                 buildsStatusList.Items.Add(label);
@@ -132,6 +141,13 @@ namespace Updater
         private void startLoading()
         {
             LoadingGrid.Visibility = Visibility.Visible;
+            loading = true;
+        }
+
+        private void startLoading(string loadingLabel)
+        {
+            LoadingGrid.Visibility = Visibility.Visible;
+            LoadingLabel.Content = loadingLabel;
             loading = true;
         }
 
@@ -240,6 +256,42 @@ namespace Updater
         private void refreshDeploysButton_Click(object sender, RoutedEventArgs e)
         {
             
+        }
+
+        private void openPreparedeployButton_Click(object sender, RoutedEventArgs e)
+        {
+            
+        }
+
+
+
+
+
+
+        private void worker2_DoWork(object sender, DoWorkEventArgs e)
+        {
+            worker.ReportProgress(50);
+            foreach (Project project in Data.startedBuilds)
+            {
+                string buildResultkey = project.startingBuildResult.buildResultkey;
+                string result = Requests.getRequest("https://ci-sel.dks.lanit.ru/rest/api/latest/result/" + buildResultkey);
+                BuildStatus buildStatus = JsonConvert.DeserializeObject<BuildStatus>(result);
+                project.buildStatus = buildStatus;
+            }
+        }
+
+        private void worker2_ProgressChanged(object sender, ProgressChangedEventArgs e)
+        {
+            if (!loading)
+            {
+                startLoading("Обновляем статусы запущенных билдов");
+            }
+        }
+
+        private void worker2_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            stopLoading();
+            AddUpdatedBuilds();
         }
     }
 

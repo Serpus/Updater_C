@@ -19,7 +19,7 @@
                 </Grid.RowDefinitions>
                 <StackPanel Margin="10,50,10,10" MaxHeight="130" Height="130" Grid.Column="0" Grid.Row="0" VerticalAlignment="Top">
                     <Label HorizontalAlignment="Center">Название ветки</Label>
-                    <TextBox Width="160" x:Name="branchName" Keyboard.KeyDown="branchName_KeyDown" Text="hotfix-12.0.1.3">
+                    <TextBox Width="160" x:Name="branchName" Keyboard.KeyDown="branchName_KeyDown" Text="hotfix-12.0.2">
                         <TextBox.ToolTip>
                             <ToolTip Content="Введите название ветки"></ToolTip>
                         </TextBox.ToolTip>
@@ -111,7 +111,7 @@
                 <StackPanel Grid.Row="2">
                     <Button Content="Выбрать стенды" Height="30" Width="130" VerticalAlignment="Top" Click="SelectStands" Name="selectStands"/>
                     <Label/>
-                    <Button Height="40" Width="180">
+                    <Button Height="40" Width="180" Name="openPreparedeployButton" Click="openPreparedeployButton_Click">
                         <Button.Content>
                             <AccessText TextWrapping="Wrap" Text="Просмотр успешных билдов для деплоя" TextAlignment="Center"/>
                         </Button.Content>

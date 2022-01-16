@@ -17,5 +17,6 @@ namespace Updater
         public static bool IsPrepareBuildsDone { get; set; }
         public static bool IsBuildsStarted { get; set; }
         public static List<Stand> stands { get; set; }
+        public static bool IsCloseProgram { get; set; }
     }
 }
