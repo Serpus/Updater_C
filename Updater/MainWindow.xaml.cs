@@ -114,6 +114,8 @@ namespace Updater
         {
             foreach (Project project in Data.startedBuilds)
             {
+                Log.Info($"{project.branch.name} - #{project.startingBuildResult.buildNumber} - {project.buildStatus.state}\n" +
+                    "https://ci-sel.dks.lanit.ru/browse/" + project.startingBuildResult.buildResultkey);
                 Label label = new Label();
                 if (project.buildStatus.state.Equals("Successful"))
                 {
@@ -260,7 +262,7 @@ namespace Updater
 
         private void openPreparedeployButton_Click(object sender, RoutedEventArgs e)
         {
-            
+            RefreshBuildsStatus(sender, e);
         }
 
 
@@ -270,7 +272,7 @@ namespace Updater
 
         private void worker2_DoWork(object sender, DoWorkEventArgs e)
         {
-            worker.ReportProgress(50);
+            worker2.ReportProgress(1);
             foreach (Project project in Data.startedBuilds)
             {
                 string buildResultkey = project.startingBuildResult.buildResultkey;
