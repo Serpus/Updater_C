@@ -8,5 +8,8 @@ namespace Updater
 {
     abstract class Stand
     {
+        public String Name { get; set; }
+        public String DeploymentProjectId { get; set; }
+        public Key Key { get; set; }
     }
 }
