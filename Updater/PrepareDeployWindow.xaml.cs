@@ -19,9 +19,25 @@ namespace Updater
     /// </summary>
     public partial class PrepareDeployWindow : Window
     {
+        private static readonly NLog.Logger Log = NLog.LogManager.GetCurrentClassLogger();
+
         public PrepareDeployWindow()
         {
             InitializeComponent();
+            this.Closing += cancelClosing;
+        }
+
+        private void cancelClosing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            e.Cancel = true;
+            if (Data.IsCloseProgram)
+            {
+                e.Cancel = false;
+            }
+            SuccessBuilds.Children.Clear();
+            ProcessBuilds.Children.Clear();
+            Log.Info("Закрываем окно подготовки деплоев");
+            this.Visibility = Visibility.Hidden;
         }
 
         private void CheckBox_Click(object sender, RoutedEventArgs e)
@@ -58,7 +74,10 @@ namespace Updater
 
         private void Cancel(object sender, RoutedEventArgs e)
         {
-
+            SuccessBuilds.Children.Clear();
+            ProcessBuilds.Children.Clear();
+            Log.Info("Закрываем окно подготовки деплоев");
+            this.Visibility = Visibility.Hidden;
         }
 
         private void StartDeploy(object sender, RoutedEventArgs e)

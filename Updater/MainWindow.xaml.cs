@@ -26,9 +26,11 @@ namespace Updater
     {
         private static readonly NLog.Logger Log = NLog.LogManager.GetCurrentClassLogger();
 
-        private BackgroundWorker worker = new BackgroundWorker();
-        private BackgroundWorker worker2 = new BackgroundWorker();
+        private BackgroundWorker prepareBuildsWorker = new BackgroundWorker();
+        private BackgroundWorker refreshBuildStatusWorker = new BackgroundWorker();
+        private BackgroundWorker waitRefreshBuildStatusWorker = new BackgroundWorker();
         private PrepareBuildsWindow prepareBuildsWindow = new PrepareBuildsWindow();
+        private PrepareDeployWindow PrepareDeployWindow = new PrepareDeployWindow();
         private bool loading;
 
         public MainWindow()
@@ -37,17 +39,23 @@ namespace Updater
 
             this.Closed += MainWindow_Closed;
 
-            worker.WorkerReportsProgress = true;
-            worker.WorkerSupportsCancellation = true;
-            worker.DoWork += worker_DoWork;
-            worker.ProgressChanged += worker_ProgressChanged;
-            worker.RunWorkerCompleted += worker_RunWorkerCompleted;
+            prepareBuildsWorker.WorkerReportsProgress = true;
+            prepareBuildsWorker.WorkerSupportsCancellation = true;
+            prepareBuildsWorker.DoWork += worker_DoWork;
+            prepareBuildsWorker.ProgressChanged += worker_ProgressChanged;
+            prepareBuildsWorker.RunWorkerCompleted += worker_RunWorkerCompleted;
 
-            worker2.WorkerReportsProgress = true;
-            worker2.WorkerSupportsCancellation = true;
-            worker2.DoWork += worker2_DoWork;
-            worker2.ProgressChanged += worker2_ProgressChanged;
-            worker2.RunWorkerCompleted += worker2_RunWorkerCompleted;
+            refreshBuildStatusWorker.WorkerReportsProgress = true;
+            refreshBuildStatusWorker.WorkerSupportsCancellation = true;
+            refreshBuildStatusWorker.DoWork += worker2_DoWork;
+            refreshBuildStatusWorker.ProgressChanged += worker2_ProgressChanged;
+            refreshBuildStatusWorker.RunWorkerCompleted += worker2_RunWorkerCompleted;
+
+            waitRefreshBuildStatusWorker.WorkerReportsProgress = true;
+            waitRefreshBuildStatusWorker.WorkerSupportsCancellation = true;
+            waitRefreshBuildStatusWorker.DoWork += worker3_DoWork;
+            waitRefreshBuildStatusWorker.ProgressChanged += worker3_ProgressChanged;
+            waitRefreshBuildStatusWorker.RunWorkerCompleted += worker3_RunWorkerCompleted;
         }
 
         private void MainWindow_Closed(object sender, EventArgs e)
@@ -93,7 +101,7 @@ namespace Updater
         {
             Data.branchName = branchName.Text;
             Log.Info("Начинаем отбор билд-планов с указанной веткой");
-            worker.RunWorkerAsync();
+            prepareBuildsWorker.RunWorkerAsync();
         }
 
         private void openBuildsWindow_Click(object sender, RoutedEventArgs e)
@@ -106,8 +114,9 @@ namespace Updater
         private void RefreshBuildsStatus(object sender, RoutedEventArgs e)
         {
             Log.Info("Обновление статусов запущенных билдов");
+            Data.IsRefreshEnd = false;
             buildsStatusList.Items.Clear();
-            worker2.RunWorkerAsync();
+            refreshBuildStatusWorker.RunWorkerAsync();
         }
 
         private void AddUpdatedBuilds()
@@ -117,22 +126,39 @@ namespace Updater
                 Log.Info($"{project.branch.name} - #{project.startingBuildResult.buildNumber} - {project.buildStatus.state}\n" +
                     "https://ci-sel.dks.lanit.ru/browse/" + project.startingBuildResult.buildResultkey);
                 Label label = new Label();
+                ProjectCheckBox checkBox = new ProjectCheckBox();
+                checkBox.Project = project;
+                checkBox.Content = project.branch.name;
+
                 if (project.buildStatus.state.Equals("Successful"))
                 {
                     label.Background = (SolidColorBrush)new BrushConverter().ConvertFrom("#12BF0F");
+                    PrepareDeployWindow.SuccessBuilds.Children.Add(checkBox);
                 }
                 else if (project.buildStatus.state.Equals("Failed"))
                 {
                     label.Background = (SolidColorBrush)new BrushConverter().ConvertFrom("#DF0E0E");
+                    checkBox.IsEnabled = false;
+                    PrepareDeployWindow.ProcessBuilds.Children.Add(checkBox);
+
                 }
 
-                if (project.buildStatus.state.Equals("Unknown")) { project.buildStatus.state = "In Progress"; }
+                if (project.buildStatus.state.Equals("Unknown")) 
+                { 
+                    project.buildStatus.state = "In Progress"; 
+                    checkBox.IsEnabled = false;
+                    PrepareDeployWindow.ProcessBuilds.Children.Add(checkBox);
+                }
 
                 label.Content = $"{project.branch.name} - #{project.startingBuildResult.buildNumber} - {project.buildStatus.state}\n" +
                     "https://ci-sel.dks.lanit.ru/browse/" + project.startingBuildResult.buildResultkey;
                 label.VerticalAlignment = VerticalAlignment.Stretch;
                 label.HorizontalAlignment = HorizontalAlignment.Stretch;
                 buildsStatusList.Items.Add(label);
+
+                
+
+                
             }
         }
 
@@ -161,7 +187,7 @@ namespace Updater
 
         private void worker_DoWork(object sender, DoWorkEventArgs e)
         {
-            worker.ReportProgress(50);
+            prepareBuildsWorker.ReportProgress(50);
             prepareBuildsWindow.PrepareBuilds();
         }
 
@@ -262,7 +288,45 @@ namespace Updater
 
         private void openPreparedeployButton_Click(object sender, RoutedEventArgs e)
         {
+            List<Stand> stands = new List<Stand>();
+
+            foreach (var children in selectStandsGrid.Children)
+            {
+                if (children is ComboBox)
+                {
+                    ComboBox cb = children as ComboBox;
+                    if (cb.Text != null)
+                    {
+                        switch (cb.Text)
+                        {
+                            case "ЕИС-3":
+                                stands.Add(new EIS3());
+                                break;
+                            case "ЕИС-4":
+                                stands.Add(new EIS4());
+                                break;
+                            case "ЕИС-5":
+                                stands.Add(new EIS5());
+                                break;
+                            case "ЕИС-6":
+                                stands.Add(new EIS6());
+                                break;
+                            case "ЕИС-7":
+                                stands.Add(new EIS7());
+                                break;
+                        }
+                    }
+                }
+            }
+            if (stands.Count == 0)
+            {
+                Log.Info("Не выбрано ни одного стенда");
+                MessageBox.Show("Выберите хотя бы один стенд");
+                return;
+            }
+
             RefreshBuildsStatus(sender, e);
+            waitRefreshBuildStatusWorker.RunWorkerAsync();
         }
 
 
@@ -272,7 +336,7 @@ namespace Updater
 
         private void worker2_DoWork(object sender, DoWorkEventArgs e)
         {
-            worker2.ReportProgress(1);
+            refreshBuildStatusWorker.ReportProgress(1);
             foreach (Project project in Data.startedBuilds)
             {
                 string buildResultkey = project.startingBuildResult.buildResultkey;
@@ -294,6 +358,27 @@ namespace Updater
         {
             stopLoading();
             AddUpdatedBuilds();
+            Data.IsRefreshEnd = true;
+        }
+
+        private void worker3_DoWork(object sender, DoWorkEventArgs e)
+        {
+            while (!Data.IsRefreshEnd)
+            {
+                Thread.Sleep(500);
+            }
+        }
+
+        private void worker3_ProgressChanged(object sender, ProgressChangedEventArgs e)
+        {
+            
+        }
+
+        private void worker3_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            Log.Info("Открываем окно с подготовкой деплоев");
+            PrepareDeployWindow.Owner = this;
+            PrepareDeployWindow.ShowDialog();
         }
     }
 
