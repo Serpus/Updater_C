@@ -27,6 +27,32 @@ namespace Updater
             this.Closing += cancelClosing;
         }
 
+        public void SetBuilds()
+        {
+            foreach (Project project in Data.startedBuilds)
+            {
+                ProjectCheckBox checkBox = new ProjectCheckBox();
+                checkBox.Project = project;
+                checkBox.Content = project.branch.name;
+
+                if (project.buildStatus.state.Equals("Successful"))
+                {
+                    SuccessBuilds.Children.Add(checkBox);
+                }
+                else if (project.buildStatus.state.Equals("Failed"))
+                {
+                    checkBox.IsEnabled = false;
+                    ProcessBuilds.Children.Add(checkBox);
+                }
+
+                if (project.buildStatus.state.Equals("In Progress") | project.buildStatus.state.Equals("Unknown"))
+                {
+                    checkBox.IsEnabled = false;
+                    ProcessBuilds.Children.Add(checkBox);
+                }
+            }
+        }
+
         private void cancelClosing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             e.Cancel = true;

@@ -140,28 +140,19 @@ namespace Updater
                 Log.Info($"{project.branch.name} - #{project.startingBuildResult.buildNumber} - {project.buildStatus.state}\n" +
                     "https://ci-sel.dks.lanit.ru/browse/" + project.startingBuildResult.buildResultkey);
                 Label label = new Label();
-                ProjectCheckBox checkBox = new ProjectCheckBox();
-                checkBox.Project = project;
-                checkBox.Content = project.branch.name;
 
                 if (project.buildStatus.state.Equals("Successful"))
                 {
                     label.Background = (SolidColorBrush)new BrushConverter().ConvertFrom("#12BF0F");
-                    PrepareDeployWindow.SuccessBuilds.Children.Add(checkBox);
                 }
                 else if (project.buildStatus.state.Equals("Failed"))
                 {
                     label.Background = (SolidColorBrush)new BrushConverter().ConvertFrom("#DF0E0E");
-                    checkBox.IsEnabled = false;
-                    PrepareDeployWindow.ProcessBuilds.Children.Add(checkBox);
-
                 }
 
                 if (project.buildStatus.state.Equals("Unknown")) 
                 { 
                     project.buildStatus.state = "In Progress"; 
-                    checkBox.IsEnabled = false;
-                    PrepareDeployWindow.ProcessBuilds.Children.Add(checkBox);
                 }
 
                 label.Content = $"{project.branch.name} - #{project.startingBuildResult.buildNumber} - {project.buildStatus.state}\n" +
@@ -169,10 +160,6 @@ namespace Updater
                 label.VerticalAlignment = VerticalAlignment.Stretch;
                 label.HorizontalAlignment = HorizontalAlignment.Stretch;
                 buildsStatusList.Items.Add(label);
-
-                
-
-                
             }
         }
 
@@ -392,6 +379,7 @@ namespace Updater
         {
             Log.Info("Открываем окно с подготовкой деплоев");
             PrepareDeployWindow.Owner = this;
+            PrepareDeployWindow.SetBuilds();
             PrepareDeployWindow.ShowDialog();
         }
     }
