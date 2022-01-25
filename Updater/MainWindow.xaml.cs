@@ -119,6 +119,20 @@ namespace Updater
             refreshBuildStatusWorker.RunWorkerAsync();
         }
 
+        private void OpenAllBuildsButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (buildsStatusList.Items.Count == 0)
+            {
+                MessageBox.Show("Отсутствуют билды на панеле статусов");
+            }
+            Log.Info("Открываем все билды с панели статусов");
+            foreach (Label item in buildsStatusList.Items)
+            {
+                String url = item.Content.ToString().Substring(item.Content.ToString().IndexOf("https://ci-sel.dks.lanit.ru/browse/"));
+                System.Diagnostics.Process.Start(url);
+            }
+        }
+
         private void AddUpdatedBuilds()
         {
             foreach (Project project in Data.startedBuilds)
