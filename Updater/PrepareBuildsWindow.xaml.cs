@@ -253,7 +253,7 @@ namespace Updater
             foreach (ProjectCheckBox checkBox in Data.checkedBoxes)
             {
                 string startBuildUrl = $"https://ci-sel.dks.lanit.ru/rest/api/latest/queue/{checkBox.Project.branch.key}";
-                string result = await Requests.postRequest(startBuildUrl);
+                string result = await Requests.postRequestAsync(startBuildUrl);
                 // Пример ответа:
                 // {"planKey":"EIS-EISBTKWF42","buildNumber":17,"buildResultKey":"EIS-EISBTKWF42-17","triggerReason":"Manual build",
                 // "link":{"href":"https://ci-sel.dks.lanit.ru/rest/api/latest/result/EIS-EISBTKWF42-17","rel":"self"}}
@@ -277,12 +277,15 @@ namespace Updater
 
         private void worker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            while (!Data.IsBuildsStarted)
+        }
+
+        private void PrepareBuildsGeneralSettings(object sender, MouseEventArgs e)
+        {
+            if (Data.IsBuildsStarted)
             {
-                
+                stopLoading();
+                this.Close();
             }
-            stopLoading();
-            this.Close();
         }
     }
 }

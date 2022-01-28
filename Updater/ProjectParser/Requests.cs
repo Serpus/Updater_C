@@ -55,7 +55,7 @@ namespace Updater
             return s;
         }
 
-        public static async Task<String> postRequest(String url)
+        public static async Task<String> postRequestAsync(String url)
         {
             username = Data.username;
             password = Data.password;

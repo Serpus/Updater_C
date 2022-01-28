@@ -7,7 +7,7 @@
         xmlns:local="clr-namespace:Updater"
         mc:Ignorable="d"
         Title="Подготовка билдов" MinHeight="450" Height="470" Width="640" MinWidth="640" ResizeMode="CanResize" WindowStartupLocation="CenterOwner">
-    <Grid>
+    <Grid MouseMove="PrepareBuildsGeneralSettings">
         <Grid.RowDefinitions>
             <RowDefinition MaxHeight="60"/>
             <RowDefinition Height="*"/>
