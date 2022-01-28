@@ -13,7 +13,7 @@ namespace Updater
         public string name { get; set; }
         public PlanKey planKey { get; set; }
         public Branch branch { get; set; }
-        public EnvironmentBuild[] environments { get; set; }
+        public List<EnvironmentBuild> environments { get; set; }
         public List<Stand> stands { get; set; }
         public StartingBuildResult startingBuildResult { get; set; }
         public BuildStatus buildStatus { get; set; }
