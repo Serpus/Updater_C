@@ -9,7 +9,7 @@ namespace Updater
     internal class StartingBuildResult
     {
         public string planKey { get; set; }
-        public string buildNumber { get; set; }
+        public int buildNumber { get; set; }
         public string buildResultkey { get; set; }
 
     }

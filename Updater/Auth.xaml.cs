@@ -72,6 +72,7 @@ namespace Updater
                     {
                         EIS3 eis3 = new EIS3
                         {
+                            id = environment.id,
                             Name = environment.name,
                             DeploymentProjectId = environment.deploymentProjectId,
                             Key = environment.key
@@ -84,6 +85,7 @@ namespace Updater
                     {
                         EIS4 eis4 = new EIS4
                         {
+                            id = environment.id,
                             Name = environment.name,
                             DeploymentProjectId = environment.deploymentProjectId,
                             Key = environment.key
@@ -96,6 +98,7 @@ namespace Updater
                     {
                         EIS5 eis5 = new EIS5
                         {
+                            id = environment.id,
                             Name = environment.name,
                             DeploymentProjectId = environment.deploymentProjectId,
                             Key = environment.key
@@ -108,6 +111,7 @@ namespace Updater
                     {
                         EIS6 eis6 = new EIS6()
                         {
+                            id = environment.id,
                             Name = environment.name,
                             DeploymentProjectId = environment.deploymentProjectId,
                             Key = environment.key
@@ -120,6 +124,7 @@ namespace Updater
                     {
                         EIS7 eis7 = new EIS7
                         {
+                            id = environment.id,
                             Name = environment.name,
                             DeploymentProjectId = environment.deploymentProjectId,
                             Key = environment.key

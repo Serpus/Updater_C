@@ -151,7 +151,7 @@ namespace Updater
                 }
 
                 if (project.buildStatus.state.Equals("Unknown")) 
-                { 
+                {
                     project.buildStatus.state = "In Progress"; 
                 }
 
@@ -278,7 +278,7 @@ namespace Updater
 
             selectStands.IsEnabled = false;
             selectStandsGrid.IsEnabled = false;
-            Data.stands = stands;
+            Data.selectedStands = stands;
             Log.Info("Выбранные стенды:" + stands);
         }
 
