@@ -251,19 +251,19 @@ namespace Updater
                         switch (cb.Text)
                         {
                             case "ЕИС-3":
-                                stands.Add(new EIS3());
+                                stands.Add(new EIS3() { Name = "ЕИС-3" });
                                 break;
                             case "ЕИС-4":
-                                stands.Add(new EIS4());
+                                stands.Add(new EIS4() { Name = "ЕИС-4" });
                                 break;
                             case "ЕИС-5":
-                                stands.Add(new EIS5());
+                                stands.Add(new EIS5() { Name = "ЕИС-5" });
                                 break;
                             case "ЕИС-6":
-                                stands.Add(new EIS6());
+                                stands.Add(new EIS6() { Name = "ЕИС-6" });
                                 break;
                             case "ЕИС-7":
-                                stands.Add(new EIS7());
+                                stands.Add(new EIS7() { Name = "ЕИС-7" });
                                 break;
                         }
                     }
@@ -280,6 +280,7 @@ namespace Updater
             selectStandsGrid.IsEnabled = false;
             Data.selectedStands = stands;
             Log.Info("Выбранные стенды:" + stands);
+            openPreparedeployButton.IsEnabled = true;
         }
 
         private void refreshDeploysButton_Click(object sender, RoutedEventArgs e)
@@ -328,6 +329,10 @@ namespace Updater
 
             RefreshBuildsStatus(sender, e);
             waitRefreshBuildStatusWorker.RunWorkerAsync();
+            Log.Info("Открываем окно с подготовкой деплоев");
+            PrepareDeployWindow.Owner = this;
+            PrepareDeployWindow.startLoading();
+            PrepareDeployWindow.ShowDialog();
         }
 
 
@@ -377,10 +382,9 @@ namespace Updater
 
         private void worker3_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            Log.Info("Открываем окно с подготовкой деплоев");
-            PrepareDeployWindow.Owner = this;
             PrepareDeployWindow.SetBuilds();
-            PrepareDeployWindow.ShowDialog();
+            Thread.Sleep(1000);
+            PrepareDeployWindow.stopLoading();
         }
     }
 

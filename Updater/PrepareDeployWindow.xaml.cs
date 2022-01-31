@@ -20,6 +20,7 @@ namespace Updater
     public partial class PrepareDeployWindow : Window
     {
         private static readonly NLog.Logger Log = NLog.LogManager.GetCurrentClassLogger();
+        private bool loading;
 
         public PrepareDeployWindow()
         {
@@ -27,8 +28,21 @@ namespace Updater
             this.Closing += cancelClosing;
         }
 
+        public void startLoading()
+        {
+            LoadingGrid.Visibility = Visibility.Visible;
+            loading = true;
+        }
+
+        public void stopLoading()
+        {
+            LoadingGrid.Visibility = Visibility.Hidden;
+            loading = false;
+        }
+
         public void SetBuilds()
         {
+            
             foreach (Project project in Data.startedBuilds)
             {
                 ProjectCheckBox checkBox = new ProjectCheckBox();
@@ -50,6 +64,7 @@ namespace Updater
                     checkBox.IsEnabled = false;
                     ProcessBuilds.Children.Add(checkBox);
                 }
+                Log.Info("aonfmgaoikndf");
             }
         }
 
@@ -108,7 +123,31 @@ namespace Updater
 
         private void StartDeploy(object sender, RoutedEventArgs e)
         {
+            foreach (Stand stand in Data.selectedStands)
+            {
+                foreach (ProjectCheckBox p in SuccessBuilds.Children)
+                {
+                    if (p.IsChecked == false)
+                    {
+                        continue;
+                    }
 
+                    foreach (Stand standBuild in p.Project.stands)
+                    {
+                        if (standBuild.Name.Contains(stand.Name))
+                        {
+                            /* String json = "{'planResultKey':'EIS-EISRDIKWF40-14'," +
+                                "'name':'release-11.0.0-14'," +
+                                "'nextVersionName':'release-11.0.0-15'}";*/
+                            String json = "{\"planResultKey\":\"" + p.Project.startingBuildResult.buildResultkey + "\"," +
+                                        "\"name\":\"" + p.Project.branch.shortName + "-" + p.Project.startingBuildResult.buildNumber + "-" + stand.Name + "\"," +
+                                        "\"nextVersionName\":\"" + p.Project.branch.shortName + "-" + (p.Project.startingBuildResult.buildNumber + 1) + "-" + stand.Name + "\"}";
+                            Log.Info("JSON: " + json);
+                            Log.Info($"https://ci-sel.dks.lanit.ru/rest/api/latest/queue/deployment?environmentId={standBuild.id}&versionId=79175346");
+                        }
+                    }
+                }
+            }
         }
     }
 }

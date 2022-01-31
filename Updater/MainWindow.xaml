@@ -103,7 +103,7 @@
                     <StackPanel Grid.Row="2">
                         <Button Content="Выбрать стенды" Height="30" Width="130" VerticalAlignment="Top" Click="SelectStands" Name="selectStands"/>
                         <Label/>
-                        <Button Height="40" Width="180" Name="openPreparedeployButton" Click="openPreparedeployButton_Click">
+                        <Button Height="40" Width="180" Name="openPreparedeployButton" Click="openPreparedeployButton_Click" IsEnabled="False">
                             <Button.Content>
                                 <AccessText TextWrapping="Wrap" Text="Просмотр успешных билдов для деплоя" TextAlignment="Center"/>
                             </Button.Content>
