@@ -30,6 +30,7 @@ namespace Updater
         {
             InitializeComponent();
             this.Closing += cancelClosing;
+
             worker.WorkerReportsProgress = true;
             worker.WorkerSupportsCancellation = true;
             worker.DoWork += worker_DoWork;
