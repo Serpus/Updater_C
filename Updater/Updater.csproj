@@ -80,6 +80,7 @@
     <Compile Include="Auth.xaml.cs">
       <DependentUpon>Auth.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ProjectParser\CreateVersionBody.cs" />
     <Compile Include="PrepareDeployWindow.xaml.cs">
       <DependentUpon>PrepareDeployWindow.xaml</DependentUpon>
     </Compile>

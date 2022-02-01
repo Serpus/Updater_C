@@ -64,7 +64,6 @@ namespace Updater
                     checkBox.IsEnabled = false;
                     ProcessBuilds.Children.Add(checkBox);
                 }
-                Log.Info("aonfmgaoikndf");
             }
         }
 
@@ -134,20 +133,39 @@ namespace Updater
 
                     foreach (Stand standBuild in p.Project.stands)
                     {
+                        Log.Info("Стенд: " + standBuild.Name);
                         if (standBuild.Name.Contains(stand.Name))
                         {
-                            /* String json = "{'planResultKey':'EIS-EISRDIKWF40-14'," +
-                                "'name':'release-11.0.0-14'," +
-                                "'nextVersionName':'release-11.0.0-15'}";*/
-                            String json = "{\"planResultKey\":\"" + p.Project.startingBuildResult.buildResultkey + "\"," +
-                                        "\"name\":\"" + p.Project.branch.shortName + "-" + p.Project.startingBuildResult.buildNumber + "-" + stand.Name + "\"," +
-                                        "\"nextVersionName\":\"" + p.Project.branch.shortName + "-" + (p.Project.startingBuildResult.buildNumber + 1) + "-" + stand.Name + "\"}";
-                            Log.Info("JSON: " + json);
+                            CreateRelease(standBuild, p);
+                            
                             Log.Info($"https://ci-sel.dks.lanit.ru/rest/api/latest/queue/deployment?environmentId={standBuild.id}&versionId=79175346");
                         }
                     }
                 }
             }
+        }
+
+        private async void CreateRelease(Stand standBuild, ProjectCheckBox p)
+        {
+            /* request bodyJson example
+             * String json = "{'planResultKey':'EIS-EISRDIKWF40-14'," +
+                                "'name':'release-11.0.0-14'," +
+                                "'nextVersionName':'release-11.0.0-15'}";*/
+            CreateVersionBody body = new CreateVersionBody()
+            {
+                planResultKey = p.Project.startingBuildResult.buildResultkey,
+                name = p.Project.branch.shortName + "-" + p.Project.startingBuildResult.buildNumber + "-" + standBuild.Name,
+                nextVersionName = p.Project.branch.shortName + "-" + (p.Project.startingBuildResult.buildNumber + 1) + "-" + standBuild.Name
+            };
+            String response = await Requests.postRequestAsync("https://ci-sel.dks.lanit.ru/rest/api/latest/deploy/project/" + standBuild.DeploymentProjectId + "/version", body);
+            /*
+             * response example: 
+             * {"id":82619038,
+             * "name":"hotfix-12.0.4-9-ЕИС-7",
+             * "creationDate":1643745388854,
+             * "creatorUserName":"Kazankin",
+             * "items" и так дале...
+             */
         }
     }
 }

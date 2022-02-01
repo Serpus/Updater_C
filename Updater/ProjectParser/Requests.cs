@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Net;
 using System.Net.Http;
 using System.IO;
+using Newtonsoft.Json;
 
 namespace Updater
 {
@@ -80,6 +81,36 @@ namespace Updater
             var response = await client.PostAsync(url, null);
 
             var responseStr = await response.Content.ReadAsStringAsync();
+            return responseStr;
+        }
+
+        public static async Task<String> postRequestAsync(String url, object jsonBodyCass)
+        {
+            username = Data.username;
+            password = Data.password;
+
+            string base64 = Convert.ToBase64String(Encoding.UTF8.GetBytes($"{username}:{password}"));
+            var baseAddress = new Uri("https://ci-sel.dks.lanit.ru");
+
+            CookieContainer cookies = new CookieContainer();
+            var handler = new HttpClientHandler()
+            {
+                CookieContainer = cookies
+            };
+
+            HttpClient client = new HttpClient(handler);
+            client.BaseAddress = baseAddress;
+            cookies.Add(baseAddress, new Cookie("bamboouserauth", "triangle-happier-ecard-climate-scoreless-stubborn"));
+
+            client.DefaultRequestHeaders.Add("user-agent", "Updater");
+            client.DefaultRequestHeaders.Add("Accept", "application/json");
+            client.DefaultRequestHeaders.Add("Authorization", $"Basic {base64}");
+            Log.Info("jsonBody: " + JsonConvert.SerializeObject(jsonBodyCass));
+            var content = new StringContent(JsonConvert.SerializeObject(jsonBodyCass), System.Text.Encoding.UTF8, "application/json");
+            var response = await client.PostAsync(url, content);
+            
+            var responseStr = await response.Content.ReadAsStringAsync();
+            Log.Info("response: " + responseStr);
             return responseStr;
         }
     }
