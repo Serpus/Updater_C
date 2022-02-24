@@ -84,6 +84,51 @@ namespace Updater
             return responseStr;
         }
 
+        public static async Task<String> postRequestAsyncJenkins(String url)
+        {
+            username = Data.username;
+            password = Data.password;
+
+            string base64 = Convert.ToBase64String(Encoding.UTF8.GetBytes($"{username}:{password}"));
+            var baseAddress = new Uri("https://ci-sel.dks.lanit.ru/jenkins/");
+
+            CookieContainer cookies = new CookieContainer();
+            var handler = new HttpClientHandler()
+            {
+                CookieContainer = cookies
+            };
+
+            HttpClient client = new HttpClient(handler);
+            client.BaseAddress = baseAddress;
+            cookies.Add(baseAddress, new Cookie("bamboouserauth", "triangle-happier-ecard-climate-scoreless-stubborn"));
+
+            client.DefaultRequestHeaders.Add("user-agent", "Updater");
+            client.DefaultRequestHeaders.Add("Accept", "application/json");
+            client.DefaultRequestHeaders.Add("Authorization", $"Basic {base64}");
+
+            var response = await client.GetAsync("https://ci-sel.dks.lanit.ru/jenkins/crumbIssuer/api/json?pretty=true");
+            IEnumerable<string> headerCookie = null;
+            foreach (var header in response.Headers)
+            {
+                if(header.Key.Equals("Set-Cookie"))
+                {
+                    headerCookie = header.Value;
+                }
+            }
+
+            var responseStr1 = await response.Content.ReadAsStringAsync();
+            CrumbResponseParser crumb = JsonConvert.DeserializeObject<CrumbResponseParser>(responseStr1);
+            client.DefaultRequestHeaders.Add(crumb.CrumbRequestField, crumb.Crumb);
+
+            String[] str = headerCookie.First().Substring(0, headerCookie.First().IndexOf(";")).Split('=');
+            cookies.Add(baseAddress, new Cookie(str[0], str[1]));
+
+            var response2 = await client.PostAsync(url, null);
+
+            var responseStr = await response2.Content.ReadAsStringAsync();
+            return responseStr;
+        }
+
         public static async Task<String> postRequestAsync(String url, object jsonBodyCass)
         {
             username = Data.username;
