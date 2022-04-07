@@ -19,5 +19,6 @@ namespace Updater
         public static List<Stand> selectedStands { get; set; }
         public static bool IsCloseProgram { get; set; }
         public static bool IsRefreshEnd { get; set; }
+        public static List<Project> startedDeploys { get; set; }
     }
 }
