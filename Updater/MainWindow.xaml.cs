@@ -279,7 +279,15 @@ namespace Updater
             selectStands.IsEnabled = false;
             selectStandsGrid.IsEnabled = false;
             Data.selectedStands = stands;
-            Log.Info("Выбранные стенды:" + stands);
+            String standsList = "";
+            foreach(Stand stand in stands)
+            {
+               standsList += stand.Name + ", ";
+            }
+
+            standsList = standsList.Substring(0, standsList.Length - 2);
+
+            Log.Info("Выбранные стенды:" + standsList);
             openPreparedeployButton.IsEnabled = true;
         }
 
