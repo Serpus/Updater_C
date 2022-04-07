@@ -6,7 +6,7 @@
         xmlns:gif="http://wpfanimatedgif.codeplex.com"
         xmlns:local="clr-namespace:Updater"
         mc:Ignorable="d"
-        Title="Updater" MinHeight="470" Height="470" Width="653" MinWidth="653" ResizeMode="CanResize" WindowStartupLocation="CenterScreen">
+        Title="Updater" MinHeight="470" Height="470" Width="665" MinWidth="653" ResizeMode="CanResize" WindowStartupLocation="CenterScreen">
     <Grid>
         <TabControl Background="#FFE5E5E5">
             <TabItem Header="Билды" MouseMove="buildsGeneralSettings">
@@ -20,7 +20,7 @@
                     </Grid.RowDefinitions>
                     <StackPanel Margin="10,50,10,10" MaxHeight="130" Height="130" Grid.Column="0" Grid.Row="0" VerticalAlignment="Top">
                         <Label HorizontalAlignment="Center">Название ветки</Label>
-                        <TextBox Width="160" x:Name="branchName" Keyboard.KeyDown="branchName_KeyDown" Text="hotfix-12.0.4">
+                        <TextBox Width="160" x:Name="branchName" Keyboard.KeyDown="branchName_KeyDown" Text="hotfix-12.1.1">
                             <TextBox.ToolTip>
                                 <ToolTip Content="Введите название ветки"></ToolTip>
                             </TextBox.ToolTip>
