@@ -17,5 +17,6 @@ namespace Updater
         public List<Stand> stands { get; set; }
         public StartingBuildResult startingBuildResult { get; set; }
         public BuildStatus buildStatus { get; set; }
+        public StartingDeployResult startingDeployResult { get; set; }
     }
 }

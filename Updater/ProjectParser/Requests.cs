@@ -81,6 +81,8 @@ namespace Updater
             var response = await client.PostAsync(url, null);
 
             var responseStr = await response.Content.ReadAsStringAsync();
+            Log.Info("responseRequestCode: " + response.StatusCode);
+            Log.Info("responseRequest: " + responseStr);
             return responseStr;
         }
 
@@ -129,7 +131,7 @@ namespace Updater
             return responseStr;
         }
 
-        public static async Task<String> postRequestAsync(String url, object jsonBodyCass)
+        public static async Task<String> postRequestAsync(String url, object jsonBodyClass)
         {
             username = Data.username;
             password = Data.password;
@@ -150,8 +152,8 @@ namespace Updater
             client.DefaultRequestHeaders.Add("user-agent", "Updater");
             client.DefaultRequestHeaders.Add("Accept", "application/json");
             client.DefaultRequestHeaders.Add("Authorization", $"Basic {base64}");
-            Log.Info("jsonBody: " + JsonConvert.SerializeObject(jsonBodyCass));
-            var content = new StringContent(JsonConvert.SerializeObject(jsonBodyCass), System.Text.Encoding.UTF8, "application/json");
+            Log.Info("jsonBody: " + JsonConvert.SerializeObject(jsonBodyClass));
+            var content = new StringContent(JsonConvert.SerializeObject(jsonBodyClass), System.Text.Encoding.UTF8, "application/json");
             var response = await client.PostAsync(url, content);
             
             var responseStr = await response.Content.ReadAsStringAsync();
