@@ -85,11 +85,11 @@
       <DependentUpon>Auth.xaml</DependentUpon>
     </Compile>
     <Compile Include="CreateVersionBodyResponse.cs" />
-    <Compile Include="ProjectParser\CreateVersionBody.cs" />
+    <Compile Include="ProjectParser\DeployParser\CreateVersionBody.cs" />
     <Compile Include="PrepareDeployWindow.xaml.cs">
       <DependentUpon>PrepareDeployWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="ProjectCheckBox.cs" />
+    <Compile Include="Setter\ProjectCheckBox.cs" />
     <Compile Include="PrepareBuildsWindow.xaml.cs">
       <DependentUpon>PrepareBuildsWindow.xaml</DependentUpon>
     </Compile>
@@ -107,11 +107,13 @@
     <Compile Include="ProjectParser\BranchParser\Branch.cs" />
     <Compile Include="ProjectParser\BuildParser\BuildStatus.cs" />
     <Compile Include="ProjectParser\BuildParser\StartingBuildResult.cs" />
-    <Compile Include="ProjectParser\CrumbResponseParser.cs" />
+    <Compile Include="ProjectParser\Jenkins\CrumbResponseParser.cs" />
+    <Compile Include="ProjectParser\DeployParser\StartingDeployResult.cs" />
     <Compile Include="ProjectParser\EnvironmentBuild.cs" />
+    <Compile Include="ProjectParser\Link.cs" />
     <Compile Include="ProjectParser\PlanKey.cs" />
     <Compile Include="ProjectParser\Key.cs" />
-    <Compile Include="Project.cs" />
+    <Compile Include="Setter\Project.cs" />
     <Compile Include="ProjectParser\Requests.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>

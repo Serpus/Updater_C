@@ -1,5 +1,7 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -120,8 +122,10 @@ namespace Updater
             this.Visibility = Visibility.Hidden;
         }
 
-        private void StartDeploy(object sender, RoutedEventArgs e)
+        private async void StartDeploy(object sender, RoutedEventArgs e)
         {
+            startLoading();
+
             foreach (Stand stand in Data.selectedStands)
             {
                 foreach (ProjectCheckBox p in SuccessBuilds.Children)
@@ -136,16 +140,18 @@ namespace Updater
                         Log.Info("Стенд: " + standBuild.Name);
                         if (standBuild.Name.Contains(stand.Name))
                         {
-                            CreateRelease(standBuild, p);
-                            
-                            Log.Info($"https://ci-sel.dks.lanit.ru/rest/api/latest/queue/deployment?environmentId={standBuild.id}&versionId=79175346");
+                            Deploy(standBuild, p);
+                            Data.startedDeploys.Add(p.Project);
                         }
                     }
                 }
             }
+
+            stopLoading();
+            Cancel(sender, e);
         }
 
-        private async void CreateRelease(Stand standBuild, ProjectCheckBox p)
+        private async void Deploy(Stand standBuild, ProjectCheckBox p)
         {
             /* request bodyJson example
              * String json = "{'planResultKey':'EIS-EISRDIKWF40-14'," +
@@ -166,6 +172,24 @@ namespace Updater
              * "creatorUserName":"Kazankin",
              * "items" и так дале...
              */
+            CreateVersionBodyResponse createVersionBodyResponse = JsonConvert.DeserializeObject<CreateVersionBodyResponse>(response);
+
+            String deployUrl = $"https://ci-sel.dks.lanit.ru/rest/api/latest/queue/deployment?environmentId={standBuild.id}&versionId={createVersionBodyResponse.id}";
+            Log.Info("deployUrl: " + deployUrl);
+            response = await Requests.postRequestAsync(deployUrl);
+            /*
+             * Response example:
+             * {"deploymentResultId":85399076,
+             * "link":{
+             *     "href":"https://ci-sel.dks.lanit.ru/rest/api/latest/deploy/result/85399076",
+             *     "rel":
+             *     "self" 
+             *     }
+             * }
+             */
+            StartingDeployResult startingDeployResult = JsonConvert.DeserializeObject<StartingDeployResult>(response);
+
+            p.Project.startingDeployResult = startingDeployResult;
         }
     }
 }
