@@ -29,6 +29,7 @@ namespace Updater
         private BackgroundWorker prepareBuildsWorker = new BackgroundWorker();
         private BackgroundWorker refreshBuildStatusWorker = new BackgroundWorker();
         private BackgroundWorker waitRefreshBuildStatusWorker = new BackgroundWorker();
+
         private PrepareBuildsWindow prepareBuildsWindow = new PrepareBuildsWindow();
         private PrepareDeployWindow PrepareDeployWindow = new PrepareDeployWindow();
         private bool loading;
@@ -276,8 +277,6 @@ namespace Updater
                 return;
             }
 
-            selectStands.IsEnabled = false;
-            selectStandsGrid.IsEnabled = false;
             Data.selectedStands = stands;
             String standsList = "";
             foreach(Stand stand in stands)
@@ -288,7 +287,22 @@ namespace Updater
             standsList = standsList.Substring(0, standsList.Length - 2);
 
             Log.Info("Выбранные стенды:" + standsList);
+
+            selectStands.IsEnabled = false;
+            selectStandsGrid.IsEnabled = false;
+            NoBuildDoploys.IsEnabled = true;
+            ResetStands.IsEnabled = true;
             openPreparedeployButton.IsEnabled = true;
+        }
+
+        private void ResetStands_Click(object sender, RoutedEventArgs e)
+        {
+            selectStands.IsEnabled = true;
+            selectStandsGrid.IsEnabled = true;
+            NoBuildDoploys.IsEnabled = false;
+            ResetStands.IsEnabled = false;
+            Data.selectedStands = null;
+            openPreparedeployButton.IsEnabled = false;
         }
 
         private void refreshDeploysButton_Click(object sender, RoutedEventArgs e)
@@ -334,7 +348,12 @@ namespace Updater
                 MessageBox.Show("Выберите хотя бы один стенд");
                 return;
             }
-
+            if (Data.startedBuilds == null)
+            {
+                Log.Info("Ни один билд не запущен");
+                MessageBox.Show("Ни один билд не запущен");
+                return;
+            }
             RefreshBuildsStatus(sender, e);
             waitRefreshBuildStatusWorker.RunWorkerAsync();
             Log.Info("Открываем окно с подготовкой деплоев");

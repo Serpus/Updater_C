@@ -13,6 +13,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using System.Threading;
 
 namespace Updater
 {
@@ -126,6 +127,8 @@ namespace Updater
         {
             startLoading();
 
+            Data.startedDeploys = new List<Project>();
+
             foreach (Stand stand in Data.selectedStands)
             {
                 foreach (ProjectCheckBox p in SuccessBuilds.Children)
@@ -142,13 +145,16 @@ namespace Updater
                         {
                             Deploy(standBuild, p);
                             Data.startedDeploys.Add(p.Project);
+                            // Ожидание для теста
+                            Thread.Sleep(10000);
+                            //
                         }
                     }
                 }
             }
 
-            stopLoading();
             Cancel(sender, e);
+            stopLoading();
         }
 
         private async void Deploy(Stand standBuild, ProjectCheckBox p)

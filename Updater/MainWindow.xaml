@@ -108,6 +108,10 @@
                                 <AccessText TextWrapping="Wrap" Text="Просмотр успешных билдов для деплоя" TextAlignment="Center"/>
                             </Button.Content>
                         </Button>
+                        <Label/>
+                        <Button x:Name="ResetStands" Content="Отменить выбор стендов" HorizontalAlignment="Center" Grid.Row="2" Width="150" Height="28" IsEnabled="False" Click="ResetStands_Click"/>
+                        <Label/>
+                        <Button x:Name="NoBuildDoploys" Content="Деплой без сборки" HorizontalAlignment="Center" Grid.Row="2" Width="130" Height="28" IsEnabled="False"/>
                     </StackPanel>
                     <Grid Grid.Column="1" Grid.RowSpan="3" IsEnabled="False" VerticalAlignment="Stretch">
                         <Grid.RowDefinitions>
@@ -146,6 +150,9 @@
                 </Grid>
             </TabItem>
             <TabItem Header="Деплой ОЧ">
+                <Grid Background="#FFE5E5E5"/>
+            </TabItem>
+            <TabItem Header="Деплой в Jenkins">
                 <Grid Background="#FFE5E5E5"/>
             </TabItem>
         </TabControl>
