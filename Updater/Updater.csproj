@@ -77,30 +77,30 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <ApplicationDefinition Include="App.xaml">
+    <ApplicationDefinition Include="Windows\App.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Auth.xaml.cs">
+    <Compile Include="Windows\Auth.xaml.cs">
       <DependentUpon>Auth.xaml</DependentUpon>
     </Compile>
     <Compile Include="CreateVersionBodyResponse.cs" />
-    <Compile Include="NoBuildDeploysTabWindow.xaml.cs">
+    <Compile Include="Windows\NoBuildDeploysTabWindow.xaml.cs">
       <DependentUpon>NoBuildDeploysTabWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="ProjectParser\DeployParser\CreateVersionBody.cs" />
-    <Compile Include="PrepareDeployWindow.xaml.cs">
+    <Compile Include="Windows\PrepareDeployWindow.xaml.cs">
       <DependentUpon>PrepareDeployWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Setter\ProjectCheckBox.cs" />
-    <Compile Include="PrepareBuildsWindow.xaml.cs">
+    <Compile Include="Windows\PrepareBuildsWindow.xaml.cs">
       <DependentUpon>PrepareBuildsWindow.xaml</DependentUpon>
     </Compile>
-    <Page Include="MainWindow.xaml">
+    <Page Include="Windows\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Compile Include="App.xaml.cs">
+    <Compile Include="Windows\App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
@@ -118,23 +118,23 @@
     <Compile Include="ProjectParser\Key.cs" />
     <Compile Include="Setter\Project.cs" />
     <Compile Include="ProjectParser\Requests.cs" />
-    <Compile Include="MainWindow.xaml.cs">
+    <Compile Include="Windows\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="Auth.xaml">
+    <Page Include="Windows\Auth.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="NoBuildDeploysTabWindow.xaml">
+    <Page Include="Windows\NoBuildDeploysTabWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="PrepareBuildsWindow.xaml">
+    <Page Include="Windows\PrepareBuildsWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="PrepareDeployWindow.xaml">
+    <Page Include="Windows\PrepareDeployWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
