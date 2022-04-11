@@ -290,7 +290,6 @@ namespace Updater
 
             selectStands.IsEnabled = false;
             selectStandsGrid.IsEnabled = false;
-            NoBuildDoploys.IsEnabled = true;
             ResetStands.IsEnabled = true;
             openPreparedeployButton.IsEnabled = true;
         }
@@ -299,7 +298,6 @@ namespace Updater
         {
             selectStands.IsEnabled = true;
             selectStandsGrid.IsEnabled = true;
-            NoBuildDoploys.IsEnabled = false;
             ResetStands.IsEnabled = false;
             Data.selectedStands = null;
             openPreparedeployButton.IsEnabled = false;
@@ -413,6 +411,14 @@ namespace Updater
             Thread.Sleep(1000);
             PrepareDeployWindow.stopLoading();
         }
-    }
 
+        private void OpenNoBuildDeploysWindow(object sender, RoutedEventArgs e)
+        {
+            NoBuildDeploysTabWindow noBuildDeploysTabWindow = new NoBuildDeploysTabWindow()
+            {
+                Owner = this
+            };
+            noBuildDeploysTabWindow.ShowDialog();
+        }
+    }
 }

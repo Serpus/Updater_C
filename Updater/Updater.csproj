@@ -85,6 +85,9 @@
       <DependentUpon>Auth.xaml</DependentUpon>
     </Compile>
     <Compile Include="CreateVersionBodyResponse.cs" />
+    <Compile Include="NoBuildDeploysTabWindow.xaml.cs">
+      <DependentUpon>NoBuildDeploysTabWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ProjectParser\DeployParser\CreateVersionBody.cs" />
     <Compile Include="PrepareDeployWindow.xaml.cs">
       <DependentUpon>PrepareDeployWindow.xaml</DependentUpon>
@@ -120,6 +123,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="Auth.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="NoBuildDeploysTabWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
