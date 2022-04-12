@@ -23,6 +23,8 @@ namespace Updater
             username = Data.username;
             password = Data.password;
 
+            Log.Info("Запрос: " + url);
+
             WebClient client = new WebClient();
             string base64 = Convert.ToBase64String(Encoding.UTF8.GetBytes($"{username}:{password}"));
             client.Headers.Add("user-agent", "Updater");
@@ -52,7 +54,7 @@ namespace Updater
 
                 return null;
             };
-
+            Log.Debug("Ответ на запрос: " + s);
             return s;
         }
 

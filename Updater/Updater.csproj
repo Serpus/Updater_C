@@ -84,6 +84,8 @@
     <Compile Include="Auth.xaml.cs">
       <DependentUpon>Auth.xaml</DependentUpon>
     </Compile>
+    <Compile Include="CustomElements\ProjectButton.cs" />
+    <Compile Include="CustomElements\JobCheckBox.cs" />
     <Compile Include="JenkinsWindow.xaml.cs">
       <DependentUpon>JenkinsWindow.xaml</DependentUpon>
     </Compile>
@@ -99,10 +101,11 @@
     <Compile Include="PrepareDeployWindow.xaml.cs">
       <DependentUpon>PrepareDeployWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ProjectParser\Jenkins\Job.cs" />
     <Compile Include="ProjectParser\Jenkins\Jobs.cs" />
     <Compile Include="CreateVersionBodyResponse.cs" />
     <Compile Include="ProjectParser\DeployParser\CreateVersionBody.cs" />
-    <Compile Include="Setter\ProjectCheckBox.cs" />
+    <Compile Include="CustomElements\ProjectCheckBox.cs" />
     <Page Include="Auth.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -143,7 +146,7 @@
     <Compile Include="ProjectParser\Link.cs" />
     <Compile Include="ProjectParser\PlanKey.cs" />
     <Compile Include="ProjectParser\Key.cs" />
-    <Compile Include="Setter\Project.cs" />
+    <Compile Include="CustomElements\Project.cs" />
     <Compile Include="ProjectParser\Requests.cs" />
   </ItemGroup>
   <ItemGroup>

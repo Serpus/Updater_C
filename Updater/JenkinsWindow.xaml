@@ -1,28 +1,49 @@
-﻿<Window x:Class="Updater.Windows.JenkinsWindow"
+﻿<Window x:Class="Updater.JenkinsWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:Updater.Windows"
+        xmlns:l="clr-namespace:Updater"
         mc:Ignorable="d"
         Title="JenkinsWindow" MinHeight="470" Height="470" Width="665" MinWidth="653" ResizeMode="CanResize" WindowStartupLocation="CenterScreen"
         Background="#FFE5E5E5">
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition/>
-            <ColumnDefinition/>
-            <ColumnDefinition/>
+            <ColumnDefinition MinWidth="70"/>
+            <ColumnDefinition MinWidth="80"/>
+            <ColumnDefinition MinWidth="70"/>
         </Grid.ColumnDefinitions>
-        <StackPanel Grid.Column="0" VerticalAlignment="Center">
-            <Button Content="ЕПЗ" Grid.Column="0" MaxHeight="28" MaxWidth="150" MinHeight="28" MinWidth="150"/>
+        <StackPanel Grid.Column="0" VerticalAlignment="Center" Name="ProjetStackPanel">
+            <Label Content="Ветка" HorizontalAlignment="Center"/>
+            <TextBox Margin="20, 0, 20, 0"/>
             <Label/>
-            <Button Content="223 ФЗ" Grid.Column="0" MaxHeight="28" MaxWidth="150" MinHeight="28" MinWidth="150"/>
+            <CheckBox Content="SKIP_DB" Margin="10, 0, 0, 0"/>
             <Label/>
-            <Button Content="ЛКП" Grid.Column="0" MaxHeight="28" MaxWidth="150" MinHeight="28" MinWidth="150"/>
+            <l:ProjectButton Content="ЕПЗ" Grid.Column="0" MaxHeight="28" MinHeight="28" MinWidth="50" Click="GetJobs" l:ProjectName="epz" Margin="10, 0, 10 ,0"/>
             <Label/>
-            <Button Content="ЗЧ" Grid.Column="0" MaxHeight="28" MaxWidth="150" MinHeight="28" MinWidth="150"/>
+            <l:ProjectButton Content="223 ФЗ" Grid.Column="0" MaxHeight="28" MinHeight="28" MinWidth="50" Click="GetJobs" l:ProjectName="fz223" Margin="10, 0, 10 ,0"/>
+            <Label/>
+            <l:ProjectButton Content="ЛКП" Grid.Column="0" MaxHeight="28" MinHeight="28" MinWidth="50" Click="GetJobs" l:ProjectName="lkp" Margin="10, 0, 10 ,0"/>
+            <Label/>
+            <l:ProjectButton Content="ЗЧ" Grid.Column="0" MaxHeight="28" MinHeight="28" MinWidth="50" Click="GetJobs" l:ProjectName="priv" Margin="10, 0, 10 ,0"/>
         </StackPanel>
         <GridSplitter Grid.Column="0" ShowsPreview="False" Width="3" Background="#5C5C5C"/>
+        <Grid Grid.Column="2" Name="RegisterColumn">
+            <Grid.RowDefinitions>
+                <RowDefinition MaxHeight="30"/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                <Button Grid.Row="0" MaxHeight="25" MinWidth="90" MaxWidth="90" HorizontalAlignment="Left" Content="Отметить все" Click="CheckAll"/>
+                <Label/>
+                <Button Grid.Row="0" MaxHeight="25" MinWidth="90" MaxWidth="90" HorizontalAlignment="Left" Content="Снять все" Click="UncheckAll"/>
+            </StackPanel>
+            <Border Height="1" Background="Black" VerticalAlignment="Bottom"/>
+            <ScrollViewer Grid.Row="1">
+                <StackPanel Margin="10,10,0,5" x:Name="jobsRegisterStackPanel" VerticalAlignment="Center">
+                </StackPanel>
+            </ScrollViewer>
+        </Grid>
         <GridSplitter Grid.Column="1" ShowsPreview="False" Width="3" Background="#5C5C5C"/>
     </Grid>
 </Window>

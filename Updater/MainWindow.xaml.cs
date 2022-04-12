@@ -423,7 +423,7 @@ namespace Updater
 
         private void OpenJenkinsWindow(object sender, RoutedEventArgs e)
         {
-            Windows.JenkinsWindow jenkinsWindow = new Windows.JenkinsWindow()
+            JenkinsWindow jenkinsWindow = new JenkinsWindow()
             {
                 Owner = this
             };
