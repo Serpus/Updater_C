@@ -77,30 +77,57 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <ApplicationDefinition Include="Windows\App.xaml">
+    <ApplicationDefinition Include="App.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Windows\Auth.xaml.cs">
+    <Compile Include="Auth.xaml.cs">
       <DependentUpon>Auth.xaml</DependentUpon>
     </Compile>
-    <Compile Include="CreateVersionBodyResponse.cs" />
-    <Compile Include="Windows\NoBuildDeploysTabWindow.xaml.cs">
+    <Compile Include="JenkinsWindow.xaml.cs">
+      <DependentUpon>JenkinsWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="MainWindow.xaml.cs">
+      <DependentUpon>MainWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="NoBuildDeploysTabWindow.xaml.cs">
       <DependentUpon>NoBuildDeploysTabWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="ProjectParser\DeployParser\CreateVersionBody.cs" />
-    <Compile Include="Windows\PrepareDeployWindow.xaml.cs">
-      <DependentUpon>PrepareDeployWindow.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Setter\ProjectCheckBox.cs" />
-    <Compile Include="Windows\PrepareBuildsWindow.xaml.cs">
+    <Compile Include="PrepareBuildsWindow.xaml.cs">
       <DependentUpon>PrepareBuildsWindow.xaml</DependentUpon>
     </Compile>
-    <Page Include="Windows\MainWindow.xaml">
+    <Compile Include="PrepareDeployWindow.xaml.cs">
+      <DependentUpon>PrepareDeployWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ProjectParser\Jenkins\Jobs.cs" />
+    <Compile Include="CreateVersionBodyResponse.cs" />
+    <Compile Include="ProjectParser\DeployParser\CreateVersionBody.cs" />
+    <Compile Include="Setter\ProjectCheckBox.cs" />
+    <Page Include="Auth.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Compile Include="Windows\App.xaml.cs">
+    <Page Include="JenkinsWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="MainWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="NoBuildDeploysTabWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="PrepareBuildsWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="PrepareDeployWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
@@ -118,26 +145,6 @@
     <Compile Include="ProjectParser\Key.cs" />
     <Compile Include="Setter\Project.cs" />
     <Compile Include="ProjectParser\Requests.cs" />
-    <Compile Include="Windows\MainWindow.xaml.cs">
-      <DependentUpon>MainWindow.xaml</DependentUpon>
-      <SubType>Code</SubType>
-    </Compile>
-    <Page Include="Windows\Auth.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Windows\NoBuildDeploysTabWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Windows\PrepareBuildsWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Windows\PrepareDeployWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ProjectParser\Stands\EIS3.cs" />

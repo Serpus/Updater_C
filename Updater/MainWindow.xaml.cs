@@ -420,5 +420,14 @@ namespace Updater
             };
             noBuildDeploysTabWindow.ShowDialog();
         }
+
+        private void OpenJenkinsWindow(object sender, RoutedEventArgs e)
+        {
+            Windows.JenkinsWindow jenkinsWindow = new Windows.JenkinsWindow()
+            {
+                Owner = this
+            };
+            jenkinsWindow.ShowDialog();
+        }
     }
 }

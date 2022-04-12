@@ -1,0 +1,28 @@
+﻿<Window x:Class="Updater.Windows.JenkinsWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Updater.Windows"
+        mc:Ignorable="d"
+        Title="JenkinsWindow" MinHeight="470" Height="470" Width="665" MinWidth="653" ResizeMode="CanResize" WindowStartupLocation="CenterScreen"
+        Background="#FFE5E5E5">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <StackPanel Grid.Column="0" VerticalAlignment="Center">
+            <Button Content="ЕПЗ" Grid.Column="0" MaxHeight="28" MaxWidth="150" MinHeight="28" MinWidth="150"/>
+            <Label/>
+            <Button Content="223 ФЗ" Grid.Column="0" MaxHeight="28" MaxWidth="150" MinHeight="28" MinWidth="150"/>
+            <Label/>
+            <Button Content="ЛКП" Grid.Column="0" MaxHeight="28" MaxWidth="150" MinHeight="28" MinWidth="150"/>
+            <Label/>
+            <Button Content="ЗЧ" Grid.Column="0" MaxHeight="28" MaxWidth="150" MinHeight="28" MinWidth="150"/>
+        </StackPanel>
+        <GridSplitter Grid.Column="0" ShowsPreview="False" Width="3" Background="#5C5C5C"/>
+        <GridSplitter Grid.Column="1" ShowsPreview="False" Width="3" Background="#5C5C5C"/>
+    </Grid>
+</Window>
