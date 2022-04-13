@@ -16,12 +16,12 @@
         </Grid.ColumnDefinitions>
         <StackPanel Grid.Column="0" VerticalAlignment="Center" Name="ProjectStackPanel">
             <Label Content="Ветка в формате hotfix/x.x.x" HorizontalAlignment="Center"/>
-            <TextBox Margin="20, 0, 20, 0" Name="branchName"/>
+            <TextBox Margin="20, 0, 20, 0" Name="BranchName"/>
             <Label/>
             <CheckBox Content="SKIP_DB" Margin="10, 0, 0, 0" Width="60" HorizontalAlignment="Left"/>
             <Label/>
             <TextBlock Text="Стенд" Margin="10,0,0,0"/>
-            <ComboBox Width="150" HorizontalAlignment="Left" Margin="10,0,0,0">
+            <ComboBox Width="120" HorizontalAlignment="Left" Margin="10,0,0,0">
                 <ComboBoxItem Content="eis3.lanit.ru"/>
                 <ComboBoxItem Content="eis4.roskazna.ru"/>
                 <ComboBoxItem Content="eis5.roskazna.ru"/>
@@ -44,7 +44,7 @@
             <Grid.RowDefinitions>
                 <RowDefinition MaxHeight="40"/>
                 <RowDefinition MaxHeight="30"/>
-                <RowDefinition MaxHeight="20"/>
+                <RowDefinition MaxHeight="35"/>
                 <RowDefinition/>
                 <RowDefinition MaxHeight="40"/>
             </Grid.RowDefinitions>
@@ -55,7 +55,10 @@
             </StackPanel>
             <Button Grid.Row="1" Content="Выбрать другой проект" MaxHeight="25" MinHeight="25" MinWidth="150" MaxWidth="150" VerticalAlignment="Top" HorizontalAlignment="Center" Click="ResetProject"/>
             <Border Grid.Row="1" Height="1" Background="Black" VerticalAlignment="Bottom"/>
-            <TextBlock Grid.Row="2"  Text="" Name="SelectedProjectName"/>
+            <StackPanel Grid.Row="2">
+                <TextBlock Text="" Name="SelectedProjectName"/>
+                <TextBlock Text="" Name="SelectedBranchName"/>
+            </StackPanel>
             <ScrollViewer Grid.Row="3" Margin="0,0,0,10">
                 <StackPanel Margin="5,5,0,5" x:Name="jobsRegisterStackPanel" VerticalAlignment="Top">
                 </StackPanel>

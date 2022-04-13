@@ -76,6 +76,7 @@ namespace Updater
 
             ProjectStackPanel.IsEnabled = false;
             SelectedProjectName.Text = "Выбранный проект: " + ProjectButton.Content.ToString();
+            SelectedBranchName.Text = "Выбранная ветка: " + BranchName.Text;
 
             getJobsWorker.RunWorkerAsync();
         }
@@ -120,6 +121,7 @@ namespace Updater
             ProjectStackPanel.IsEnabled = true;
             jobsRegisterStackPanel.Children.Clear();
             SelectedProjectName.Text = "";
+            SelectedBranchName.Text = "";
         }
 
 
@@ -225,7 +227,7 @@ namespace Updater
                 foreach (Job branch in regJob.BranchList.jobs)
                 {
                     String branchF = branch.name.Replace("%2F", "/");
-                    if (branchF == branchName.Text)
+                    if (branchF == BranchName.Text)
                     {
                         checkBox.IsEnabled = true;
                         break;
