@@ -114,6 +114,9 @@
     <Compile Include="Auth.xaml.cs">
       <DependentUpon>Auth.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ConfirmMo.xaml.cs">
+      <DependentUpon>ConfirmMo.xaml</DependentUpon>
+    </Compile>
     <Compile Include="CustomElements\ProjectButton.cs" />
     <Compile Include="CustomElements\JobCheckBox.cs" />
     <Compile Include="DataJenkins.cs" />
@@ -140,6 +143,10 @@
     <Page Include="Auth.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ConfirmMo.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="JenkinsWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -201,6 +208,7 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <Resource Include="simbol.png" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>

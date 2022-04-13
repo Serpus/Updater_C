@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -116,12 +117,62 @@ namespace Updater
             Log.Info("Все чекбоксы сняты");
         }
 
+        /**
+         * Сброс выбранного проекта
+         */
         private void ResetProject(object sender, RoutedEventArgs e)
         {
+            Log.Info("Сброс выбранного проекта");
             ProjectStackPanel.IsEnabled = true;
             jobsRegisterStackPanel.Children.Clear();
             SelectedProjectName.Text = "";
             SelectedBranchName.Text = "";
+        }
+
+        /**
+         * Начинаем деплой
+         */
+        private void Confirm(object sender, RoutedEventArgs e)
+        {
+            int i = 0;
+            foreach (CheckBox checkBox in jobsRegisterStackPanel.Children)
+            {
+                i++;
+                if (checkBox.IsChecked.Value)
+                {
+                    break;
+                }
+                if (i == jobsRegisterStackPanel.Children.Count) 
+                {
+                    MessageBox.Show("Необходимо отметить хотя бы один чекбокс");
+                    return;
+                }
+            }
+
+            ConfirmMo confirm = new ConfirmMo();
+            confirm.ShowDialog();
+            if (confirm.DialogResult.Value)
+            {
+                foreach (CheckBox checkBox in StandCheckBoxes.Children)
+                {
+                    if (checkBox.IsChecked.Value)
+                    {
+                        Log.Info("Deploy on " + checkBox.Content);
+                        DataJenkins.SKIP_DB = SKIP_DB.IsChecked.Value.ToString();
+                        DataJenkins.STAND = checkBox.Content.ToString().ToLower();
+                        String branch = HttpUtility.UrlEncode(BranchName.Text);
+
+                        foreach (CheckBox regCB in jobsRegisterStackPanel.Children)
+                        {
+                            if (regCB.IsChecked.Value)
+                            {
+                                String url = $"https://ci-sel.dks.lanit.ru/jenkins/job/{DataJenkins.ProjectName}/job/{regCB.Content}/job/{branch}/buildWithParameters?STAND={DataJenkins.STAND}&SKIP_DB={DataJenkins.SKIP_DB}&OLD_BUILD=";
+                                Log.Info($"deploy \"{regCB.Content}\" url: " + url);
+                            }
+                        }
+                    }
+                }
+            }
         }
 
 
@@ -226,7 +277,7 @@ namespace Updater
 
                 foreach (Job branch in regJob.BranchList.jobs)
                 {
-                    String branchF = branch.name.Replace("%2F", "/");
+                    String branchF = HttpUtility.UrlDecode(branch.name);
                     if (branchF == BranchName.Text)
                     {
                         checkBox.IsEnabled = true;

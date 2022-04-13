@@ -12,6 +12,7 @@ namespace Updater
         public static string password { get; set; }
         public static string ProjectName { get; set; }
         public static List<Register> Registers { get; set; }
-
+        public static string SKIP_DB { get; set; }
+        public static string STAND { get; set; }
     }
 }

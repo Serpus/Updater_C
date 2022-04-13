@@ -10,24 +10,24 @@
         Background="#FFE5E5E5">
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition MinWidth="70" Width="180"/>
-            <ColumnDefinition MinWidth="80"/>
-            <ColumnDefinition MinWidth="70"/>
+            <ColumnDefinition MinWidth="70" Width="180" MaxWidth="650"/>
+            <ColumnDefinition MinWidth="80" MaxWidth="650"/>
+            <ColumnDefinition MinWidth="70" MaxWidth="650"/>
         </Grid.ColumnDefinitions>
         <StackPanel Grid.Column="0" VerticalAlignment="Center" Name="ProjectStackPanel">
             <Label Content="Ветка в формате hotfix/x.x.x" HorizontalAlignment="Center"/>
             <TextBox Margin="20, 0, 20, 0" Name="BranchName"/>
             <Label/>
-            <CheckBox Content="SKIP_DB" Margin="10, 0, 0, 0" Width="60" HorizontalAlignment="Left"/>
+            <CheckBox Content="SKIP_DB" x:Name="SKIP_DB" Margin="10, 0, 0, 0" Width="60" HorizontalAlignment="Left"/>
             <Label/>
-            <TextBlock Text="Стенд" Margin="10,0,0,0"/>
-            <ComboBox Width="120" HorizontalAlignment="Left" Margin="10,0,0,0">
-                <ComboBoxItem Content="eis3.lanit.ru"/>
-                <ComboBoxItem Content="eis4.roskazna.ru"/>
-                <ComboBoxItem Content="eis5.roskazna.ru"/>
-                <ComboBoxItem Content="eis6.lanit.ru"/>
-                <ComboBoxItem Content="eis7.lanit.ru"/>
-            </ComboBox>
+            <TextBlock Text="Стенд:" Margin="10,0,0,3"/>
+            <StackPanel Width="120" HorizontalAlignment="Left" Margin="10,0,0,0" Name="StandCheckBoxes">
+                <CheckBox Content="eis3.lanit.ru"/>
+                <CheckBox Content="eis4.roskazna.ru"/>
+                <CheckBox Content="eis5.roskazna.ru"/>
+                <CheckBox Content="eis6.lanit.ru"/>
+                <CheckBox Content="eis7.lanit.ru"/>
+            </StackPanel>
             <Label/>
             <l:ProjectButton Content="ЕПЗ" Grid.Column="0" MaxHeight="28" MinHeight="28" MinWidth="50" Click="GetJobs" l:ProjectName="epz" Margin="10, 0, 10 ,0"/>
             <Label/>
@@ -63,7 +63,7 @@
                 <StackPanel Margin="5,5,0,5" x:Name="jobsRegisterStackPanel" VerticalAlignment="Top">
                 </StackPanel>
             </ScrollViewer>
-            <Button Content="Подтвердить выбор" Grid.Row="4" MaxHeight="30" MinHeight="25" MinWidth="150" MaxWidth="150" HorizontalAlignment="Center"/>
+            <Button Content="Подтвердить выбор" Grid.Row="4" MaxHeight="30" MinHeight="25" MinWidth="150" MaxWidth="150" HorizontalAlignment="Center" Click="Confirm"/>
         </Grid>
 
         <GridSplitter Grid.Column="1" ShowsPreview="False" Width="3" Background="#5C5C5C"/>
