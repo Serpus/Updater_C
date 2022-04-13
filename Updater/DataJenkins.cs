@@ -15,5 +15,6 @@ namespace Updater
         public static string SKIP_DB { get; set; }
         public static string STAND { get; set; }
         public static List<DeployEnvironment> DeployEnvironments { get; set;}
+        public static List<BuildResult> BuildResults { get; set; }
     }
 }

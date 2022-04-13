@@ -54,7 +54,7 @@ namespace Updater
 
                 return null;
             };
-            Log.Debug("Ответ на запрос: " + s);
+            // Log.Debug("Ответ на запрос: " + s);
             return s;
         }
 

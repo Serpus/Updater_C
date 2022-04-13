@@ -14,6 +14,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using System.Threading;
+using Updater.CustomElements;
 using Newtonsoft.Json;
 
 namespace Updater
@@ -29,6 +30,7 @@ namespace Updater
         private BackgroundWorker getJobsWorker = new BackgroundWorker();
         private BackgroundWorker getBranchesWorker = new BackgroundWorker();
         private BackgroundWorker startDeployWorker = new BackgroundWorker();
+        private BackgroundWorker refreshStatusWorker = new BackgroundWorker();
 
         private static readonly NLog.Logger Log = NLog.LogManager.GetCurrentClassLogger();
         public JenkinsWindow()
@@ -54,6 +56,12 @@ namespace Updater
             startDeployWorker.DoWork += startDeploy_DoWork;
             startDeployWorker.ProgressChanged += startDeploy_ProgressChanged;
             startDeployWorker.RunWorkerCompleted += startDeploy_RunWorkerCompleted;
+
+            refreshStatusWorker.WorkerReportsProgress = true;
+            refreshStatusWorker.WorkerSupportsCancellation = true;
+            refreshStatusWorker.DoWork += refreshStatus_DoWork;
+            refreshStatusWorker.ProgressChanged += refreshStatus_ProgressChanged;
+            refreshStatusWorker.RunWorkerCompleted += refreshStatus_RunWorkerCompleted;
         }
 
         private void JenkinsWindow_Closing(object sender, CancelEventArgs e)
@@ -166,25 +174,64 @@ namespace Updater
                 {
                     if (checkBox.IsChecked.Value)
                     {
-                        Log.Info("--- Deploy on " + checkBox.Content + " ---");
-
                         foreach (CheckBox regCB in jobsRegisterStackPanel.Children)
                         {
                             if (regCB.IsChecked.Value)
                             {
-                                DataJenkins.DeployEnvironments.Add(new DeployEnvironment()
+                                DeployEnvironment de = new DeployEnvironment()
                                 {
                                     RegisterName = regCB.Content.ToString(),
                                     Project = DataJenkins.ProjectName,
                                     Branch = HttpUtility.UrlEncode(BranchName.Text),
                                     Stand = checkBox.Content.ToString(),
                                     SKIP_DB = SKIP_DB.IsChecked.Value.ToString().ToLower()
-                                });
+                                };
+                                de.Branch = HttpUtility.UrlEncode(de.Branch).Replace("%252f", "%252F");
+                                DataJenkins.DeployEnvironments.Add(de);
                             }
                         }
                     }
                 }
                 startDeployWorker.RunWorkerAsync();
+            }
+        }
+
+        private void RefreshStatus(object sender, RoutedEventArgs e)
+        {
+            Log.Info("Обновляем статусы запущенных билдов");
+            refreshStatusWorker.RunWorkerAsync();
+        }
+
+        private void setBuildResultInUi()
+        {
+            if (DataJenkins.BuildResults != null)
+            {
+                buildStatusListBox.Items.Clear();
+
+                foreach (BuildResult result in DataJenkins.BuildResults)
+                {
+                    BuildStatusLabel label = new BuildStatusLabel()
+                    {
+                        Content = result.FullDisplayName + " - " + result.Result,
+                        BuildResult = result,
+                    };
+                    if (label.BuildResult.Result == null)
+                    {
+                        label.Content = result.FullDisplayName + " - В очереди, либо статус неизвестен";
+                    }
+                    buildStatusListBox.Items.Add(label);
+                }
+
+                foreach (BuildStatusLabel label in buildStatusListBox.Items)
+                {
+                    if (label.BuildResult.Result.Equals("SUCCESS")) 
+                    {
+                        label.Background = (SolidColorBrush)new BrushConverter().ConvertFrom("#12BF0F");
+                    } else if (label.BuildResult.Result.Equals("FAILURE"))
+                    {
+                        label.Background = (SolidColorBrush)new BrushConverter().ConvertFrom("#DF0E0E");
+                    }
+                }
             }
         }
 
@@ -315,7 +362,7 @@ namespace Updater
             foreach (DeployEnvironment de in DataJenkins.DeployEnvironments)
             {
                 String url = $"https://ci-sel.dks.lanit.ru/jenkins/job/{de.Project}/job/{de.RegisterName}/job/{de.Branch}/buildWithParameters?STAND={de.Stand}&SKIP_DB={de.SKIP_DB}&OLD_BUILD=";
-                Log.Info($"deploy \"{de.RegisterName}\" url: " + url);
+                Log.Info($"deploy \"{de.RegisterName}\" on \"{de.Stand}\" url: " + url);
                 Thread.Sleep(2000);
             }
         }
@@ -331,6 +378,53 @@ namespace Updater
         public void startDeploy_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             stopLoading();
+            Log.Info("--- *** ---");
+        }
+
+        // Обновление статусов запущенных деплоев
+        public void refreshStatus_DoWork(object sender, DoWorkEventArgs e)
+        {
+            DataJenkins.BuildResults = new List<BuildResult>();
+            refreshStatusWorker.ReportProgress(1);
+            foreach (DeployEnvironment de in DataJenkins.DeployEnvironments)
+            {
+                String url = $"https://ci-sel.dks.lanit.ru/jenkins/job/{de.Project}/job/{de.RegisterName}/job/{de.Branch}/api/json?pretty=true";
+                string responseLastBuild = Requests.getRequest(url);
+                BuildsList BuildsList = JsonConvert.DeserializeObject<BuildsList>(responseLastBuild);
+
+                string responseResult = "";
+                foreach (Build build in BuildsList.builds)
+                {
+                    string buildUrl = build.url + "api/json?pretty=true";
+                    responseResult = Requests.getRequest(buildUrl);
+                    BuildResult BuildResult = JsonConvert.DeserializeObject<BuildResult>(responseResult);
+
+                    var standParameter = BuildResult.getFirstAction().getStandParameter();
+                    if (standParameter == null)
+                    {
+                        continue;
+                    }
+                    if (standParameter.Value.Equals(de.Stand))
+                    {
+                        DataJenkins.BuildResults.Add(BuildResult);
+                        break;
+                    }
+                }
+            }
+        }
+
+        public void refreshStatus_ProgressChanged(object sender, ProgressChangedEventArgs e)
+        {
+            if (!loading)
+            {
+                startLoading();
+            }
+        }
+
+        public void refreshStatus_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            stopLoading();
+            setBuildResultInUi();
             Log.Info("--- *** ---");
         }
     }

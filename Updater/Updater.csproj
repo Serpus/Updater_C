@@ -117,6 +117,7 @@
     <Compile Include="ConfirmMo.xaml.cs">
       <DependentUpon>ConfirmMo.xaml</DependentUpon>
     </Compile>
+    <Compile Include="CustomElements\BuildStatusLabel.cs" />
     <Compile Include="CustomElements\ProjectButton.cs" />
     <Compile Include="CustomElements\JobCheckBox.cs" />
     <Compile Include="DataJenkins.cs" />
@@ -135,6 +136,12 @@
     <Compile Include="PrepareDeployWindow.xaml.cs">
       <DependentUpon>PrepareDeployWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ProjectParser\Jenkins\Build.cs" />
+    <Compile Include="ProjectParser\Jenkins\BuildResult.cs" />
+    <Compile Include="ProjectParser\Jenkins\BuildResult\ActionBuild.cs" />
+    <Compile Include="ProjectParser\Jenkins\BuildResult\Parameter.cs" />
+    <Compile Include="ProjectParser\Jenkins\BuildResult\Parameters.cs" />
+    <Compile Include="ProjectParser\Jenkins\BuildsList.cs" />
     <Compile Include="ProjectParser\Jenkins\DeployEnvironment.cs" />
     <Compile Include="ProjectParser\Jenkins\Job.cs" />
     <Compile Include="ProjectParser\Jenkins\Jobs.cs" />
