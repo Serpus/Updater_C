@@ -13,6 +13,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using System.Threading;
 using Newtonsoft.Json;
 
 namespace Updater
@@ -27,6 +28,7 @@ namespace Updater
 
         private BackgroundWorker getJobsWorker = new BackgroundWorker();
         private BackgroundWorker getBranchesWorker = new BackgroundWorker();
+        private BackgroundWorker startDeployWorker = new BackgroundWorker();
 
         private static readonly NLog.Logger Log = NLog.LogManager.GetCurrentClassLogger();
         public JenkinsWindow()
@@ -46,6 +48,12 @@ namespace Updater
             getBranchesWorker.DoWork += getBranches_DoWork;
             getBranchesWorker.ProgressChanged += getBranches_ProgressChanged;
             getBranchesWorker.RunWorkerCompleted += getBranches_RunWorkerCompleted;
+
+            startDeployWorker.WorkerReportsProgress = true;
+            startDeployWorker.WorkerSupportsCancellation = true;
+            startDeployWorker.DoWork += startDeploy_DoWork;
+            startDeployWorker.ProgressChanged += startDeploy_ProgressChanged;
+            startDeployWorker.RunWorkerCompleted += startDeploy_RunWorkerCompleted;
         }
 
         private void JenkinsWindow_Closing(object sender, CancelEventArgs e)
@@ -153,25 +161,30 @@ namespace Updater
             confirm.ShowDialog();
             if (confirm.DialogResult.Value)
             {
+                DataJenkins.DeployEnvironments = new List<DeployEnvironment>();
                 foreach (CheckBox checkBox in StandCheckBoxes.Children)
                 {
                     if (checkBox.IsChecked.Value)
                     {
-                        Log.Info("Deploy on " + checkBox.Content);
-                        DataJenkins.SKIP_DB = SKIP_DB.IsChecked.Value.ToString();
-                        DataJenkins.STAND = checkBox.Content.ToString().ToLower();
-                        String branch = HttpUtility.UrlEncode(BranchName.Text);
+                        Log.Info("--- Deploy on " + checkBox.Content + " ---");
 
                         foreach (CheckBox regCB in jobsRegisterStackPanel.Children)
                         {
                             if (regCB.IsChecked.Value)
                             {
-                                String url = $"https://ci-sel.dks.lanit.ru/jenkins/job/{DataJenkins.ProjectName}/job/{regCB.Content}/job/{branch}/buildWithParameters?STAND={DataJenkins.STAND}&SKIP_DB={DataJenkins.SKIP_DB}&OLD_BUILD=";
-                                Log.Info($"deploy \"{regCB.Content}\" url: " + url);
+                                DataJenkins.DeployEnvironments.Add(new DeployEnvironment()
+                                {
+                                    RegisterName = regCB.Content.ToString(),
+                                    Project = DataJenkins.ProjectName,
+                                    Branch = HttpUtility.UrlEncode(BranchName.Text),
+                                    Stand = checkBox.Content.ToString(),
+                                    SKIP_DB = SKIP_DB.IsChecked.Value.ToString().ToLower()
+                                });
                             }
                         }
                     }
                 }
+                startDeployWorker.RunWorkerAsync();
             }
         }
 
@@ -199,6 +212,8 @@ namespace Updater
             LoadingGrid.Visibility = Visibility.Hidden;
             loading = false;
         }
+
+        // Получение джобов
 
         public void getJobs_DoWork(object sender, DoWorkEventArgs e)
         {
@@ -242,6 +257,8 @@ namespace Updater
             CreateButtons(DataJenkins.Registers);
             stopLoading();
         }
+
+        // Получение веток
 
         public void getBranches_DoWork(object sender, DoWorkEventArgs e)
         {
@@ -288,6 +305,33 @@ namespace Updater
                 jobsRegisterStackPanel.Children.Add(checkBox);
             }
             stopLoading();
+        }
+
+        // Деплой
+
+        public void startDeploy_DoWork(object sender, DoWorkEventArgs e)
+        {
+            startDeployWorker.ReportProgress(1);
+            foreach (DeployEnvironment de in DataJenkins.DeployEnvironments)
+            {
+                String url = $"https://ci-sel.dks.lanit.ru/jenkins/job/{de.Project}/job/{de.RegisterName}/job/{de.Branch}/buildWithParameters?STAND={de.Stand}&SKIP_DB={de.SKIP_DB}&OLD_BUILD=";
+                Log.Info($"deploy \"{de.RegisterName}\" url: " + url);
+                Thread.Sleep(2000);
+            }
+        }
+
+        public void startDeploy_ProgressChanged(object sender, ProgressChangedEventArgs e)
+        {
+            if (!loading)
+            {
+                startLoading();
+            }
+        }
+
+        public void startDeploy_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            stopLoading();
+            Log.Info("--- *** ---");
         }
     }
 }

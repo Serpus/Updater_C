@@ -135,6 +135,7 @@
     <Compile Include="PrepareDeployWindow.xaml.cs">
       <DependentUpon>PrepareDeployWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ProjectParser\Jenkins\DeployEnvironment.cs" />
     <Compile Include="ProjectParser\Jenkins\Job.cs" />
     <Compile Include="ProjectParser\Jenkins\Jobs.cs" />
     <Compile Include="CreateVersionBodyResponse.cs" />

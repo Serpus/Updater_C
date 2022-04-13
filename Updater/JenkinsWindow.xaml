@@ -6,12 +6,12 @@
         xmlns:l="clr-namespace:Updater"
         xmlns:gif="http://wpfanimatedgif.codeplex.com"
         mc:Ignorable="d"
-        Title="JenkinsWindow" MinHeight="470" Height="470" Width="665" MinWidth="653" ResizeMode="CanResize" WindowStartupLocation="CenterScreen"
+        Title="JenkinsWindow" MinHeight="470" Height="470" Width="730" MinWidth="700" ResizeMode="CanResize" WindowStartupLocation="CenterScreen"
         Background="#FFE5E5E5">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition MinWidth="70" Width="180" MaxWidth="600"/>
-            <ColumnDefinition MinWidth="80" MaxWidth="600"/>
+            <ColumnDefinition MinWidth="80" Width="250" MaxWidth="600"/>
             <ColumnDefinition MinWidth="70" MaxWidth="600"/>
         </Grid.ColumnDefinitions>
         <StackPanel Grid.Column="0" VerticalAlignment="Center" Name="ProjectStackPanel">
@@ -67,6 +67,23 @@
         </Grid>
 
         <GridSplitter Grid.Column="1" ShowsPreview="False" Width="3" Background="#5C5C5C"/>
+
+        <Grid Grid.Column="2">
+            <Grid.RowDefinitions>
+                <RowDefinition MaxHeight="15"/>
+                <RowDefinition MaxHeight="50"/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <TextBlock HorizontalAlignment="Center">
+                Статусы запущенных билдов
+            </TextBlock>
+            <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center">
+                <Button Content="Обновить статусы" MaxHeight="28" MinHeight="25" MinWidth="110"/>
+                <Label/>
+                <Button Content="Открыть все в браузере" MaxHeight="28" MinHeight="25" MinWidth="145"/>
+            </StackPanel>
+            <ListBox Grid.Row="2" d:ItemsSource="{d:SampleData ItemCount=21}"/>
+        </Grid>
 
         <Grid Grid.Column="0" Grid.ColumnSpan="3" x:Name="LoadingGrid" Visibility="Hidden">
             <StackPanel VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Background="#FFE5E5E5" Opacity="0.7" Visibility="Visible">

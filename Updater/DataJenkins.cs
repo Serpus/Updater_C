@@ -14,5 +14,6 @@ namespace Updater
         public static List<Register> Registers { get; set; }
         public static string SKIP_DB { get; set; }
         public static string STAND { get; set; }
+        public static List<DeployEnvironment> DeployEnvironments { get; set;}
     }
 }
