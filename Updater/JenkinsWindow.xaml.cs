@@ -62,6 +62,9 @@ namespace Updater
                 return;
             }
 
+            ProjectStackPanel.IsEnabled = false;
+            SelectedProjectName.Text = "Выбранный проект: " + ProjectButton.Content.ToString();
+
             getJobsWorker.RunWorkerAsync();
         }
 
@@ -100,6 +103,26 @@ namespace Updater
             Log.Info("Все чекбоксы сняты");
         }
 
+        private void ResetProject(object sender, RoutedEventArgs e)
+        {
+            ProjectStackPanel.IsEnabled = true;
+            jobsRegisterStackPanel.Children.Clear();
+            SelectedProjectName.Text = "";
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         public void startLoading()
         {
             LoadingGrid.Visibility = Visibility.Visible;
@@ -111,15 +134,6 @@ namespace Updater
             LoadingGrid.Visibility = Visibility.Hidden;
             loading = false;
         }
-
-
-
-
-
-
-
-
-
 
         public void getJobs_DoWork(object sender, DoWorkEventArgs e)
         {

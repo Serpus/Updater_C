@@ -14,7 +14,7 @@
             <ColumnDefinition MinWidth="80"/>
             <ColumnDefinition MinWidth="70"/>
         </Grid.ColumnDefinitions>
-        <StackPanel Grid.Column="0" VerticalAlignment="Center" Name="ProjetStackPanel">
+        <StackPanel Grid.Column="0" VerticalAlignment="Center" Name="ProjectStackPanel">
             <Label Content="Ветка в формате hotfix/x.x.x" HorizontalAlignment="Center"/>
             <TextBox Margin="20, 0, 20, 0" Name="branchName"/>
             <Label/>
@@ -33,7 +33,9 @@
         
         <Grid Grid.Column="1" Name="RegisterColumn">
             <Grid.RowDefinitions>
+                <RowDefinition MaxHeight="40"/>
                 <RowDefinition MaxHeight="30"/>
+                <RowDefinition MaxHeight="20"/>
                 <RowDefinition/>
             </Grid.RowDefinitions>
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
@@ -41,12 +43,15 @@
                 <Label/>
                 <Button Grid.Row="0" MaxHeight="25" MinWidth="90" MaxWidth="90" HorizontalAlignment="Left" Content="Снять все" Click="UncheckAll"/>
             </StackPanel>
-            <Border Height="1" Background="Black" VerticalAlignment="Bottom"/>
-            <ScrollViewer Grid.Row="1">
-                <StackPanel Margin="10,10,0,5" x:Name="jobsRegisterStackPanel" VerticalAlignment="Center">
+            <Button Grid.Row="1" Content="Выбрать другой проект" MaxHeight="25" MinHeight="25" MinWidth="150" MaxWidth="150" VerticalAlignment="Top" HorizontalAlignment="Center" Click="ResetProject"/>
+            <Border Grid.Row="1" Height="1" Background="Black" VerticalAlignment="Bottom"/>
+            <TextBlock Grid.Row="2"  Text="" Name="SelectedProjectName"/>
+            <ScrollViewer Grid.Row="3" Margin="0,0,0,10">
+                <StackPanel Margin="5,5,0,5" x:Name="jobsRegisterStackPanel" VerticalAlignment="Top">
                 </StackPanel>
             </ScrollViewer>
         </Grid>
+
         <GridSplitter Grid.Column="1" ShowsPreview="False" Width="3" Background="#5C5C5C"/>
 
         <Grid Grid.Column="0" Grid.ColumnSpan="3" x:Name="LoadingGrid" Visibility="Hidden">
