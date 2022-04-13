@@ -70,40 +70,6 @@ namespace Updater
          */
         public void CreateButtons(List<Register> jobslist)
         {
-            /*Log.Debug("--- Создаём кнопки ---");
-            foreach (Job job in jobslist.jobs)
-            {
-                JobCheckBox checkBox = new JobCheckBox()
-                {
-                    Content = job.name,
-                    JobName = job.name,
-                    JobUrl = job.url,
-                    IsEnabled = false
-                };
-
-                Log.Debug("jobName - " + job.name + ", jobURL - " + job.url);
-                var response = Requests.getRequest($"https://ci-sel.dks.lanit.ru/jenkins/job/{DataJenkins.ProjectName}/job/{job.name}/api/json?pretty=true");
-                Jobs branchList = JsonConvert.DeserializeObject<Jobs>(response);
-                if (branchList != null)
-                {
-                    foreach (Job branch in branchList.jobs)
-                    {
-                        String branchF = branch.name.Replace("%2F", "/");
-                        if (branchF == branchName.Text)
-                        {
-                            checkBox.IsEnabled = true;
-                            break;
-                        }
-                    }
-                }
-                else
-                {
-                    Log.Info("Не удаётся найти ветки для реестра " + job.name);
-                }
-                jobsRegisterStackPanel.Children.Add(checkBox);
-            }
-            Log.Debug("--- *** ---");*/
-
             getBranchesWorker.RunWorkerAsync();
         }
 
