@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -20,10 +21,20 @@ namespace Updater
     /// </summary>
     public partial class JenkinsWindow : Window
     {
+        public bool loading = false;
+
+        private BackgroundWorker getJobsWorker = new BackgroundWorker();
+
         private static readonly NLog.Logger Log = NLog.LogManager.GetCurrentClassLogger();
         public JenkinsWindow()
         {
             InitializeComponent();
+
+            getJobsWorker.WorkerReportsProgress = true;
+            getJobsWorker.WorkerSupportsCancellation = true;
+            getJobsWorker.DoWork += getJobs_DoWork;
+            getJobsWorker.ProgressChanged += getJobs_ProgressChanged;
+            getJobsWorker.RunWorkerCompleted += getJobs_RunWorkerCompleted;
         }
 
         /**
@@ -35,25 +46,21 @@ namespace Updater
             if (sender is ProjectButton)
             {
                 ProjectButton = (ProjectButton)sender;
-            }
-            var response = Requests.getRequest($"https://ci-sel.dks.lanit.ru/jenkins/job/{ProjectButton.ProjectName}/api/json?pretty=true");
-            Jobs jobsList = JsonConvert.DeserializeObject<Jobs>(response);
-
-            Log.Info("--- Реестры на докерах ---");
-            int i = 0;
-            foreach (Job job in jobsList.jobs)
+                DataJenkins.ProjectName = ProjectButton.ProjectName;
+            } else
             {
-                i++;
-                Log.Info(i + " job - " + job.name);
+                Log.Info("sender in GetJobs method is not ProjectButton");
+                MessageBox.Show("sender in GetJobs method is not ProjectButton");
+                return;
             }
-            Log.Info("--- *** ---");
-            CreateButtons(jobsList);
+
+            getJobsWorker.RunWorkerAsync();
         }
 
         /**
          * Создание кнопок в части окна (с реестрами)
          */
-        private void CreateButtons(Jobs jobslist)
+        public void CreateButtons(Jobs jobslist)
         {
             Log.Debug("--- Создаём кнопки ---");
             foreach (Job job in jobslist.jobs)
@@ -93,6 +100,60 @@ namespace Updater
                 checkBox.IsChecked = false;
             }
             Log.Info("Чекбоксы все сняты");
+        }
+
+        public void startLoading()
+        {
+            LoadingGrid.Visibility = Visibility.Visible;
+            loading = true;
+        }
+
+        public void stopLoading()
+        {
+            LoadingGrid.Visibility = Visibility.Hidden;
+            loading = false;
+        }
+
+
+
+
+
+
+
+
+
+
+        public void getJobs_DoWork(object sender, DoWorkEventArgs e)
+        {
+            getJobsWorker.ReportProgress(1);
+            var response = Requests.getRequest($"https://ci-sel.dks.lanit.ru/jenkins/job/{DataJenkins.ProjectName}/api/json?pretty=true");
+            Jobs jobsList = JsonConvert.DeserializeObject<Jobs>(response);
+            if (jobsList != null)
+            {
+                DataJenkins.Jobs = jobsList;
+            }
+        }
+
+        public void getJobs_ProgressChanged(object sender, ProgressChangedEventArgs e)
+        {
+            if (!loading)
+            {
+                startLoading();
+            }
+        }
+
+        public void getJobs_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            Log.Info("--- Реестры на докерах ---");
+            int i = 0;
+            foreach (Job job in DataJenkins.Jobs.jobs)
+            {
+                i++;
+                Log.Info(i + " job - " + job.name);
+            }
+            Log.Info("--- *** ---");
+            CreateButtons(DataJenkins.Jobs);
+            stopLoading();
         }
     }
 }

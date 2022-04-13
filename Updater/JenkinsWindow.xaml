@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:l="clr-namespace:Updater"
+        xmlns:gif="http://wpfanimatedgif.codeplex.com"
         mc:Ignorable="d"
         Title="JenkinsWindow" MinHeight="470" Height="470" Width="665" MinWidth="653" ResizeMode="CanResize" WindowStartupLocation="CenterScreen"
         Background="#FFE5E5E5">
@@ -14,7 +15,7 @@
             <ColumnDefinition MinWidth="70"/>
         </Grid.ColumnDefinitions>
         <StackPanel Grid.Column="0" VerticalAlignment="Center" Name="ProjetStackPanel">
-            <Label Content="Ветка" HorizontalAlignment="Center"/>
+            <Label Content="Ветка в формате hotfix/x.x.x" HorizontalAlignment="Center"/>
             <TextBox Margin="20, 0, 20, 0"/>
             <Label/>
             <CheckBox Content="SKIP_DB" Margin="10, 0, 0, 0"/>
@@ -45,5 +46,13 @@
             </ScrollViewer>
         </Grid>
         <GridSplitter Grid.Column="1" ShowsPreview="False" Width="3" Background="#5C5C5C"/>
+        <Grid Grid.Column="0" Grid.ColumnSpan="3" x:Name="LoadingGrid" Visibility="Hidden">
+            <StackPanel VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Background="#FFE5E5E5" Opacity="0.7" Visibility="Visible">
+            </StackPanel>
+            <Grid x:Name="LoadingSpinner" Visibility="Visible">
+                <Label x:Name="LoadingLabel" Content="Выбираем билды с указанной веткой. Ожидайте" Margin="0,90,0,0" HorizontalAlignment="Center" FontWeight="Bold" FontSize="15"/>
+                <Image Width="150" Height="150" gif:ImageBehavior.AnimatedSource="/spinner-icon-0.gif" Stretch="Fill" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+            </Grid>
+        </Grid>
     </Grid>
 </Window>

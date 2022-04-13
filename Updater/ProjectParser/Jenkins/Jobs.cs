@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Updater
 {
-    internal class Jobs
+    public class Jobs
     {
         public String description { get; set; }
         public Job[] jobs { get; set; }
