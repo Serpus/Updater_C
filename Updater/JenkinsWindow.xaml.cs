@@ -363,7 +363,9 @@ namespace Updater
             {
                 String url = $"https://ci-sel.dks.lanit.ru/jenkins/job/{de.Project}/job/{de.RegisterName}/job/{de.Branch}/buildWithParameters?STAND={de.Stand}&SKIP_DB={de.SKIP_DB}&OLD_BUILD=";
                 Log.Info($"deploy \"{de.RegisterName}\" on \"{de.Stand}\" url: " + url);
-                Thread.Sleep(2000);
+                Requests.postRequestAsyncJenkins(url);
+                // Для отладки без запуска делпоя: 
+                // Thread.Sleep(2000);
             }
         }
 
