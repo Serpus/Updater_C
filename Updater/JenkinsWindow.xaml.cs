@@ -32,6 +32,8 @@ namespace Updater
         {
             InitializeComponent();
 
+            this.Closing += JenkinsWindow_Closing;
+
             getJobsWorker.WorkerReportsProgress = true;
             getJobsWorker.WorkerSupportsCancellation = true;
             getJobsWorker.DoWork += getJobs_DoWork;
@@ -43,6 +45,16 @@ namespace Updater
             getBranchesWorker.DoWork += getBranches_DoWork;
             getBranchesWorker.ProgressChanged += getBranches_ProgressChanged;
             getBranchesWorker.RunWorkerCompleted += getBranches_RunWorkerCompleted;
+        }
+
+        private void JenkinsWindow_Closing(object sender, CancelEventArgs e)
+        {
+            e.Cancel = true;
+            if (Data.IsCloseProgram)
+            {
+                e.Cancel = false;
+            }
+            this.Visibility = Visibility.Hidden;
         }
 
         /**
