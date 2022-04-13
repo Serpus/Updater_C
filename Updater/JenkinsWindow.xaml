@@ -10,9 +10,9 @@
         Background="#FFE5E5E5">
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition MinWidth="70" Width="180" MaxWidth="650"/>
-            <ColumnDefinition MinWidth="80" MaxWidth="650"/>
-            <ColumnDefinition MinWidth="70" MaxWidth="650"/>
+            <ColumnDefinition MinWidth="70" Width="180" MaxWidth="600"/>
+            <ColumnDefinition MinWidth="80" MaxWidth="600"/>
+            <ColumnDefinition MinWidth="70" MaxWidth="600"/>
         </Grid.ColumnDefinitions>
         <StackPanel Grid.Column="0" VerticalAlignment="Center" Name="ProjectStackPanel">
             <Label Content="Ветка в формате hotfix/x.x.x" HorizontalAlignment="Center"/>
