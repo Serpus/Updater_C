@@ -16,7 +16,7 @@
         </Grid.ColumnDefinitions>
         <StackPanel Grid.Column="0" VerticalAlignment="Center" Name="ProjetStackPanel">
             <Label Content="Ветка в формате hotfix/x.x.x" HorizontalAlignment="Center"/>
-            <TextBox Margin="20, 0, 20, 0"/>
+            <TextBox Margin="20, 0, 20, 0" Name="branchName"/>
             <Label/>
             <CheckBox Content="SKIP_DB" Margin="10, 0, 0, 0"/>
             <Label/>
@@ -28,8 +28,10 @@
             <Label/>
             <l:ProjectButton Content="ЗЧ" Grid.Column="0" MaxHeight="28" MinHeight="28" MinWidth="50" Click="GetJobs" l:ProjectName="priv" Margin="10, 0, 10 ,0"/>
         </StackPanel>
+        
         <GridSplitter Grid.Column="0" ShowsPreview="False" Width="3" Background="#5C5C5C"/>
-        <Grid Grid.Column="2" Name="RegisterColumn">
+        
+        <Grid Grid.Column="1" Name="RegisterColumn">
             <Grid.RowDefinitions>
                 <RowDefinition MaxHeight="30"/>
                 <RowDefinition/>
@@ -46,6 +48,7 @@
             </ScrollViewer>
         </Grid>
         <GridSplitter Grid.Column="1" ShowsPreview="False" Width="3" Background="#5C5C5C"/>
+
         <Grid Grid.Column="0" Grid.ColumnSpan="3" x:Name="LoadingGrid" Visibility="Hidden">
             <StackPanel VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Background="#FFE5E5E5" Opacity="0.7" Visibility="Visible">
             </StackPanel>

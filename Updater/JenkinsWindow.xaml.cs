@@ -22,8 +22,10 @@ namespace Updater
     public partial class JenkinsWindow : Window
     {
         public bool loading = false;
+        private Job branchListLocal = new Job();
 
         private BackgroundWorker getJobsWorker = new BackgroundWorker();
+        private BackgroundWorker getBranchesWorker = new BackgroundWorker();
 
         private static readonly NLog.Logger Log = NLog.LogManager.GetCurrentClassLogger();
         public JenkinsWindow()
@@ -35,6 +37,12 @@ namespace Updater
             getJobsWorker.DoWork += getJobs_DoWork;
             getJobsWorker.ProgressChanged += getJobs_ProgressChanged;
             getJobsWorker.RunWorkerCompleted += getJobs_RunWorkerCompleted;
+
+            getBranchesWorker.WorkerReportsProgress = true;
+            getBranchesWorker.WorkerSupportsCancellation = true;
+            getBranchesWorker.DoWork += getBranches_DoWork;
+            getBranchesWorker.ProgressChanged += getBranches_ProgressChanged;
+            getBranchesWorker.RunWorkerCompleted += getBranches_RunWorkerCompleted;
         }
 
         /**
@@ -60,9 +68,9 @@ namespace Updater
         /**
          * Создание кнопок в части окна (с реестрами)
          */
-        public void CreateButtons(Jobs jobslist)
+        public void CreateButtons(List<Register> jobslist)
         {
-            Log.Debug("--- Создаём кнопки ---");
+            /*Log.Debug("--- Создаём кнопки ---");
             foreach (Job job in jobslist.jobs)
             {
                 JobCheckBox checkBox = new JobCheckBox()
@@ -70,12 +78,33 @@ namespace Updater
                     Content = job.name,
                     JobName = job.name,
                     JobUrl = job.url,
+                    IsEnabled = false
                 };
 
                 Log.Debug("jobName - " + job.name + ", jobURL - " + job.url);
+                var response = Requests.getRequest($"https://ci-sel.dks.lanit.ru/jenkins/job/{DataJenkins.ProjectName}/job/{job.name}/api/json?pretty=true");
+                Jobs branchList = JsonConvert.DeserializeObject<Jobs>(response);
+                if (branchList != null)
+                {
+                    foreach (Job branch in branchList.jobs)
+                    {
+                        String branchF = branch.name.Replace("%2F", "/");
+                        if (branchF == branchName.Text)
+                        {
+                            checkBox.IsEnabled = true;
+                            break;
+                        }
+                    }
+                }
+                else
+                {
+                    Log.Info("Не удаётся найти ветки для реестра " + job.name);
+                }
                 jobsRegisterStackPanel.Children.Add(checkBox);
             }
-            Log.Debug("--- *** ---");
+            Log.Debug("--- *** ---");*/
+
+            getBranchesWorker.RunWorkerAsync();
         }
 
         /**
@@ -85,7 +114,10 @@ namespace Updater
         {
             foreach(JobCheckBox checkBox in jobsRegisterStackPanel.Children)
             {
-                checkBox.IsChecked = true;
+                if (checkBox.IsEnabled)
+                {
+                    checkBox.IsChecked = true;
+                }
             }
             Log.Info("Отмечены все чекбоксы");
         }
@@ -99,7 +131,7 @@ namespace Updater
             {
                 checkBox.IsChecked = false;
             }
-            Log.Info("Чекбоксы все сняты");
+            Log.Info("Все чекбоксы сняты");
         }
 
         public void startLoading()
@@ -130,7 +162,17 @@ namespace Updater
             Jobs jobsList = JsonConvert.DeserializeObject<Jobs>(response);
             if (jobsList != null)
             {
-                DataJenkins.Jobs = jobsList;
+                DataJenkins.Registers = new List<Register>();
+                foreach (Job job in jobsList.jobs)
+                {
+                    Register register = new Register()
+                    {
+                        name = job.name,
+                        url = job.url,
+                        BranchList = new Jobs()
+                    };
+                    DataJenkins.Registers.Add(register);
+                }
             }
         }
 
@@ -146,13 +188,60 @@ namespace Updater
         {
             Log.Info("--- Реестры на докерах ---");
             int i = 0;
-            foreach (Job job in DataJenkins.Jobs.jobs)
+            foreach (Register register in DataJenkins.Registers)
             {
                 i++;
-                Log.Info(i + " job - " + job.name);
+                Log.Info(i + " job - " + register.name);
             }
             Log.Info("--- *** ---");
-            CreateButtons(DataJenkins.Jobs);
+            CreateButtons(DataJenkins.Registers);
+            stopLoading();
+        }
+
+        public void getBranches_DoWork(object sender, DoWorkEventArgs e)
+        {
+            getBranchesWorker.ReportProgress(1);
+            foreach (Register register in DataJenkins.Registers)
+            {
+                Log.Debug("jobName - " + register.name + ", jobURL - " + register.url);
+                var response = Requests.getRequest($"https://ci-sel.dks.lanit.ru/jenkins/job/{DataJenkins.ProjectName}/job/{register.name}/api/json?pretty=true");
+                Jobs branchList = JsonConvert.DeserializeObject<Jobs>(response);
+                register.BranchList = branchList;
+            }
+        }
+
+        public void getBranches_ProgressChanged(object sender, ProgressChangedEventArgs e)
+        {
+            if (!loading)
+            {
+                startLoading();
+            }
+        }
+
+        public void getBranches_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            foreach (Register regJob in DataJenkins.Registers) 
+            {
+                JobCheckBox checkBox = new JobCheckBox()
+                {
+                    Content = regJob.name,
+                    JobName = regJob.name,
+                    JobUrl = regJob.url,
+                    IsEnabled = false
+                };
+
+                foreach (Job branch in regJob.BranchList.jobs)
+                {
+                    String branchF = branch.name.Replace("%2F", "/");
+                    if (branchF == branchName.Text)
+                    {
+                        checkBox.IsEnabled = true;
+                        break;
+                    }
+                }
+
+                jobsRegisterStackPanel.Children.Add(checkBox);
+            }
             stopLoading();
         }
     }

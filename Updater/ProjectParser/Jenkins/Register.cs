@@ -6,8 +6,10 @@ using System.Threading.Tasks;
 
 namespace Updater
 {
-    public class Jobs
+    public class Register
     {
-        public Job[] jobs { get; set; }
+        public string name { get; set; }
+        public string url { get; set; }
+        public Jobs BranchList { get; set; }
     }
 }

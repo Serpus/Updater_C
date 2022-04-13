@@ -11,6 +11,7 @@ namespace Updater
         public static string username { get; set; }
         public static string password { get; set; }
         public static string ProjectName { get; set; }
-        public static Jobs Jobs { get; set; }
+        public static List<Register> Registers { get; set; }
+
     }
 }
