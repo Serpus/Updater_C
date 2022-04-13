@@ -90,8 +90,6 @@ namespace Updater
                 MessageBox.Show("sender in GetJobs method is not ProjectButton");
                 return;
             }
-
-            ProjectStackPanel.IsEnabled = false;
             SelectedProjectName.Text = "Выбранный проект: " + ProjectButton.Content.ToString();
             SelectedBranchName.Text = "Выбранная ветка: " + BranchName.Text;
 
@@ -99,9 +97,9 @@ namespace Updater
         }
 
         /**
-         * Создание кнопок в части окна (с реестрами)
+         * Создание чекбоксов в части окна (с реестрами)
          */
-        public void CreateButtons(List<Register> jobslist)
+        public void CreateProjectCheckBoxes(List<Register> jobslist)
         {
             getBranchesWorker.RunWorkerAsync();
         }
@@ -139,7 +137,6 @@ namespace Updater
         private void ResetProject(object sender, RoutedEventArgs e)
         {
             Log.Info("Сброс выбранного проекта");
-            ProjectStackPanel.IsEnabled = true;
             jobsRegisterStackPanel.Children.Clear();
             SelectedProjectName.Text = "";
             SelectedBranchName.Text = "";
@@ -174,14 +171,14 @@ namespace Updater
                 {
                     if (checkBox.IsChecked.Value)
                     {
-                        foreach (CheckBox regCB in jobsRegisterStackPanel.Children)
+                        foreach (JobCheckBox regCB in jobsRegisterStackPanel.Children)
                         {
                             if (regCB.IsChecked.Value)
                             {
                                 DeployEnvironment de = new DeployEnvironment()
                                 {
                                     RegisterName = regCB.Content.ToString(),
-                                    Project = DataJenkins.ProjectName,
+                                    Project = regCB.JobProject,
                                     Branch = HttpUtility.UrlEncode(BranchName.Text),
                                     Stand = checkBox.Content.ToString(),
                                     SKIP_DB = SKIP_DB.IsChecked.Value.ToString().ToLower()
@@ -276,6 +273,7 @@ namespace Updater
                     {
                         name = job.name,
                         url = job.url,
+                        project = DataJenkins.ProjectName,
                         BranchList = new Jobs()
                     };
                     DataJenkins.Registers.Add(register);
@@ -301,7 +299,7 @@ namespace Updater
                 Log.Info(i + " job - " + register.name);
             }
             Log.Info("--- *** ---");
-            CreateButtons(DataJenkins.Registers);
+            CreateProjectCheckBoxes(DataJenkins.Registers);
             stopLoading();
         }
 
@@ -312,7 +310,7 @@ namespace Updater
             getBranchesWorker.ReportProgress(1);
             foreach (Register register in DataJenkins.Registers)
             {
-                Log.Debug("jobName - " + register.name + ", jobURL - " + register.url);
+                Log.Debug("Получачем ветки для джоба " + register.name + ", jobURL - " + register.url);
                 var response = Requests.getRequest($"https://ci-sel.dks.lanit.ru/jenkins/job/{DataJenkins.ProjectName}/job/{register.name}/api/json?pretty=true");
                 Jobs branchList = JsonConvert.DeserializeObject<Jobs>(response);
                 register.BranchList = branchList;
@@ -336,6 +334,7 @@ namespace Updater
                     Content = regJob.name,
                     JobName = regJob.name,
                     JobUrl = regJob.url,
+                    JobProject = regJob.project,
                     IsEnabled = false
                 };
 
@@ -345,6 +344,7 @@ namespace Updater
                     if (branchF == BranchName.Text)
                     {
                         checkBox.IsEnabled = true;
+                        Log.Info("Ветка " + branchF + " найдена у джоба " + regJob.name);
                         break;
                     }
                 }
@@ -363,9 +363,9 @@ namespace Updater
             {
                 String url = $"https://ci-sel.dks.lanit.ru/jenkins/job/{de.Project}/job/{de.RegisterName}/job/{de.Branch}/buildWithParameters?STAND={de.Stand}&SKIP_DB={de.SKIP_DB}&OLD_BUILD=";
                 Log.Info($"deploy \"{de.RegisterName}\" on \"{de.Stand}\" url: " + url);
-                Requests.postRequestAsyncJenkins(url);
+                //Requests.postRequestAsyncJenkins(url);
                 // Для отладки без запуска делпоя: 
-                // Thread.Sleep(2000);
+                Thread.Sleep(2000);
             }
         }
 

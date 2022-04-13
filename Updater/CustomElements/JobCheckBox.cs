@@ -11,5 +11,6 @@ namespace Updater
     {
         public String JobName { get; set; }
         public String JobUrl { get; set; }
+        public String JobProject { get; set; }
     }
 }
