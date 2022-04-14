@@ -19,5 +19,10 @@ namespace Updater
         {
             return actions[0];
         }
+
+        public String getStand()
+        {
+            return actions[0].getStandParameter().Value;
+        }
     }
 }

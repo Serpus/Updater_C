@@ -84,13 +84,13 @@ namespace Updater
             {
                 ProjectButton = (ProjectButton)sender;
                 DataJenkins.ProjectName = ProjectButton.ProjectName;
+                ProjectButton.IsEnabled = false;
             } else
             {
                 Log.Info("sender in GetJobs method is not ProjectButton");
                 MessageBox.Show("sender in GetJobs method is not ProjectButton");
                 return;
             }
-            SelectedProjectName.Text = "Выбранный проект: " + ProjectButton.Content.ToString();
             SelectedBranchName.Text = "Выбранная ветка: " + BranchName.Text;
 
             getJobsWorker.RunWorkerAsync();
@@ -138,8 +138,34 @@ namespace Updater
         {
             Log.Info("Сброс выбранного проекта");
             jobsRegisterStackPanel.Children.Clear();
-            SelectedProjectName.Text = "";
             SelectedBranchName.Text = "";
+            ProjectStackPanel.IsEnabled = true;
+            RegisterList.IsEnabled = true;
+            ConfirmButton.IsEnabled = true;
+            BuildStatusGrid.IsEnabled = false;
+
+            foreach (var obj in ProjectStackPanel.Children)
+            {
+                if (obj is Button)
+                {
+                    Button button = (Button)obj;
+                    button.IsEnabled = true;
+                }
+
+                if (obj is StackPanel)
+                {
+                    StackPanel stackPanel = (StackPanel)obj;
+                    foreach (var item in stackPanel.Children)
+                    {
+                        if (item is CheckBox)
+                        {
+                            CheckBox checkBox = (CheckBox)item;
+                            checkBox.IsChecked = false;
+                        }
+                    }
+                }
+                
+            }
         }
 
         /**
@@ -162,10 +188,26 @@ namespace Updater
                 }
             }
 
+            i = 0;
+            foreach (CheckBox checkBox in StandCheckBoxes.Children)
+            {
+                i++;
+                if (checkBox.IsChecked.Value)
+                {
+                    break;
+                }
+                if (i == StandCheckBoxes.Children.Count)
+                {
+                    MessageBox.Show("Необходимо выбрать хотя бы один стенд");
+                    return;
+                }
+            }
+
             ConfirmMo confirm = new ConfirmMo();
             confirm.ShowDialog();
             if (confirm.DialogResult.Value)
             {
+                Log.Info("--- Начинаем деплоить ---");
                 DataJenkins.DeployEnvironments = new List<DeployEnvironment>();
                 foreach (CheckBox checkBox in StandCheckBoxes.Children)
                 {
@@ -189,6 +231,9 @@ namespace Updater
                         }
                     }
                 }
+                RegisterList.IsEnabled = false;
+                ConfirmButton.IsEnabled = false;
+                BuildStatusGrid.IsEnabled = true;
                 startDeployWorker.RunWorkerAsync();
             }
         }
@@ -201,32 +246,74 @@ namespace Updater
 
         private void setBuildResultInUi()
         {
-            if (DataJenkins.BuildResults != null)
+            if (DataJenkins.BuildResults == null)
             {
-                buildStatusListBox.Items.Clear();
+                MessageBox.Show("Результаты билдов отсутствуют");
+                return;
+            }
 
-                foreach (BuildResult result in DataJenkins.BuildResults)
+            HashSet<string> StandSet = new HashSet<string>();
+            List<BuildStatusLabel> labelList = new List<BuildStatusLabel>();
+
+            BuildStatusTabs.Items.Clear();
+
+            foreach (BuildResult result in DataJenkins.BuildResults)
+            {
+                BuildStatusLabel label = new BuildStatusLabel()
                 {
-                    BuildStatusLabel label = new BuildStatusLabel()
-                    {
-                        Content = result.FullDisplayName + " - " + result.Result,
-                        BuildResult = result,
-                    };
-                    if (label.BuildResult.Result == null)
-                    {
-                        label.Content = result.FullDisplayName + " - В очереди, либо статус неизвестен";
-                    }
-                    buildStatusListBox.Items.Add(label);
+                    Content = result.FullDisplayName + " - " + result.Result,
+                    BuildResult = result,
+                };
+
+                if (label.BuildResult.Result == null)
+                {
+                    label.Content = result.FullDisplayName + " - В очереди, либо статус неизвестен";
+                }
+                if (label.BuildResult.Result.Equals("SUCCESS"))
+                {
+                    label.Background = (SolidColorBrush)new BrushConverter().ConvertFrom("#12BF0F");
+                }
+                else if (label.BuildResult.Result.Equals("FAILURE"))
+                {
+                    label.Background = (SolidColorBrush)new BrushConverter().ConvertFrom("#DF0E0E");
                 }
 
-                foreach (BuildStatusLabel label in buildStatusListBox.Items)
+                StandSet.Add(label.BuildResult.getStand());
+                labelList.Add(label);
+            }
+
+            foreach (string stand in StandSet)
+            {
+                ListBox listBox = new ListBox();
+                foreach (BuildStatusLabel label in labelList)
                 {
-                    if (label.BuildResult.Result.Equals("SUCCESS")) 
+                    if (label.BuildResult.getStand().Equals(stand))
                     {
-                        label.Background = (SolidColorBrush)new BrushConverter().ConvertFrom("#12BF0F");
-                    } else if (label.BuildResult.Result.Equals("FAILURE"))
+                        listBox.Items.Add(label);
+                    }
+                }
+                BuildStatusTabs.Items.Add(new TabItem { Header = stand, Content = listBox });
+            }
+        }
+
+        /**
+         * Открываем билды в браузере
+         */
+        private void OpenBuildsInBrowser(object sender, RoutedEventArgs e)
+        {
+            foreach (TabItem item in BuildStatusTabs.Items)
+            {
+                if (!item.IsSelected)
+                {
+                    continue;
+                }
+                if (item.Content is ListBox)
+                {
+                    ListBox listBox = (ListBox)item.Content;
+                    foreach (BuildStatusLabel label in listBox.Items)
                     {
-                        label.Background = (SolidColorBrush)new BrushConverter().ConvertFrom("#DF0E0E");
+                        Log.Info("Открываем все билды Дженкинса для стенда " + item.Header.ToString());
+                        System.Diagnostics.Process.Start(label.BuildResult.Url);
                     }
                 }
             }
@@ -380,6 +467,7 @@ namespace Updater
         public void startDeploy_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             stopLoading();
+            ProjectStackPanel.IsEnabled = false;
             Log.Info("--- *** ---");
         }
 
@@ -395,8 +483,15 @@ namespace Updater
                 BuildsList BuildsList = JsonConvert.DeserializeObject<BuildsList>(responseLastBuild);
 
                 string responseResult = "";
+                int i = 0;
                 foreach (Build build in BuildsList.builds)
                 {
+                    i++;
+                    if (i > 10)
+                    {
+                        break;
+                    }
+
                     string buildUrl = build.url + "api/json?pretty=true";
                     responseResult = Requests.getRequest(buildUrl);
                     BuildResult BuildResult = JsonConvert.DeserializeObject<BuildResult>(responseResult);
@@ -408,6 +503,7 @@ namespace Updater
                     }
                     if (standParameter.Value.Equals(de.Stand))
                     {
+                        Log.Info("Найден билд - " + BuildResult.FullDisplayName + " - " + de.Stand);
                         DataJenkins.BuildResults.Add(BuildResult);
                         break;
                     }

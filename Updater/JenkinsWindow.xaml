@@ -6,7 +6,7 @@
         xmlns:l="clr-namespace:Updater"
         xmlns:gif="http://wpfanimatedgif.codeplex.com"
         mc:Ignorable="d"
-        Title="JenkinsWindow" MinHeight="470" Height="470" Width="730" MinWidth="700" ResizeMode="CanResize" WindowStartupLocation="CenterScreen"
+        Title="Jenkins" MinHeight="470" Height="470" Width="730" MinWidth="900" ResizeMode="CanResize" WindowStartupLocation="CenterScreen"
         Background="#FFE5E5E5">
     <Grid>
         <Grid.ColumnDefinitions>
@@ -16,7 +16,7 @@
         </Grid.ColumnDefinitions>
         <StackPanel Grid.Column="0" VerticalAlignment="Center" Name="ProjectStackPanel">
             <Label Content="Ветка в формате hotfix/x.x.x" HorizontalAlignment="Center"/>
-            <TextBox Margin="20, 0, 20, 0" Name="BranchName" Text="hotfix/12.1.1"/>
+            <TextBox Margin="20, 0, 20, 0" Name="BranchName" Text="hotfix/12.1.2"/>
             <Label/>
             <CheckBox Content="SKIP_DB" x:Name="SKIP_DB" Margin="10, 0, 0, 0" Width="60" HorizontalAlignment="Left"/>
             <Label/>
@@ -53,24 +53,23 @@
                 <Label/>
                 <Button Grid.Row="0" MaxHeight="25" MinWidth="90" MaxWidth="90" HorizontalAlignment="Left" Content="Снять все" Click="UncheckAll"/>
             </StackPanel>
-            <Button Grid.Row="1" Content="Выбрать другой проект" MaxHeight="25" MinHeight="25" MinWidth="150" MaxWidth="150" VerticalAlignment="Top" HorizontalAlignment="Center" Click="ResetProject"/>
+            <Button Grid.Row="1" Content="Сбросить" MaxHeight="25" MinHeight="25" MinWidth="150" MaxWidth="150" VerticalAlignment="Top" HorizontalAlignment="Center" Click="ResetProject"/>
             <Border Grid.Row="1" Height="1" Background="Black" VerticalAlignment="Bottom"/>
             <StackPanel Grid.Row="2">
-                <TextBlock Text="" Name="SelectedProjectName"/>
                 <TextBlock Text="" Name="SelectedBranchName"/>
             </StackPanel>
-            <ScrollViewer Grid.Row="3" Margin="0,0,0,10">
+            <ScrollViewer Grid.Row="3" Margin="0,0,0,10" Name="RegisterList">
                 <StackPanel Margin="5,5,0,5" x:Name="jobsRegisterStackPanel" VerticalAlignment="Top">
                 </StackPanel>
             </ScrollViewer>
-            <Button Content="Подтвердить выбор" Grid.Row="4" MaxHeight="30" MinHeight="25" MinWidth="150" MaxWidth="150" HorizontalAlignment="Center" Click="Confirm"/>
+            <Button Content="Подтвердить выбор" Name="ConfirmButton" Grid.Row="4" MaxHeight="30" MinHeight="25" MinWidth="150" MaxWidth="150" HorizontalAlignment="Center" Click="Confirm"/>
         </Grid>
 
         <GridSplitter Grid.Column="1" ShowsPreview="False" Width="3" Background="#5C5C5C"/>
 
-        <Grid Grid.Column="2">
+        <Grid Grid.Column="2" Name="BuildStatusGrid" IsEnabled="False">
             <Grid.RowDefinitions>
-                <RowDefinition MaxHeight="15"/>
+                <RowDefinition MaxHeight="16"/>
                 <RowDefinition MaxHeight="50"/>
                 <RowDefinition/>
             </Grid.RowDefinitions>
@@ -80,9 +79,9 @@
             <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center">
                 <Button Content="Обновить статусы" MaxHeight="28" MinHeight="25" MinWidth="110" Click="RefreshStatus"/>
                 <Label/>
-                <Button Content="Открыть все в браузере" MaxHeight="28" MinHeight="25" MinWidth="145"/>
+                <Button Content="Открыть все в браузере" MaxHeight="28" MinHeight="25" MinWidth="145" Click="OpenBuildsInBrowser"/>
             </StackPanel>
-            <ListBox Grid.Row="2" d:ItemsSource="{d:SampleData ItemCount=21}" Name="buildStatusListBox"/>
+            <TabControl Grid.Row="2" Name="BuildStatusTabs"/>
         </Grid>
 
         <Grid Grid.Column="0" Grid.ColumnSpan="3" x:Name="LoadingGrid" Visibility="Hidden">
