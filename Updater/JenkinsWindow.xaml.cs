@@ -143,6 +143,7 @@ namespace Updater
             RegisterList.IsEnabled = true;
             ConfirmButton.IsEnabled = true;
             BuildStatusGrid.IsEnabled = false;
+            BuildStatusTabs.Items.Clear();
 
             foreach (var obj in ProjectStackPanel.Children)
             {
@@ -259,10 +260,19 @@ namespace Updater
 
             foreach (BuildResult result in DataJenkins.BuildResults)
             {
+                ContextMenu cm = new ContextMenu();
+                ResultMenuItem menuItem = new ResultMenuItem() 
+                {
+                    Header = "Открыть в браузере", 
+                    ResultUrl = result.Url
+                };
+                menuItem.Click += OpenCurrentBuild;
+                cm.Items.Add(menuItem);
                 BuildStatusLabel label = new BuildStatusLabel()
                 {
                     Content = result.FullDisplayName + " - " + result.Result,
                     BuildResult = result,
+                    ContextMenu = cm,
                 };
 
                 if (label.BuildResult.Result == null)
@@ -293,6 +303,15 @@ namespace Updater
                     }
                 }
                 BuildStatusTabs.Items.Add(new TabItem { Header = stand, Content = listBox });
+            }
+        }
+
+        private void OpenCurrentBuild(object sender, RoutedEventArgs e)
+        {
+            if (sender is ResultMenuItem)
+            {
+                ResultMenuItem Result = (ResultMenuItem)sender;
+                System.Diagnostics.Process.Start(Result.ResultUrl);
             }
         }
 

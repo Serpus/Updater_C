@@ -120,6 +120,7 @@
     <Compile Include="CustomElements\BuildStatusLabel.cs" />
     <Compile Include="CustomElements\ProjectButton.cs" />
     <Compile Include="CustomElements\JobCheckBox.cs" />
+    <Compile Include="CustomElements\ResultMenuItem.cs" />
     <Compile Include="DataJenkins.cs" />
     <Compile Include="JenkinsWindow.xaml.cs">
       <DependentUpon>JenkinsWindow.xaml</DependentUpon>
