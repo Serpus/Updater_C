@@ -139,12 +139,12 @@ namespace Updater
             Stream responseStream = response.GetResponseStream();
 
             StreamReader reader = new StreamReader(responseStream);
-            String version = reader.ReadToEnd().Replace("version/.\r\nversion/..\r\nversion/", "").Replace("\r\n", "");
+            String remoteVersion = reader.ReadToEnd().Replace("version/.\r\nversion/..\r\nversion/", "").Replace("\r\n", "");
 
             IFormatProvider formatter = new NumberFormatInfo { NumberDecimalSeparator = "." };
-            if (double.Parse(version, formatter) > Data.appVersion)
+            if (double.Parse(remoteVersion, formatter) > Data.localVersion)
             {
-                if (MessageBox.Show($"Обнаружена новая версия программы ({version}). Обновить?", "Обновление", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+                if (MessageBox.Show($"Обнаружена новая версия программы ({remoteVersion}). Обновить?", "Обновление", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
                 {
                     if (!Directory.Exists("InstallUpdateForUpdater"))
                     {
