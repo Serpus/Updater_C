@@ -16,7 +16,16 @@
         </Grid.ColumnDefinitions>
         <StackPanel Grid.Column="0" VerticalAlignment="Center" Name="ProjectStackPanel">
             <Label Content="Ветка в формате hotfix/x.x.x" HorizontalAlignment="Center"/>
-            <TextBox Margin="20, 0, 20, 0" Name="BranchName" Text="hotfix/12.1.2"/>
+            <StackPanel Orientation="Horizontal">
+                <TextBox Margin="10, 0, 5, 0" Name="BranchName" Text="" Width="130"/>
+                <Menu Height="20" Width="20" HorizontalAlignment="Right">
+                    <MenuItem Header="V">
+                        <MenuItem Header="hotfix/" Click="SetBranchName"/>
+                        <MenuItem Header="release/" Click="SetBranchName"/>
+                        <MenuItem Header="develop" Click="SetBranchName"/>
+                    </MenuItem>
+                </Menu>
+            </StackPanel>
             <Label/>
             <CheckBox Content="SKIP_DB" x:Name="SKIP_DB" Margin="10, 0, 0, 0" Width="60" HorizontalAlignment="Left"/>
             <Label/>

@@ -338,6 +338,18 @@ namespace Updater
             }
         }
 
+        /**
+         * Устанавливаем название ветки
+         */
+        private void SetBranchName(object sender, RoutedEventArgs e)
+        {
+            if (sender is MenuItem)
+            {
+                MenuItem item = (MenuItem)sender;
+                BranchName.Text = item.Header.ToString();
+            }
+        }
+
 
 
 

@@ -156,6 +156,9 @@ namespace Updater
                     Process.Start(Environment.CurrentDirectory + "/InstallUpdateForUpdater/InstallUpdateForUpdater.exe");
                     Application.Current.Shutdown();
                 }
+            } else
+            {
+                MessageBox.Show("Новых обновлений нет");
             }
         }
     }
