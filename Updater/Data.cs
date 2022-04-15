@@ -20,5 +20,7 @@ namespace Updater
         public static bool IsCloseProgram { get; set; }
         public static bool IsRefreshEnd { get; set; }
         public static List<Project> startedDeploys { get; set; }
+
+        public static double appVersion = 1.0;
     }
 }

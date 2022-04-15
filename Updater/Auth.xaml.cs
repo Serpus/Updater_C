@@ -1,16 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Diagnostics;
+using System.Globalization;
+using System.IO;
+using System.Net;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 using Newtonsoft.Json;
 
 namespace Updater
@@ -132,6 +126,35 @@ namespace Updater
 
                         project.stands.Add(eis7);
                     }
+                }
+            }
+        }
+
+        private void CheckUpdates(object sender, RoutedEventArgs e)
+        {
+            FtpWebRequest request = (FtpWebRequest)WebRequest.Create("ftp://s101238@s101238.hostru10.fornex.host/public_ftp/version");
+            request.Method = WebRequestMethods.Ftp.ListDirectory;
+            request.Credentials = new NetworkCredential("du@s101238.hostru10.fornex.host", "emtzfwsn7q8stuw0xm");
+            FtpWebResponse response = (FtpWebResponse)request.GetResponse();
+            Stream responseStream = response.GetResponseStream();
+
+            StreamReader reader = new StreamReader(responseStream);
+            String version = reader.ReadToEnd().Replace("version/.\r\nversion/..\r\nversion/", "").Replace("\r\n", "");
+
+            IFormatProvider formatter = new NumberFormatInfo { NumberDecimalSeparator = "." };
+            if (double.Parse(version, formatter) > Data.appVersion)
+            {
+                if (MessageBox.Show($"Обнаружена новая версия программы ({version}). Обновить?", "Обновление", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+                {
+                    if (!Directory.Exists("InstallUpdateForUpdater"))
+                    {
+                        MessageBox.Show("Папка InstallUpdateForUpdater для обнолвения отсутствует. Не получится обновить");
+                        return;
+                    }
+
+                    Log.Info("Запускаем обновление");
+                    Process.Start(Environment.CurrentDirectory + "/InstallUpdateForUpdater/InstallUpdateForUpdater.exe");
+                    Application.Current.Shutdown();
                 }
             }
         }
