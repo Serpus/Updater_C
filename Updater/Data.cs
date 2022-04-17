@@ -21,6 +21,6 @@ namespace Updater
         public static bool IsRefreshEnd { get; set; }
         public static List<Project> startedDeploys { get; set; }
 
-        public static double localVersion = 1.0;
+        public static double localVersion = 2.0;
     }
 }
