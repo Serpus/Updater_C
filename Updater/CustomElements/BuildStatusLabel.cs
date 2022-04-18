@@ -5,6 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 
+/// <summary>
+/// Класс для помещения окружения билда в Label
+/// </summary>
 namespace Updater.CustomElements
 {
     internal class BuildStatusLabel : Label

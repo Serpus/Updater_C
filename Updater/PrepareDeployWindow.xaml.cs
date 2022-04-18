@@ -14,6 +14,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using System.Threading;
+using Updater.CustomElements;
 
 namespace Updater
 {
@@ -23,12 +24,19 @@ namespace Updater
     public partial class PrepareDeployWindow : Window
     {
         private static readonly NLog.Logger Log = NLog.LogManager.GetCurrentClassLogger();
-        private bool loading;
+        private bool loading = false;
+        private BackgroundWorker startDeployWorker = new BackgroundWorker();
 
         public PrepareDeployWindow()
         {
             InitializeComponent();
             this.Closing += cancelClosing;
+
+            startDeployWorker.WorkerReportsProgress = true;
+            startDeployWorker.WorkerSupportsCancellation = true;
+            startDeployWorker.DoWork += startDeploy_DoWork;
+            startDeployWorker.ProgressChanged += startDeploy_ProgressChanged;
+            startDeployWorker.RunWorkerCompleted += startDeploy_RunWorkerCompleted;
         }
 
         public void startLoading()
@@ -125,49 +133,48 @@ namespace Updater
 
         private async void StartDeploy(object sender, RoutedEventArgs e)
         {
-            startLoading();
-
-            Data.startedDeploys = new List<Project>();
+            Data.preparedDeploy = new List<PreparedDeploy>();
 
             foreach (Stand stand in Data.selectedStands)
             {
-                foreach (ProjectCheckBox p in SuccessBuilds.Children)
+                foreach (ProjectCheckBox projectCb in SuccessBuilds.Children)
                 {
-                    if (p.IsChecked == false)
+                    if (projectCb.IsChecked == false)
                     {
                         continue;
                     }
 
-                    foreach (Stand standBuild in p.Project.stands)
+                    foreach (Stand standBuild in projectCb.Project.stands)
                     {
-                        Log.Info("Стенд: " + standBuild.Name);
                         if (standBuild.Name.Contains(stand.Name))
                         {
-                            Deploy(standBuild, p);
-                            Data.startedDeploys.Add(p.Project);
-                            // Ожидание для теста
-                            Thread.Sleep(10000);
-                            //
+                            PreparedDeploy deploy = new PreparedDeploy()
+                            {
+                                StandEnvironment = standBuild,
+                                Project = projectCb.Project
+                            };
+                            Data.preparedDeploy.Add(deploy);
                         }
                     }
                 }
             }
 
+            startDeployWorker.RunWorkerAsync();
             Cancel(sender, e);
-            stopLoading();
         }
 
-        private async void Deploy(Stand standBuild, ProjectCheckBox p)
+        private async Task<StartingDeployResult> Deploy(Stand standBuild, Project p)
         {
+            Log.Info("Билд: " + p.branch.name + ". Стенд: " + standBuild.Name);
             /* request bodyJson example
              * String json = "{'planResultKey':'EIS-EISRDIKWF40-14'," +
                                 "'name':'release-11.0.0-14'," +
                                 "'nextVersionName':'release-11.0.0-15'}";*/
             CreateVersionBody body = new CreateVersionBody()
             {
-                planResultKey = p.Project.startingBuildResult.buildResultkey,
-                name = p.Project.branch.shortName + "-" + p.Project.startingBuildResult.buildNumber + "-" + standBuild.Name,
-                nextVersionName = p.Project.branch.shortName + "-" + (p.Project.startingBuildResult.buildNumber + 1) + "-" + standBuild.Name
+                planResultKey = p.startingBuildResult.buildResultkey,
+                name = p.branch.shortName + "-" + p.startingBuildResult.buildNumber + "-" + standBuild.Name,
+                nextVersionName = p.branch.shortName + "-" + (p.startingBuildResult.buildNumber + 1) + "-" + standBuild.Name
             };
             String response = await Requests.postRequestAsync("https://ci-sel.dks.lanit.ru/rest/api/latest/deploy/project/" + standBuild.DeploymentProjectId + "/version", body);
             /*
@@ -195,7 +202,43 @@ namespace Updater
              */
             StartingDeployResult startingDeployResult = JsonConvert.DeserializeObject<StartingDeployResult>(response);
 
-            p.Project.startingDeployResult = startingDeployResult;
+            return startingDeployResult;
+        }
+
+
+
+
+
+        public void startDeploy_DoWork(object sender, DoWorkEventArgs e)
+        {
+            Data.startedDeploys = new List<StartedDeploy>();
+            startDeployWorker.ReportProgress(1);
+            Log.Info("--- Начало деплоев ---");
+            foreach (PreparedDeploy deploy in Data.preparedDeploy)
+            {
+                StartingDeployResult depRes = Deploy(deploy.StandEnvironment, deploy.Project).Result;
+                StartedDeploy startedDeploy = new StartedDeploy()
+                {
+                    DeployResult = depRes,
+                    Project = deploy.Project,
+                };
+                Data.startedDeploys.Add(startedDeploy);
+            }
+            
+        }
+
+        public void startDeploy_ProgressChanged(object sender, ProgressChangedEventArgs e)
+        {
+            if (!loading)
+            {
+                startLoading();
+            }
+        }
+
+        public void startDeploy_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            stopLoading();
+            Log.Info("--- *** ---");
         }
     }
 }

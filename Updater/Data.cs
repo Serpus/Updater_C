@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Updater.CustomElements;
 
 namespace Updater
 {
@@ -19,7 +20,8 @@ namespace Updater
         public static List<Stand> selectedStands { get; set; }
         public static bool IsCloseProgram { get; set; }
         public static bool IsRefreshEnd { get; set; }
-        public static List<Project> startedDeploys { get; set; }
+        public static List<PreparedDeploy> preparedDeploy { get; set; }
+        public static List<StartedDeploy> startedDeploys { get; set; }
 
         public static double localVersion = 2.0;
     }
