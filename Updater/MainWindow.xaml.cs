@@ -83,14 +83,17 @@ namespace Updater
             if (Data.IsPrepareBuildsDone)
             {
                 prepareBuildsButton.IsEnabled = false;
+                changeBrunchButton.IsEnabled = true;
                 openBuildsWindow.IsEnabled = true;
                 branchName.IsEnabled = false;
+                branchStackPanel.IsEnabled = false;
             }
 
             if (Data.IsBuildsStarted)
             {
                 buildsStatusGrid.IsEnabled = true;
                 openBuildsWindow.IsEnabled = false;
+                changeBrunchButton.IsEnabled = false;
             }
         }
 
@@ -165,6 +168,26 @@ namespace Updater
             }
         }
 
+        private void ChangeBranch(Object sender, RoutedEventArgs args)
+        {
+            Log.Info("Сбрасываем выбранную ветку");
+            openBuildsWindow.IsEnabled = false;
+            prepareBuildsButton.IsEnabled = true;
+            changeBrunchButton.IsEnabled = false;
+            branchName.IsEnabled = true;
+            branchStackPanel.IsEnabled = true;
+            Data.IsPrepareBuildsDone = false;
+            prepareBuildsWindow.CleanBranchesCheckBoxes();
+        }
+
+        private void SetBranchName(Object sender, RoutedEventArgs args)
+        {
+            if (sender is MenuItem)
+            {
+                MenuItem menuItem = (MenuItem)sender;
+                branchName.Text = menuItem.Header.ToString();
+            }
+        }
 
 
 

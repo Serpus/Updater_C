@@ -18,17 +18,28 @@
                     <Grid.RowDefinitions>
                         <RowDefinition Height="200*"/>
                     </Grid.RowDefinitions>
-                    <StackPanel Margin="10,50,10,10" MaxHeight="130" Height="130" Grid.Column="0" Grid.Row="0" VerticalAlignment="Top">
+                    <StackPanel Margin="10,50,10,10" MinHeight="150" Height="130" Grid.Column="0" Grid.Row="0" VerticalAlignment="Top">
                         <Label HorizontalAlignment="Center">Название ветки</Label>
-                        <TextBox Width="160" x:Name="branchName" Keyboard.KeyDown="branchName_KeyDown" Text="hotfix-12.1.1">
-                            <TextBox.ToolTip>
-                                <ToolTip Content="Введите название ветки"></ToolTip>
-                            </TextBox.ToolTip>
-                        </TextBox>
+                        <StackPanel Orientation="Horizontal" Name="branchStackPanel">
+                            <TextBox Width="160" x:Name="branchName" Keyboard.KeyDown="branchName_KeyDown" Text="hotfix-12.1.1">
+                                <TextBox.ToolTip>
+                                    <ToolTip Content="Введите название ветки"></ToolTip>
+                                </TextBox.ToolTip>
+                            </TextBox>
+                            <Menu Height="20" Width="20" HorizontalAlignment="Right">
+                                <MenuItem Header="V">
+                                    <MenuItem Header="hotfix-" Click="SetBranchName"/>
+                                    <MenuItem Header="release-" Click="SetBranchName"/>
+                                </MenuItem>
+                            </Menu>
+                        </StackPanel>
+                        
                         <Label/>
                         <Button Content="Подготовить указанную ветку" Height="23" IsEnabled="False" x:Name="prepareBuildsButton" IsDefault="True" Click="prepareBuildsButton_Click"/>
                         <Label/>
                         <Button Content="Открыть окно выбора билдов" Height="23" IsEnabled="False" x:Name="openBuildsWindow" Click="openBuildsWindow_Click"/>
+                        <Label/>
+                        <Button Content="Выбрать другую ветку" Height="23" IsEnabled="False" x:Name="changeBrunchButton" Click="ChangeBranch"/>
                     </StackPanel>
                     <Grid Grid.Column="1" IsEnabled="False" VerticalAlignment="Stretch" x:Name="buildsStatusGrid">
                         <Grid.RowDefinitions>

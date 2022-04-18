@@ -52,6 +52,7 @@ namespace Updater
         {
             Log.Info("Ветка: " + Data.branchName);
             Log.Info("---Обработка билд-планов---");
+
             foreach (Project project in Data.projects)
             {
                 string url = $"https://ci-sel.dks.lanit.ru/rest/api/latest/plan/{project.planKey.key}/branch";
@@ -229,6 +230,15 @@ namespace Updater
             Log.Info("---Старт билдов---");
             worker.RunWorkerAsync();
         }
+
+        public void CleanBranchesCheckBoxes()
+        {
+            fcsBuilds.Children.Clear();
+            lkpBuilds.Children.Clear();
+            epzBuilds.Children.Clear();
+            otherBuilds.Children.Clear();
+        }
+
 
 
 
