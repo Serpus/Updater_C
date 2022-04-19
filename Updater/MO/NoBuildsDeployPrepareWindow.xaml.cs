@@ -40,7 +40,6 @@ namespace Updater.MO
 
         public void SetBuilds()
         {
-
             foreach (Project project in Data.startedBuilds)
             {
                 if (project.buildStatus == null)
@@ -56,18 +55,32 @@ namespace Updater.MO
                 {
                     SuccessBuilds.Children.Add(checkBox);
                 }
-                else if (project.buildStatus.state.Equals("Failed"))
-                {
-                    checkBox.IsEnabled = false;
-                    ProcessBuilds.Children.Add(checkBox);
-                }
+                //else if (project.buildStatus.state.Equals("Failed"))
+                //{
+                //    checkBox.IsEnabled = false;
+                //    ProcessBuilds.Children.Add(checkBox);
+                //}
 
-                if (project.buildStatus.state.Equals("In Progress") | project.buildStatus.state.Equals("Unknown"))
-                {
-                    checkBox.IsEnabled = false;
-                    ProcessBuilds.Children.Add(checkBox);
-                }
+                //if (project.buildStatus.state.Equals("In Progress") | project.buildStatus.state.Equals("Unknown"))
+                //{
+                //    checkBox.IsEnabled = false;
+                //    ProcessBuilds.Children.Add(checkBox);
+                //}
             }
+
+            String standsList = "";
+            foreach (Stand stand in Data.selectedStands)
+            {
+                standsList += stand.Name + ", ";
+            }
+            standsList = standsList.Substring(0, standsList.Length - 2);
+            standNames.Content = standsList;
+        }
+
+        private void Cancel(object sender, RoutedEventArgs e)
+        {
+            Data.startedBuilds = null;
+            this.Close();
         }
 
 
@@ -78,6 +91,7 @@ namespace Updater.MO
         {
             Data.startedBuilds = new List<Project>();
             preapareBuildsWorker.ReportProgress(1);
+            Log.Info("Отбираем из бамбу проекты с веткой " + Data.branchName);
             foreach(Project project in Data.projects)
             {
                 message = "Отбираем из бамбу проекты с веткой " + Data.branchName;
@@ -96,6 +110,7 @@ namespace Updater.MO
                     {
                         project.branch = branch;
                         Data.startedBuilds.Add(project);
+                        break;
                     }
                 }
             }
@@ -129,7 +144,6 @@ namespace Updater.MO
 
         private void PreapareBuildsWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            Thread.Sleep(2000);
             SetBuilds();
             stopLoading();
             Log.Info("--- *** ---");
@@ -154,6 +168,38 @@ namespace Updater.MO
         {
             LoadingGrid.Visibility = Visibility.Hidden;
             loading = false;
+        }
+
+        private void CheckBox_Click(object sender, RoutedEventArgs e)
+        {
+            StackPanel somePanel = null;
+
+            if (sender is CheckBox checkBox)
+            {
+                if (checkBox.Name.Contains("Success"))
+                {
+                    somePanel = SuccessBuilds;
+                }
+                //if (checkBox.Name.Contains("Process"))
+                //{
+                //    somePanel = ProcessBuilds;
+                //}
+
+                if (checkBox.IsChecked == true)
+                {
+                    foreach (CheckBox box in somePanel.Children)
+                    {
+                        box.IsChecked = true;
+                    }
+                }
+                else
+                {
+                    foreach (CheckBox box in somePanel.Children)
+                    {
+                        box.IsChecked = false;
+                    }
+                }
+            }
         }
     }
 }

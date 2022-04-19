@@ -36,7 +36,7 @@ namespace Updater
             {
                 e.Cancel = false;
             }
-            Log.Info("Закрываем окно деплоев без сборки билдов");
+            Log.Info("Закрываем окно деплоев без предварительной сборки");
             this.Visibility = Visibility.Hidden;
             this.Owner.Show();
         }
