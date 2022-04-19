@@ -438,7 +438,7 @@ namespace Updater
 
         private void OpenNoBuildDeploysWindow(object sender, RoutedEventArgs e)
         {
-            NoBuildDeploysTabWindow noBuildDeploysTabWindow = new NoBuildDeploysTabWindow()
+            NoBuildDeploysWindow noBuildDeploysTabWindow = new NoBuildDeploysWindow()
             {
                 Owner = this
             };

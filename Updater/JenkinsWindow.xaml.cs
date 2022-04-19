@@ -338,9 +338,6 @@ namespace Updater
             }
         }
 
-        /**
-         * Устанавливаем название ветки
-         */
         private void SetBranchName(object sender, RoutedEventArgs e)
         {
             if (sender is MenuItem)

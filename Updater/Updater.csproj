@@ -182,8 +182,11 @@
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="NoBuildDeploysTabWindow.xaml.cs">
-      <DependentUpon>NoBuildDeploysTabWindow.xaml</DependentUpon>
+    <Compile Include="MO\NoBuildsDeployPrepareWindow.xaml.cs">
+      <DependentUpon>NoBuildsDeployPrepareWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="NoBuildDeploysWindow.xaml.cs">
+      <DependentUpon>NoBuildDeploysWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="PrepareBuildsWindow.xaml.cs">
       <DependentUpon>PrepareBuildsWindow.xaml</DependentUpon>
@@ -219,7 +222,11 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="NoBuildDeploysTabWindow.xaml">
+    <Page Include="MO\NoBuildsDeployPrepareWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="NoBuildDeploysWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
