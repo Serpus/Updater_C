@@ -18,21 +18,21 @@ namespace Updater.CustomElements
                     return 0;
                 } else
                 {
-                    return 1;
+                    return -1;
                 }
             }
             if (x.branch.name.Contains("LKP"))
             {
                 if (y.branch.name.Contains("PRIV"))
                 {
-                    return -1;
+                    return 1;
                 }
                 if (y.branch.name.Contains("LKP"))
                 {
                     return 0;
                 } else 
                 {
-                    return 1; 
+                    return -1; 
                 }
             }
             if (y.branch.name.Contains("PRIV"))
@@ -43,14 +43,14 @@ namespace Updater.CustomElements
                 }
                 else
                 {
-                    return -1;
+                    return 1;
                 }
             }
             if (y.branch.name.Contains("LKP"))
             {
                 if (x.branch.name.Contains("PRIV"))
                 {
-                    return 1;
+                    return -1;
                 }
                 if (x.branch.name.Contains("LKP"))
                 {
@@ -58,7 +58,7 @@ namespace Updater.CustomElements
                 }
                 else
                 {
-                    return -1;
+                    return 1;
                 }
             } else
             {
