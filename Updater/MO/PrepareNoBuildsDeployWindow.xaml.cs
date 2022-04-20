@@ -38,16 +38,23 @@ namespace Updater.MO
 
         public void SetBuilds()
         {
+            Data.startedBuilds.Sort(CompareProjects.CompareBranch);
             foreach (Project project in Data.startedBuilds)
             {
-                if (project.buildStatus == null)
-                {
-                    continue;
-                }
-
                 ProjectCheckBox checkBox = new ProjectCheckBox();
                 checkBox.Project = project;
                 checkBox.Content = project.branch.name;
+
+                if (project.buildStatus == null)
+                {
+                    TextBlock textBlock = new TextBlock()
+                    {
+                        Text = project.branch.name,
+                    };
+                    checkBox.IsEnabled = false;
+                    NoBuilds.Children.Add(textBlock);
+                    continue;
+                }
 
                 if (project.buildStatus.state.Equals("Successful"))
                 {

@@ -45,8 +45,8 @@
                         </Grid.RowDefinitions>
                         <CheckBox x:Name="SuccessBuildsCheckBox" Content="Успешные билды" FontWeight="Bold" Grid.Row="0" Grid.Column="1" Click="CheckBox_Click"/>
                         <StackPanel x:Name="SuccessBuilds" Grid.Row="1" Grid.Column="1" Margin="0,0,10,10"/>
-                        <!-- <CheckBox x:Name="ProcessBuildsCheckBox" Content="Упавшие и незаконченные билды" FontWeight="Bold" Grid.Row="2" Grid.Column="1" IsEnabled="False" Click="CheckBox_Click"/>
-                        <StackPanel x:Name="ProcessBuilds" Grid.Row="3" Grid.Column="1" Margin="0,0,0,10"/> -->
+                        <CheckBox x:Name="NoBuildsCheckBox" Content="Проекты, в которых отсутствуют сборки:" FontWeight="Bold" Grid.Row="2" Grid.Column="1" IsEnabled="False"/>
+                        <StackPanel x:Name="NoBuilds" Grid.Row="3" Grid.Column="1" Margin="0,0,0,10"/>
                     </Grid>
                 </ScrollViewer>
             </Border>

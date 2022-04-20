@@ -170,6 +170,7 @@
       <DependentUpon>ConfirmMo.xaml</DependentUpon>
     </Compile>
     <Compile Include="CustomElements\BuildStatusLabel.cs" />
+    <Compile Include="CustomElements\CompareProjects.cs" />
     <Compile Include="CustomElements\PreparedDeploy.cs" />
     <Compile Include="CustomElements\ProjectButton.cs" />
     <Compile Include="CustomElements\JobCheckBox.cs" />

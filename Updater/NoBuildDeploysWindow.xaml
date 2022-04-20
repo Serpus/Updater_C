@@ -64,7 +64,7 @@
         <StackPanel Grid.Row="2">
             <Label Content="Ветка в формате hotfix-x.x.x" HorizontalAlignment="Center"/>
             <StackPanel Orientation="Horizontal" Name="branchSelectPanel">
-                <TextBox Margin="10, 0, 5, 0" Name="BranchName" Text="" Width="155"/>
+                <TextBox Margin="10, 0, 5, 0" Name="BranchName" Text="hotfix-" Width="155"/>
                 <Menu Height="20" Width="20" HorizontalAlignment="Right">
                     <MenuItem Header="V">
                         <MenuItem Header="hotfix-" Click="SetBranchName"/>
