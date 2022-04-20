@@ -14,18 +14,16 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using System.Threading;
+using Updater.CustomElements;
 
 namespace Updater.MO
 {
-    /// <summary>
-    /// Логика взаимодействия для NoBuildsDeployPrepareWindow.xaml
-    /// </summary>
-    public partial class NoBuildsDeployPrepareWindow : Window
+    public partial class PrepareNoBuildsDeployWindow : Window
     {
         private static readonly NLog.Logger Log = NLog.LogManager.GetCurrentClassLogger();
         private BackgroundWorker preapareBuildsWorker = new BackgroundWorker();
         private bool loading = false;
-        public NoBuildsDeployPrepareWindow()
+        public PrepareNoBuildsDeployWindow()
         {
             InitializeComponent();
 
@@ -83,6 +81,37 @@ namespace Updater.MO
             this.Close();
         }
 
+        private void StartDeploys(object sender, RoutedEventArgs e)
+        {
+            Data.preparedDeploy = new List<PreparedDeploy>();
+
+            foreach (Stand stand in Data.selectedStands)
+            {
+                foreach (ProjectCheckBox projectCb in SuccessBuilds.Children)
+                {
+                    if (projectCb.IsChecked == false)
+                    {
+                        continue;
+                    }
+
+                    foreach (Stand standBuild in projectCb.Project.stands)
+                    {
+                        if (standBuild.Name.Contains(stand.Name))
+                        {
+                            PreparedDeploy deploy = new PreparedDeploy()
+                            {
+                                StandEnvironment = standBuild,
+                                Project = projectCb.Project
+                            };
+                            Data.preparedDeploy.Add(deploy);
+                        }
+                    }
+                }
+            }
+
+            Cancel(sender, e);
+        }
+
 
 
 
@@ -128,7 +157,7 @@ namespace Updater.MO
 
                 if (result == null)
                 {
-                    Log.Info("У билд-плана: " + project.name + " отсутствуют сборки");
+                    Log.Info("У билд-плана: " + project.name + " отсутствуют сборки - https://ci-sel.dks.lanit.ru/browse/" + project.branch.key);
                     continue;
                 }
 

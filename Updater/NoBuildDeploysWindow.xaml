@@ -75,7 +75,7 @@
             <Label/>
             <Button Content="Выбрать стенды и ветку" Height="30" MinWidth="150" Width="150" VerticalAlignment="Top" Name="selectStands" Click="selectStands_Click"/>
             <Label/>
-            <Button Height="40" Width="180" Name="openPreparedeployButton" IsEnabled="False" Click="openPrepareDeployButton_Click">
+            <Button Height="40" Width="190" Name="openPreparedeployButton" IsEnabled="False" Click="openPrepareDeployButton_Click">
                 <Button.Content>
                     <AccessText TextWrapping="Wrap" Text="Просмотр последних успешных билдов" TextAlignment="Center" Name="ShowSuccessBuilds"/>
                 </Button.Content>

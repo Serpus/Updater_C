@@ -154,7 +154,7 @@ namespace Updater
 
         private void openPrepareDeployButton_Click(object sender, RoutedEventArgs e)
         {
-            NoBuildsDeployPrepareWindow window = new NoBuildsDeployPrepareWindow()
+            PrepareNoBuildsDeployWindow window = new PrepareNoBuildsDeployWindow()
             {
                 Owner = this,
             };
