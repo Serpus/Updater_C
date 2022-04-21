@@ -10,7 +10,6 @@ namespace Updater.CustomElements
     {
         public static int CompareBranch(Project x, Project y)
         {
-            Console.WriteLine("x - " + x.branch.name + ", y - " + y.branch.name);
             if (x.branch.name.Contains("PRIV"))
             {
                 if (y.branch.name.Contains("PRIV"))
