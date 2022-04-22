@@ -177,11 +177,15 @@
     <Compile Include="CustomElements\ResultMenuItem.cs" />
     <Compile Include="CustomElements\StartedDeploy.cs" />
     <Compile Include="DataJenkins.cs" />
+    <Compile Include="DataOp.cs" />
     <Compile Include="JenkinsWindow.xaml.cs">
       <DependentUpon>JenkinsWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="MO\PrepareOpWindow.cs">
+      <DependentUpon>PrepareOpWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="MO\PrepareNoBuildsDeployWindow.xaml.cs">
       <DependentUpon>PrepareNoBuildsDeployWindow.xaml</DependentUpon>
@@ -198,6 +202,7 @@
     <Compile Include="PrepareDeployWindow.xaml.cs">
       <DependentUpon>PrepareDeployWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ProjectParser\BuildParser\BuildResultsInBranch.cs" />
     <Compile Include="ProjectParser\Jenkins\Build.cs" />
     <Compile Include="ProjectParser\Jenkins\BuildResult.cs" />
     <Compile Include="ProjectParser\Jenkins\BuildResult\ActionBuild.cs" />
@@ -225,6 +230,10 @@
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="MO\PrepareOpWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="MO\PrepareNoBuildsDeployWindow.xaml">
       <SubType>Designer</SubType>

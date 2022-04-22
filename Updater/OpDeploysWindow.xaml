@@ -62,8 +62,8 @@
                 </StackPanel>
             </Grid>
             <Label HorizontalAlignment="Center">Название ветки</Label>
-            <StackPanel Orientation="Horizontal" Name="branchStackPanel" HorizontalAlignment="Center">
-                <TextBox Width="160" x:Name="branchName" Text="hotfix-12.1.1">
+            <StackPanel Orientation="Horizontal" Name="BranchStackPanel" HorizontalAlignment="Center">
+                <TextBox Width="160" x:Name="BranchName" Text="hotfix-12.1.1">
                     <TextBox.ToolTip>
                         <ToolTip Content="Введите название ветки"></ToolTip>
                     </TextBox.ToolTip>
@@ -76,11 +76,16 @@
                 </Menu>
             </StackPanel>
             <Label/>
-            <Button Content="Деплой ЕПЗ" MinHeight="25" MaxWidth="190"/>
+            <Button Content="Выбрать стенды и ветку" Height="30" MinWidth="150" Width="150" VerticalAlignment="Top" Name="selectStands" Click="SelectStands_Click"/>
             <Label/>
-            <Button Content="Деплой ЕПЗ БД" MinHeight="25" MaxWidth="190"/>
+            <Button Content="Деплой ЕПЗ БД" Name="EpzDbButton" MinHeight="25" MaxWidth="190" Click="PrepareEpzBd" IsEnabled="False"/>
             <Label/>
-            <Button Content="Деплой ЛКО" MinHeight="25" MaxWidth="190"/>
+            <Button Content="Деплой ЕПЗ" Name="EpzButton" MinHeight="25" MaxWidth="190" IsEnabled="False"/>
+            <Label/>
+            <Button Content="Деплой ЛКО" Name="LkoButton" MinHeight="25" MaxWidth="190" IsEnabled="False"/>
+            <Label/>
+            <Button x:Name="ResetStands" Content="Отменить выбор стендов и ветки" HorizontalAlignment="Center" Grid.Row="2" 
+                    MinWidth="195" Width="190" Height="28" IsEnabled="False" Click="ResetStands_Click"/>
         </StackPanel>
         <Grid Grid.Column="1" Grid.RowSpan="3" IsEnabled="False" VerticalAlignment="Stretch">
             <Grid.RowDefinitions>
