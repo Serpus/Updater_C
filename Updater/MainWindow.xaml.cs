@@ -16,6 +16,7 @@ using System.Windows.Shapes;
 using System.Windows.Threading;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using Updater.CustomElements;
 
 namespace Updater
 {
@@ -144,7 +145,19 @@ namespace Updater
             {
                 Log.Info($"{project.branch.name} - #{project.startingBuildResult.buildNumber} - {project.buildStatus.state}\n" +
                     "https://ci-sel.dks.lanit.ru/browse/" + project.startingBuildResult.buildResultkey);
-                Label label = new Label();
+
+                ContextMenu cm = new ContextMenu();
+                ResultMenuItem menuItem = new ResultMenuItem()
+                {
+                    Header = "Открыть в браузере",
+                    ResultUrl = "https://ci-sel.dks.lanit.ru/browse/" + project.startingBuildResult.buildResultkey,
+                };
+                menuItem.Click += OpenCurrentBuild;
+                cm.Items.Add(menuItem);
+                Label label = new Label()
+                {
+                    ContextMenu = cm,
+                };
 
                 if (project.buildStatus.state.Equals("Successful"))
                 {
@@ -186,6 +199,14 @@ namespace Updater
             {
                 MenuItem menuItem = (MenuItem)sender;
                 branchName.Text = menuItem.Header.ToString();
+            }
+        }
+
+        private void OpenCurrentBuild(object sender, RoutedEventArgs e)
+        {
+            if (sender is ResultMenuItem Result)
+            {
+                System.Diagnostics.Process.Start(Result.ResultUrl);
             }
         }
 

@@ -76,6 +76,14 @@ namespace Updater
                     ProcessBuilds.Children.Add(checkBox);
                 }
             }
+
+            String standsList = "";
+            foreach (Stand stand in Data.selectedStands)
+            {
+                standsList += stand.Name + ", ";
+            }
+            standsList = standsList.Substring(0, standsList.Length - 2);
+            standNames.Content = standsList;
         }
 
         private void cancelClosing(object sender, System.ComponentModel.CancelEventArgs e)

@@ -16,7 +16,7 @@
         <StackPanel Grid.Row="0" HorizontalAlignment="Center">
             <Label Content="Предупреждение" HorizontalAlignment="Center" FontWeight="Bold" FontSize="15" Padding="0 0 0 5"/>
             <Label Content="После подтверждения начнётся деплой билдов на стенды:" HorizontalAlignment="Center" VerticalAlignment="Stretch" Padding="0 0 0 0"/>
-            <Label Content="stand-stand-stand" x:Name="standName" HorizontalAlignment="Center" Foreground="Green" Padding="0 0 0 0"/>
+            <Label Content="" x:Name="standNames" HorizontalAlignment="Center" Foreground="Green" Padding="0 0 0 0"/>
         </StackPanel>
         <Grid Grid.Row="1">
             <Grid.ColumnDefinitions>
