@@ -26,10 +26,11 @@ namespace Updater.MO
         private static readonly NLog.Logger Log = NLog.LogManager.GetCurrentClassLogger();
 
         private bool loading = false;
+        private BuildResultsInBranch BuildStatus;
 
         private BackgroundWorker preapareBuildsWorker = new BackgroundWorker();
         private BackgroundWorker startDeployWorker = new BackgroundWorker();
-        public String SelectedProject;
+        internal Project SelectedProject;
         public PrepareOpWindow()
         {
             InitializeComponent();
@@ -81,6 +82,46 @@ namespace Updater.MO
         {
             DataOp.startedBuilds = null;
             this.Close();
+        }
+
+        public void SetBuilds()
+        {
+            if (SelectedProject.branch == null)
+            {
+                MessageBox.Show("У билд-плана: " + SelectedProject.name + " отсутствует ветка " + DataOp.branchName, "Ошибка",
+                    MessageBoxButton.OK, MessageBoxImage.Error);
+                DataOp.startedBuilds = null;
+                this.Close();
+                return;
+            }
+            if (BuildStatus == null)
+            {
+                MessageBox.Show("У билд-плана: " + SelectedProject.name + " отсутствуют сборки - https://ci-sel.dks.lanit.ru/browse/" + SelectedProject.branch.key, "Ошибка",
+                                    MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            foreach (BuildStatus buildStatus in BuildStatus.Results.Result)
+            {
+                ProjectCheckBox checkBox = new ProjectCheckBox
+                {
+                    Project = SelectedProject,
+                    Content = SelectedProject.name + " #" + buildStatus.buildNumber + " - " + buildStatus.state
+                };
+
+                if (buildStatus.state.Equals("Successful"))
+                {
+                    SuccessBuilds.Children.Add(checkBox);
+                }
+            }
+
+            String standsList = "";
+            foreach (Stand stand in DataOp.selectedStands)
+            {
+                standsList += stand.Name + ", ";
+            }
+            standsList = standsList.Substring(0, standsList.Length - 2);
+            standNames.Content = standsList;
         }
 
         private void StartDeploys(object sender, RoutedEventArgs e)
@@ -164,12 +205,11 @@ namespace Updater.MO
         private void PreapareBuildsWorker_DoWork(object sender, DoWorkEventArgs e)
         {
             DataOp.startedBuilds = new List<Project>();
-            Project project = new Project();
             preapareBuildsWorker.ReportProgress(1);
             Log.Info("ЕПЗ: Отбираем из бамбу проекты с веткой " + DataOp.branchName);
             message = "Отбираем из бамбу проекты с веткой " + DataOp.branchName;
 
-            string url = $"https://ci-sel.dks.lanit.ru/rest/api/latest/plan/{SelectedProject}/branch";
+            string url = $"https://ci-sel.dks.lanit.ru/rest/api/latest/plan/{SelectedProject.planKey.key}/branch";
             string result = Requests.getRequest(url);
 
             BranchList branchList = JsonConvert.DeserializeObject<BranchList>(result);
@@ -177,22 +217,25 @@ namespace Updater.MO
             {
                 if (branch.shortName.Equals(DataOp.branchName))
                 {
-                    project.branch = branch;
+                    SelectedProject.branch = branch;
                     break;
                 }
             }
 
-            url = $"https://ci-sel.dks.lanit.ru/rest/api/latest/result/{project.branch.key}";
+            if (SelectedProject.branch == null)
+            {
+                return;
+            }
+
+            url = $"https://ci-sel.dks.lanit.ru/rest/api/latest/result/{SelectedProject.branch.key}";
             result = Requests.getRequest(url);
 
             if (result == null)
             {
-                MessageBox.Show("ЕПЗ: У билд-плана: " + project.name + " отсутствуют сборки - https://ci-sel.dks.lanit.ru/browse/" + project.branch.key, "Ошибка", 
-                    MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
 
-            BuildResultsInBranch buildStatus = JsonConvert.DeserializeObject<BuildResultsInBranch>(result);
+            BuildStatus = JsonConvert.DeserializeObject<BuildResultsInBranch>(result);
         }
         private void PreapareBuildsWorker_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {

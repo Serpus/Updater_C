@@ -10,5 +10,6 @@ namespace Updater
     {
         public string buildResultKey { get; set; }
         public string state { get; set; }
+        public string buildNumber { get; set; }
     }
 }

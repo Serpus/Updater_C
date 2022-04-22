@@ -41,10 +41,54 @@ namespace Updater
 
         private void PrepareEpzBd(object sender, RoutedEventArgs e)
         {
+            Project selectedProject = new Project();
+            foreach (Project project in Data.projects)
+            {
+                if (project.planKey.key.Equals("EPZ-EPZDATABASE"))
+                {
+                    selectedProject = project;
+                }
+            }
             PrepareOpWindow prepareEpzBdWindow = new PrepareOpWindow()
             {
                 Owner = this,
-                SelectedProject = "EPZ-EPZWF",
+                SelectedProject = selectedProject,
+            };
+            prepareEpzBdWindow.ShowDialog();
+        }
+
+        private void PrepareEpz(object sender, RoutedEventArgs e)
+        {
+            Project selectedProject = new Project();
+            foreach (Project project in Data.projects)
+            {
+                if (project.planKey.key.Equals("EPZ-EPZWF"))
+                {
+                    selectedProject = project;
+                }
+            }
+            PrepareOpWindow prepareEpzBdWindow = new PrepareOpWindow()
+            {
+                Owner = this,
+                SelectedProject = selectedProject,
+            };
+            prepareEpzBdWindow.ShowDialog();
+        }
+
+        private void PrepareLko(object sender, RoutedEventArgs e)
+        {
+            Project selectedProject = new Project();
+            foreach (Project project in Data.projects)
+            {
+                if (project.planKey.key.Equals("EPZ-LKO"))
+                {
+                    selectedProject = project;
+                }
+            }
+            PrepareOpWindow prepareEpzBdWindow = new PrepareOpWindow()
+            {
+                Owner = this,
+                SelectedProject = selectedProject,
             };
             prepareEpzBdWindow.ShowDialog();
         }
