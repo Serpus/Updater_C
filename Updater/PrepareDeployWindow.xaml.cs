@@ -56,6 +56,12 @@ namespace Updater
             
             foreach (Project project in Data.startedBuilds)
             {
+
+                if (project.branch.name.Contains("EPZ"))
+                {
+                    continue;
+                }
+
                 ProjectCheckBox checkBox = new ProjectCheckBox();
                 checkBox.Project = project;
                 checkBox.Content = project.branch.name;
