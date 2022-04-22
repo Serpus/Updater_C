@@ -50,7 +50,7 @@ namespace Updater.MO
             Data.startedBuilds.Sort(CompareProjects.CompareBranch);
             foreach (Project project in Data.startedBuilds)
             {
-                if (project.branch.name.Contains("EPZ"))
+                if (project.branch.name.Contains("EPZ-"))
                 {
                     continue;
                 }
