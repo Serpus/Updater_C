@@ -157,6 +157,10 @@ namespace Updater
                 Label label = new Label()
                 {
                     ContextMenu = cm,
+                    VerticalAlignment = VerticalAlignment.Stretch,
+                    HorizontalAlignment = HorizontalAlignment.Stretch,
+                    Content = $"{project.branch.name} - #{project.startingBuildResult.buildNumber} - {project.buildStatus.state}\n" +
+                    "https://ci-sel.dks.lanit.ru/browse/" + project.startingBuildResult.buildResultkey
                 };
 
                 if (project.buildStatus.state.Equals("Successful"))
@@ -173,10 +177,6 @@ namespace Updater
                     project.buildStatus.state = "In Progress"; 
                 }
 
-                label.Content = $"{project.branch.name} - #{project.startingBuildResult.buildNumber} - {project.buildStatus.state}\n" +
-                    "https://ci-sel.dks.lanit.ru/browse/" + project.startingBuildResult.buildResultkey;
-                label.VerticalAlignment = VerticalAlignment.Stretch;
-                label.HorizontalAlignment = HorizontalAlignment.Stretch;
                 buildsStatusList.Items.Add(label);
             }
         }
