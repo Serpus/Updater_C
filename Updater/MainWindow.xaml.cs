@@ -34,6 +34,7 @@ namespace Updater
         private PrepareBuildsWindow prepareBuildsWindow = new PrepareBuildsWindow();
         private PrepareDeployWindow PrepareDeployWindow = new PrepareDeployWindow();
         private JenkinsWindow jenkinsWindow = new JenkinsWindow();
+        private OpDeploysWindow opDeploysWindow = new OpDeploysWindow();
         private bool loading;
 
         public MainWindow()
@@ -469,6 +470,11 @@ namespace Updater
         private void OpenJenkinsWindow(object sender, RoutedEventArgs e)
         {
             jenkinsWindow.Show();
+        }
+
+        private void OpenOpDeploys(object sender, RoutedEventArgs e)
+        {
+            opDeploysWindow.Show();
         }
     }
 }

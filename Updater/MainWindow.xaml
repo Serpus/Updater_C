@@ -125,6 +125,8 @@
                         <Button Content="Деплой без сборки" HorizontalAlignment="Center" Grid.Row="2" Width="150" Height="28" Click="OpenNoBuildDeploysWindow"/>
                         <Label/>
                         <Button Content="Деплой Jenkins" HorizontalAlignment="Center" Grid.Row="2" Width="150" Height="28" Click="OpenJenkinsWindow"/>
+                        <Label/>
+                        <Button Content="Деплой ОЧ" HorizontalAlignment="Center" Grid.Row="2" Width="150" Height="28" Click="OpenOpDeploys"/>
                     </StackPanel>
                     <Grid Grid.Column="1" Grid.RowSpan="3" IsEnabled="False" VerticalAlignment="Stretch">
                         <Grid.RowDefinitions>
@@ -161,9 +163,6 @@
                         </TabControl>
                     </Grid>
                 </Grid>
-            </TabItem>
-            <TabItem Header="Деплой ОЧ">
-                <Grid Background="#FFE5E5E5"/>
             </TabItem>
         </TabControl>
         <Grid Grid.Column="0" Grid.ColumnSpan="2" x:Name="LoadingGrid" Visibility="Hidden">
