@@ -202,8 +202,6 @@ namespace Updater.MO
         private async Task<StartingDeployResult> Deploy(Stand standBuild, Project p)
         {
             Log.Info("ЕПЗ: Билд: " + p.branch.name + ", Стенд: " + standBuild.Name);
-            if (true)
-                return null;
             /* request bodyJson example
              * String json = "{'planResultKey':'EIS-EISRDIKWF40-14'," +
                                 "'name':'release-11.0.0-14'," +

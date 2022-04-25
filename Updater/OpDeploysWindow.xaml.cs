@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using Updater.MO;
+using Updater.CustomElements;
 
 namespace Updater
 {
@@ -180,6 +181,30 @@ namespace Updater
             LkoButton.IsEnabled = false;
         }
 
+        private void RefreshDeploysStatus(object sender, RoutedEventArgs e)
+        {
+            foreach (StartedDeploy deploy in DataOp.startedDeploys)
+            {
+                ContextMenu cm = new ContextMenu();
+                ResultMenuItem menuItem = new ResultMenuItem()
+                {
+                    Header = "Открыть в браузере",
+                    ResultUrl = $"https://ci-sel.dks.lanit.ru/deploy/viewDeploymentResult.action?deploymentResultId={deploy.DeployResult.deploymentResultId}",
+                };
+                menuItem.Click += OpenCurrentBuild;
+                cm.Items.Add(menuItem);
+                DeployStatusLabel label = new DeployStatusLabel(deploy)
+                {
+                    ContextMenu = cm,
+                };
+                DeployStatusPanel.Children.Add(label);
+            }
+        }
+
+
+
+
+
         private void SetBranchName(Object sender, RoutedEventArgs e)
         {
             if (sender is MenuItem menuItem)
@@ -217,6 +242,13 @@ namespace Updater
             Stand3Panel.Visibility = Visibility.Hidden;
             Stand3.Visibility = Visibility.Hidden;
             Stand3.SelectedIndex = -1;
+        }
+        private void OpenCurrentBuild(object sender, RoutedEventArgs e)
+        {
+            if (sender is ResultMenuItem Result)
+            {
+                System.Diagnostics.Process.Start(Result.ResultUrl);
+            }
         }
     }
 }

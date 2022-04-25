@@ -95,7 +95,7 @@
             </Grid.RowDefinitions>
             <StackPanel Grid.Row="0" VerticalAlignment="Top" Orientation="Horizontal" Height="32">
                 <Label VerticalAlignment="Center">Статусы запущенных деплоев</Label>
-                <Button Content=" Обновить " Margin="10,3,0,3" Name="refreshDeploysButton"/>
+                <Button Content=" Обновить " Margin="10,3,0,3" Name="refreshDeploysButton" Click="RefreshDeploysStatus"/>
                 <Button Content=" Открыть все деплои в списке " Margin="15,3,0,3"/>
             </StackPanel>
             <TabControl Grid.Row="1" TabStripPlacement="Bottom" Background="#FFE5E5E5">
