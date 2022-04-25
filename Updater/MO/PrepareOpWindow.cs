@@ -103,10 +103,20 @@ namespace Updater.MO
 
             foreach (BuildStatus buildStatus in BuildStatus.Results.Result)
             {
+                ContextMenu cm = new ContextMenu();
+                ResultMenuItem menuItem = new ResultMenuItem()
+                {
+                    Header = "Открыть в браузере",
+                    ResultUrl = $"https://ci-sel.dks.lanit.ru/browse/{buildStatus.buildResultKey}",
+                };
+                menuItem.Click += OpenCurrentBuild;
+                cm.Items.Add(menuItem);
+
                 ProjectCheckBox checkBox = new ProjectCheckBox
                 {
                     Project = SelectedProject,
-                    Content = SelectedProject.name + " #" + buildStatus.buildNumber + " - " + buildStatus.state
+                    Content = SelectedProject.name + " #" + buildStatus.buildNumber + " - " + buildStatus.state,
+                    ContextMenu = cm
                 };
 
                 if (buildStatus.state.Equals("Successful"))
@@ -297,6 +307,14 @@ namespace Updater.MO
         {
             LoadingGrid.Visibility = Visibility.Hidden;
             loading = false;
+        }
+        private void OpenCurrentBuild(object sender, RoutedEventArgs e)
+        {
+            if (sender is ResultMenuItem)
+            {
+                ResultMenuItem Result = (ResultMenuItem)sender;
+                System.Diagnostics.Process.Start(Result.ResultUrl);
+            }
         }
     }
 }
