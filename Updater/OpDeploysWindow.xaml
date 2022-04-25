@@ -87,7 +87,7 @@
             <Button x:Name="ResetStands" Content="Отменить выбор стендов и ветки" HorizontalAlignment="Center" Grid.Row="2" 
                     MinWidth="195" Width="190" Height="28" IsEnabled="False" Click="ResetStands_Click"/>
         </StackPanel>
-        <Grid Grid.Column="1" Grid.RowSpan="3" IsEnabled="False" VerticalAlignment="Stretch">
+        <Grid Grid.Column="1" Grid.RowSpan="3" IsEnabled="False" VerticalAlignment="Stretch" x:Name="DeployStatusPanel">
             <Grid.RowDefinitions>
                 <RowDefinition Height="35"/>
                 <RowDefinition Height="*"/>

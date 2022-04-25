@@ -81,6 +81,14 @@ namespace Updater.MO
         private void Cancel(object sender, RoutedEventArgs e)
         {
             DataOp.startedBuilds = null;
+            this.DialogResult = false;
+            this.Close();
+        }
+
+        private void Close(object sender, RoutedEventArgs e)
+        {
+            DataOp.startedBuilds = null;
+            this.DialogResult = true;
             this.Close();
         }
 
@@ -188,12 +196,14 @@ namespace Updater.MO
                 }
             }
             startDeployWorker.RunWorkerAsync();
-            Cancel(sender, e);
+            Close(sender, e);
         }
 
         private async Task<StartingDeployResult> Deploy(Stand standBuild, Project p)
         {
             Log.Info("ЕПЗ: Билд: " + p.branch.name + ", Стенд: " + standBuild.Name);
+            if (true)
+                return null;
             /* request bodyJson example
              * String json = "{'planResultKey':'EIS-EISRDIKWF40-14'," +
                                 "'name':'release-11.0.0-14'," +

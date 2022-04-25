@@ -49,12 +49,15 @@ namespace Updater
                     selectedProject = project;
                 }
             }
-            PrepareOpWindow prepareEpzBdWindow = new PrepareOpWindow()
+            PrepareOpWindow prepareWindow = new PrepareOpWindow()
             {
                 Owner = this,
                 SelectedProject = selectedProject,
             };
-            prepareEpzBdWindow.ShowDialog();
+            if (prepareWindow.ShowDialog().Value)
+            {
+                DeployStatusPanel.IsEnabled = true;
+            }
         }
 
         private void PrepareEpz(object sender, RoutedEventArgs e)
@@ -67,12 +70,15 @@ namespace Updater
                     selectedProject = project;
                 }
             }
-            PrepareOpWindow prepareEpzBdWindow = new PrepareOpWindow()
+            PrepareOpWindow prepareWindow = new PrepareOpWindow()
             {
                 Owner = this,
                 SelectedProject = selectedProject,
             };
-            prepareEpzBdWindow.ShowDialog();
+            if (prepareWindow.ShowDialog().Value)
+            {
+                DeployStatusPanel.IsEnabled = true;
+            }
         }
 
         private void PrepareLko(object sender, RoutedEventArgs e)
@@ -85,12 +91,15 @@ namespace Updater
                     selectedProject = project;
                 }
             }
-            PrepareOpWindow prepareEpzBdWindow = new PrepareOpWindow()
+            PrepareOpWindow prepareWindow = new PrepareOpWindow()
             {
                 Owner = this,
                 SelectedProject = selectedProject,
             };
-            prepareEpzBdWindow.ShowDialog();
+            if (prepareWindow.ShowDialog().Value)
+            {
+                DeployStatusPanel.IsEnabled = true;
+            }
         }
 
         private void SelectStands_Click(object sender, RoutedEventArgs e)
@@ -163,6 +172,7 @@ namespace Updater
             selectStands.IsEnabled = true;
             selectStandsGrid.IsEnabled = true;
             BranchStackPanel.IsEnabled = true;
+            DeployStatusPanel.IsEnabled = false;
             DataOp.selectedStands = null;
 
             EpzDbButton.IsEnabled = false;
