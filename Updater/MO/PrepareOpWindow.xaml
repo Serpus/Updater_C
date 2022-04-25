@@ -43,8 +43,8 @@
                             <RowDefinition Height="15" MaxHeight="15"/>
                             <RowDefinition/>
                         </Grid.RowDefinitions>
-                        <CheckBox x:Name="SuccessBuildsCheckBox" Content="Последние успешные билды" FontWeight="Bold" Grid.Row="0" Grid.Column="1" Click="CheckBox_Click"/>
-                        <StackPanel x:Name="SuccessBuilds" Grid.Row="1" Grid.Column="1" Margin="0,0,10,10"/>
+                        <TextBlock x:Name="SuccessBuildsCheckBox" Text="Последние успешные билды:" FontWeight="Bold" Grid.Row="0" Grid.Column="1" IsEnabled="False" Margin="5,0,0,0"/>
+                        <StackPanel x:Name="SuccessBuilds" Grid.Row="1" Grid.Column="1" Margin="5,5,10,10"/>
                     </Grid>
                 </ScrollViewer>
             </Border>

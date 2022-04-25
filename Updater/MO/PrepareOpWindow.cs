@@ -118,6 +118,7 @@ namespace Updater.MO
                     Content = SelectedProject.name + " #" + buildStatus.buildNumber + " - " + buildStatus.state,
                     ContextMenu = cm
                 };
+                checkBox.Click += CheckBox_Click1;
 
                 if (buildStatus.state.Equals("Successful"))
                 {
@@ -132,6 +133,31 @@ namespace Updater.MO
             }
             standsList = standsList.Substring(0, standsList.Length - 2);
             standNames.Content = standsList;
+        }
+
+        private void CheckBox_Click1(object sender, RoutedEventArgs e)
+        {
+            if (sender is ProjectCheckBox checkBox)
+            {
+                if (checkBox.IsChecked.Value)
+                {
+                    foreach (ProjectCheckBox pcb in SuccessBuilds.Children)
+                    {
+                        if (!pcb.IsChecked.Value)
+                        {
+                            pcb.IsEnabled = false;
+                        }
+                    }
+                } else
+                {
+                    checkBox.IsChecked = false;
+                    foreach (ProjectCheckBox pcb in SuccessBuilds.Children)
+                    {
+                        pcb.IsEnabled = true;
+                    }
+                }
+                
+            }
         }
 
         private void StartDeploys(object sender, RoutedEventArgs e)
