@@ -72,6 +72,7 @@ namespace Updater
                 e.Cancel = false;
             }
             this.Visibility = Visibility.Hidden;
+            Log.Info("Закрываем окно Дженкинса");
         }
 
         /**

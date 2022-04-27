@@ -469,11 +469,13 @@ namespace Updater
 
         private void OpenJenkinsWindow(object sender, RoutedEventArgs e)
         {
+            Log.Info("Открываем окно Дженкинса");
             jenkinsWindow.Show();
         }
 
         private void OpenOpDeploys(object sender, RoutedEventArgs e)
         {
+            Log.Info("Открываем окно деплоев открытой части");
             opDeploysWindow.Show();
         }
     }

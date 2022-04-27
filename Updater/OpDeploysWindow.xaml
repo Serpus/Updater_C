@@ -4,8 +4,9 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Updater"
+        xmlns:gif="http://wpfanimatedgif.codeplex.com"
         mc:Ignorable="d"
-        Title="OpDeploysWindow" MinHeight="470" Height="470" Width="665" MinWidth="653" ResizeMode="CanResize" WindowStartupLocation="CenterScreen" 
+        Title="Деплой открытой части" MinHeight="470" Height="470" Width="665" MinWidth="670" ResizeMode="CanResize" WindowStartupLocation="CenterScreen" 
         Background="#FFE5E5E5">
     <Grid Background="#FFE5E5E5" Margin="5">
         <Grid.ColumnDefinitions>
@@ -98,7 +99,7 @@
                 <Button Content=" Обновить " Margin="10,3,0,3" Name="refreshDeploysButton" Click="RefreshDeploysStatus"/>
                 <Button Content=" Открыть все деплои в списке " Margin="15,3,0,3"/>
             </StackPanel>
-            <TabControl Grid.Row="1" TabStripPlacement="Bottom" Background="#FFE5E5E5">
+            <TabControl Grid.Row="1" TabStripPlacement="Bottom" Background="#FFE5E5E5" Name="DeploysTabControl">
                 <TabItem Header="ЕИС-3">
                     <ListView d:ItemsSource="{d:SampleData ItemCount=10}" Name="deploysEIS3">
                     </ListView>
@@ -120,6 +121,14 @@
                     </ListView>
                 </TabItem>
             </TabControl>
+        </Grid>
+        <Grid Grid.Column="0" Grid.RowSpan="3" Grid.ColumnSpan="2" x:Name="LoadingGrid" Visibility="Hidden">
+            <StackPanel VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Background="#FFE5E5E5" Opacity="0.7" Visibility="Visible" x:Name="LoadingPanel">
+            </StackPanel>
+            <Grid x:Name="LoadingSpinner" Visibility="Visible">
+                <Label Content="Загрузка. Ожидайте" Margin="0,90,0,0" HorizontalAlignment="Center" FontWeight="Bold" FontSize="15" Name="Message"/>
+                <Image Width="150" Height="150" gif:ImageBehavior.AnimatedSource="/spinner-icon-0.gif" Stretch="Fill" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+            </Grid>
         </Grid>
     </Grid>
 </Window>

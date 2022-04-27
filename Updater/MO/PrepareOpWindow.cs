@@ -304,6 +304,7 @@ namespace Updater.MO
                 {
                     DeployResult = depRes,
                     Project = deploy.Project,
+                    Stand = deploy.StandEnvironment
                 };
                 DataOp.startedDeploys.Add(startedDeploy);
             }

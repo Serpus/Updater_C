@@ -10,5 +10,7 @@ namespace Updater.CustomElements
     {
         public StartingDeployResult DeployResult { get; set; }
         public Project Project { get; set; }
+        public Stand Stand { get; set; }
+        public string CurrentStatus { get; set; }
     }
 }

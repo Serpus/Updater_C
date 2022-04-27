@@ -204,6 +204,7 @@
       <DependentUpon>PrepareDeployWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="ProjectParser\BuildParser\BuildResultsInBranch.cs" />
+    <Compile Include="ProjectParser\DeployParser\DeployCurrentStatus.cs" />
     <Compile Include="ProjectParser\Jenkins\Build.cs" />
     <Compile Include="ProjectParser\Jenkins\BuildResult.cs" />
     <Compile Include="ProjectParser\Jenkins\BuildResult\ActionBuild.cs" />

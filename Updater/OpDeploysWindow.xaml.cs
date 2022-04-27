@@ -13,6 +13,9 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using Updater.MO;
 using Updater.CustomElements;
+using Updater.ProjectParser.DeployParser;
+using System.ComponentModel;
+using Newtonsoft.Json;
 
 namespace Updater
 {
@@ -22,12 +25,20 @@ namespace Updater
     public partial class OpDeploysWindow : Window
     {
         private static readonly NLog.Logger Log = NLog.LogManager.GetCurrentClassLogger();
+        private BackgroundWorker refreshDeployStatusWorker = new BackgroundWorker();
+        private bool loading = false;
 
         public OpDeploysWindow()
         {
             InitializeComponent();
 
             this.Closing += OpDeploysWindow_Closing;
+
+            refreshDeployStatusWorker.WorkerSupportsCancellation = true;
+            refreshDeployStatusWorker.WorkerReportsProgress = true;
+            refreshDeployStatusWorker.DoWork += RefreshDeployStatusWorker_DoWork;
+            refreshDeployStatusWorker.ProgressChanged += RefreshDeployStatusWorker_ProgressChanged;
+            refreshDeployStatusWorker.RunWorkerCompleted += RefreshDeployStatusWorker_RunWorkerCompleted;
         }
 
         private void OpDeploysWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
@@ -38,6 +49,7 @@ namespace Updater
                 e.Cancel = false;
             }
             this.Visibility = Visibility.Hidden;
+            Log.Info("Закрываем окно деплоев открытой части");
         }
 
         private void PrepareEpzBd(object sender, RoutedEventArgs e)
@@ -183,6 +195,13 @@ namespace Updater
 
         private void RefreshDeploysStatus(object sender, RoutedEventArgs e)
         {
+            Log.Info("--- Обновляем статусы деплоев ---");
+            ClearDeployStatusList();
+            refreshDeployStatusWorker.RunWorkerAsync();
+        }
+
+        private void SetDeployResultInPanel()
+        {
             foreach (StartedDeploy deploy in DataOp.startedDeploys)
             {
                 ContextMenu cm = new ContextMenu();
@@ -196,8 +215,38 @@ namespace Updater
                 DeployStatusLabel label = new DeployStatusLabel(deploy)
                 {
                     ContextMenu = cm,
+                    Content = deploy.Project.branch.key + " - " + deploy.CurrentStatus,
+                    Width = deploysEIS3.ActualWidth - 50,
                 };
-                DeployStatusPanel.Children.Add(label);
+
+                if (deploy.CurrentStatus.Contains("SUCCESS"))
+                {
+                    label.Background = (SolidColorBrush)new BrushConverter().ConvertFrom("#12BF0F");
+                } else if (deploy.CurrentStatus.Contains("FAILURE"))
+                {
+                    label.Background = (SolidColorBrush)new BrushConverter().ConvertFrom("#DF0E0E");
+                }
+
+                if (deploy.Stand.Name.Contains("ЕИС-3"))
+                {
+                    deploysEIS3.Items.Add(label);
+                }
+                if (deploy.Stand.Name.Contains("ЕИС-4"))
+                {
+                    deploysEIS4.Items.Add(label);
+                }
+                if (deploy.Stand.Name.Contains("ЕИС-5"))
+                {
+                    deploysEIS5.Items.Add(label);
+                }
+                if (deploy.Stand.Name.Contains("ЕИС-6"))
+                {
+                    deploysEIS6.Items.Add(label);
+                }
+                if (deploy.Stand.Name.Contains("ЕИС-7"))
+                {
+                    deploysEIS7.Items.Add(label);
+                }
             }
         }
 
@@ -250,5 +299,60 @@ namespace Updater
                 System.Diagnostics.Process.Start(Result.ResultUrl);
             }
         }
+        private void ClearDeployStatusList()
+        {
+            deploysEIS3.Items.Clear();
+            deploysEIS4.Items.Clear();
+            deploysEIS5.Items.Clear();
+            deploysEIS6.Items.Clear();
+            deploysEIS7.Items.Clear();
+        }
+
+        public void startLoading()
+        {
+            LoadingGrid.Visibility = Visibility.Visible;
+            loading = true;
+        }
+        public void startLoading(string message)
+        {
+            Message.Content = message;
+            if (!loading)
+            {
+                LoadingGrid.Visibility = Visibility.Visible;
+                loading = true;
+            }
+        }
+        public void stopLoading()
+        {
+            LoadingGrid.Visibility = Visibility.Hidden;
+            loading = false;
+        }
+
+
+        private void RefreshDeployStatusWorker_DoWork(object sender, DoWorkEventArgs e)
+        {
+            refreshDeployStatusWorker.ReportProgress(50);
+            foreach (StartedDeploy deploy in DataOp.startedDeploys)
+            {
+                string response = Requests.getRequest("https://ci-sel.dks.lanit.ru/rest/api/latest/deploy/result/" + deploy.DeployResult.deploymentResultId);
+                DeployCurrentStatus currentStatus = JsonConvert.DeserializeObject<DeployCurrentStatus>(response);
+                deploy.CurrentStatus = currentStatus.DeploymentState;
+            }
+        }
+        private void RefreshDeployStatusWorker_ProgressChanged(object sender, ProgressChangedEventArgs e)
+        {
+            if (!loading)
+            {
+                startLoading("Обновляем статусы запущенных деплоев");
+            }
+        }
+        private void RefreshDeployStatusWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            SetDeployResultInPanel();
+            stopLoading();
+            Log.Info("--- *** ---");
+        }
+
+        
     }
 }

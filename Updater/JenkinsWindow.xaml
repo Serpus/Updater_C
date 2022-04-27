@@ -15,7 +15,7 @@
             <ColumnDefinition MinWidth="70" MaxWidth="600"/>
         </Grid.ColumnDefinitions>
         <StackPanel Grid.Column="0" VerticalAlignment="Center" Name="ProjectStackPanel">
-            <Label Content="Ветка в формате hotfix/x.x.x" HorizontalAlignment="Center"/>
+            <Label Content="Ветка в формате hotfix/x.x.x" HorizontalAlignment="Left" Margin="5,0,0,0"/>
             <StackPanel Orientation="Horizontal">
                 <TextBox Margin="10, 0, 5, 0" Name="BranchName" Text="" Width="130"/>
                 <Menu Height="20" Width="20" HorizontalAlignment="Right">
