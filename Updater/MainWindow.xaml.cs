@@ -332,7 +332,7 @@ namespace Updater
 
             standsList = standsList.Substring(0, standsList.Length - 2);
 
-            Log.Info("Выбранные стенды:" + standsList);
+            Log.Info("Выбранные стенды: " + standsList);
 
             selectStands.IsEnabled = false;
             selectStandsGrid.IsEnabled = false;

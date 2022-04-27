@@ -6,7 +6,7 @@
         xmlns:gif="http://wpfanimatedgif.codeplex.com"
         xmlns:local="clr-namespace:Updater"
         mc:Ignorable="d"
-        Title="Updater" MinHeight="470" Height="470" Width="665" MinWidth="653" ResizeMode="CanResize" WindowStartupLocation="CenterScreen">
+        Title="Updater" MinHeight="470" Height="470" Width="665" MinWidth="665" ResizeMode="CanResize" WindowStartupLocation="CenterScreen">
     <Grid>
         <TabControl Background="#FFE5E5E5">
             <TabItem Header="Билды" MouseMove="buildsGeneralSettings">
