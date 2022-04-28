@@ -128,7 +128,7 @@
                         <Label/>
                         <Button Content="Деплой ОЧ" HorizontalAlignment="Center" Grid.Row="2" Width="150" Height="28" Click="OpenOpDeploys"/>
                     </StackPanel>
-                    <Grid Grid.Column="1" Grid.RowSpan="3" IsEnabled="False" VerticalAlignment="Stretch">
+                    <Grid Grid.Column="1" Grid.RowSpan="3" IsEnabled="False" VerticalAlignment="Stretch" Name="DeployStatusPanel">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="35"/>
                             <RowDefinition Height="*"/>

@@ -195,7 +195,7 @@ namespace Updater
 
         private void RefreshDeploysStatus(object sender, RoutedEventArgs e)
         {
-            Log.Info("--- Обновляем статусы деплоев ---");
+            Log.Info("--- ЕПЗ: Обновляем статусы деплоев ---");
             ClearDeployStatusList();
             refreshDeployStatusWorker.RunWorkerAsync();
         }
@@ -215,7 +215,7 @@ namespace Updater
                 DeployStatusLabel label = new DeployStatusLabel(deploy)
                 {
                     ContextMenu = cm,
-                    Content = deploy.Project.branch.key + " - " + deploy.CurrentStatus,
+                    Content = deploy.Project.branch.name + " - " + deploy.CurrentStatus,
                     Width = deploysEIS3.ActualWidth - 50,
                 };
 
@@ -225,6 +225,9 @@ namespace Updater
                 } else if (deploy.CurrentStatus.Contains("FAILURE"))
                 {
                     label.Background = (SolidColorBrush)new BrushConverter().ConvertFrom("#DF0E0E");
+                } else if (deploy.CurrentStatus.Contains("UNKNOWN"))
+                {
+                    label.Content = deploy.Project.branch.name + " - В процессе";
                 }
 
                 if (deploy.Stand.Name.Contains("ЕИС-3"))

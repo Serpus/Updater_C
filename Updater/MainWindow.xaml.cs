@@ -17,6 +17,7 @@ using System.Windows.Threading;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Updater.CustomElements;
+using Updater.ProjectParser.DeployParser;
 
 namespace Updater
 {
@@ -29,10 +30,9 @@ namespace Updater
 
         private BackgroundWorker prepareBuildsWorker = new BackgroundWorker();
         private BackgroundWorker refreshBuildStatusWorker = new BackgroundWorker();
-        private BackgroundWorker waitRefreshBuildStatusWorker = new BackgroundWorker();
+        private BackgroundWorker refreshDeployStatusWorker = new BackgroundWorker();
 
         private PrepareBuildsWindow prepareBuildsWindow = new PrepareBuildsWindow();
-        private PrepareDeployWindow PrepareDeployWindow = new PrepareDeployWindow();
         private JenkinsWindow jenkinsWindow = new JenkinsWindow();
         private OpDeploysWindow opDeploysWindow = new OpDeploysWindow();
         private bool loading;
@@ -55,11 +55,11 @@ namespace Updater
             refreshBuildStatusWorker.ProgressChanged += worker2_ProgressChanged;
             refreshBuildStatusWorker.RunWorkerCompleted += worker2_RunWorkerCompleted;
 
-            waitRefreshBuildStatusWorker.WorkerReportsProgress = true;
-            waitRefreshBuildStatusWorker.WorkerSupportsCancellation = true;
-            waitRefreshBuildStatusWorker.DoWork += worker3_DoWork;
-            waitRefreshBuildStatusWorker.ProgressChanged += worker3_ProgressChanged;
-            waitRefreshBuildStatusWorker.RunWorkerCompleted += worker3_RunWorkerCompleted;
+            refreshDeployStatusWorker.WorkerSupportsCancellation = true;
+            refreshDeployStatusWorker.WorkerReportsProgress = true;
+            refreshDeployStatusWorker.DoWork += RefreshDeployStatusWorker_DoWork;
+            refreshDeployStatusWorker.ProgressChanged += RefreshDeployStatusWorker_ProgressChanged;
+            refreshDeployStatusWorker.RunWorkerCompleted += RefreshDeployStatusWorker_RunWorkerCompleted;
         }
 
         private void MainWindow_Closed(object sender, EventArgs e)
@@ -120,7 +120,7 @@ namespace Updater
 
         private void RefreshBuildsStatus(object sender, RoutedEventArgs e)
         {
-            Log.Info("Обновление статусов запущенных билдов");
+            Log.Info("--- Обновление статусов запущенных билдов ---");
             Data.IsRefreshEnd = false;
             buildsStatusList.Items.Clear();
             refreshBuildStatusWorker.RunWorkerAsync();
@@ -349,11 +349,6 @@ namespace Updater
             openPreparedeployButton.IsEnabled = false;
         }
 
-        private void refreshDeploysButton_Click(object sender, RoutedEventArgs e)
-        {
-            
-        }
-
         private void openPreparedeployButton_Click(object sender, RoutedEventArgs e)
         {
             List<Stand> stands = new List<Stand>();
@@ -399,11 +394,84 @@ namespace Updater
                 return;
             }
             RefreshBuildsStatus(sender, e);
-            waitRefreshBuildStatusWorker.RunWorkerAsync();
             Log.Info("Открываем окно с подготовкой деплоев");
+            PrepareDeployWindow PrepareDeployWindow = new PrepareDeployWindow();
             PrepareDeployWindow.Owner = this;
             PrepareDeployWindow.startLoading();
-            PrepareDeployWindow.ShowDialog();
+            if (PrepareDeployWindow.ShowDialog().Value)
+            {
+                DeployStatusPanel.IsEnabled = true;
+            }
+        }
+
+        private void refreshDeploysButton_Click(object sender, RoutedEventArgs e)
+        {
+            Log.Info("--- Обновляем статусы деплоев ---");
+            ClearDeployStatusList();
+            refreshDeployStatusWorker.RunWorkerAsync();
+        }
+
+        private void ClearDeployStatusList()
+        {
+            deploysEIS3.Items.Clear();
+            deploysEIS4.Items.Clear();
+            deploysEIS5.Items.Clear();
+            deploysEIS6.Items.Clear();
+            deploysEIS7.Items.Clear();
+        }
+
+        private void SetDeployResultInPanel()
+        {
+            foreach (StartedDeploy deploy in Data.startedDeploys)
+            {
+                ContextMenu cm = new ContextMenu();
+                ResultMenuItem menuItem = new ResultMenuItem()
+                {
+                    Header = "Открыть в браузере",
+                    ResultUrl = $"https://ci-sel.dks.lanit.ru/deploy/viewDeploymentResult.action?deploymentResultId={deploy.DeployResult.deploymentResultId}",
+                };
+                menuItem.Click += OpenCurrentBuild;
+                cm.Items.Add(menuItem);
+                DeployStatusLabel label = new DeployStatusLabel(deploy)
+                {
+                    ContextMenu = cm,
+                    Content = deploy.Project.branch.name + " - " + deploy.CurrentStatus,
+                    Width = deploysEIS3.ActualWidth - 50,
+                };
+
+                if (deploy.CurrentStatus.Contains("SUCCESS"))
+                {
+                    label.Background = (SolidColorBrush)new BrushConverter().ConvertFrom("#12BF0F");
+                }
+                else if (deploy.CurrentStatus.Contains("FAILURE"))
+                {
+                    label.Background = (SolidColorBrush)new BrushConverter().ConvertFrom("#DF0E0E");
+                } else if (deploy.CurrentStatus.Contains("UNKNOWN"))
+                {
+                    label.Content = deploy.Project.branch.name + " - В процессе";
+                }
+
+                if (deploy.Stand.Name.Contains("ЕИС-3"))
+                {
+                    deploysEIS3.Items.Add(label);
+                }
+                if (deploy.Stand.Name.Contains("ЕИС-4"))
+                {
+                    deploysEIS4.Items.Add(label);
+                }
+                if (deploy.Stand.Name.Contains("ЕИС-5"))
+                {
+                    deploysEIS5.Items.Add(label);
+                }
+                if (deploy.Stand.Name.Contains("ЕИС-6"))
+                {
+                    deploysEIS6.Items.Add(label);
+                }
+                if (deploy.Stand.Name.Contains("ЕИС-7"))
+                {
+                    deploysEIS7.Items.Add(label);
+                }
+            }
         }
 
 
@@ -436,26 +504,33 @@ namespace Updater
             stopLoading();
             AddUpdatedBuilds();
             Data.IsRefreshEnd = true;
+            Log.Info("--- *** ---");
         }
 
-        private void worker3_DoWork(object sender, DoWorkEventArgs e)
+        
+
+        private void RefreshDeployStatusWorker_DoWork(object sender, DoWorkEventArgs e)
         {
-            while (!Data.IsRefreshEnd)
+            refreshDeployStatusWorker.ReportProgress(50);
+            foreach (StartedDeploy deploy in Data.startedDeploys)
             {
-                Thread.Sleep(500);
+                string response = Requests.getRequest("https://ci-sel.dks.lanit.ru/rest/api/latest/deploy/result/" + deploy.DeployResult.deploymentResultId);
+                DeployCurrentStatus currentStatus = JsonConvert.DeserializeObject<DeployCurrentStatus>(response);
+                deploy.CurrentStatus = currentStatus.DeploymentState;
             }
         }
-
-        private void worker3_ProgressChanged(object sender, ProgressChangedEventArgs e)
+        private void RefreshDeployStatusWorker_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
-            
+            if (!loading)
+            {
+                startLoading("Обновляем статусы запущенных деплоев");
+            }
         }
-
-        private void worker3_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        private void RefreshDeployStatusWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            PrepareDeployWindow.SetBuilds();
-            Thread.Sleep(1000);
-            PrepareDeployWindow.stopLoading();
+            SetDeployResultInPanel();
+            stopLoading();
+            Log.Info("--- *** ---");
         }
 
         private void OpenNoBuildDeploysWindow(object sender, RoutedEventArgs e)

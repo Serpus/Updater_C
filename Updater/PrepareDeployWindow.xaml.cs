@@ -26,17 +26,25 @@ namespace Updater
         private static readonly NLog.Logger Log = NLog.LogManager.GetCurrentClassLogger();
         private bool loading = false;
         private BackgroundWorker startDeployWorker = new BackgroundWorker();
+        private BackgroundWorker RefreshBuildStatusWorker = new BackgroundWorker();
 
         public PrepareDeployWindow()
         {
             InitializeComponent();
-            this.Closing += cancelClosing;
 
             startDeployWorker.WorkerReportsProgress = true;
             startDeployWorker.WorkerSupportsCancellation = true;
             startDeployWorker.DoWork += startDeploy_DoWork;
             startDeployWorker.ProgressChanged += startDeploy_ProgressChanged;
             startDeployWorker.RunWorkerCompleted += startDeploy_RunWorkerCompleted;
+
+            RefreshBuildStatusWorker.WorkerReportsProgress = true;
+            RefreshBuildStatusWorker.WorkerSupportsCancellation = true;
+            RefreshBuildStatusWorker.DoWork += RefreshBuildStatusWorker_DoWork;
+            RefreshBuildStatusWorker.ProgressChanged += RefreshBuildStatusWorker_ProgressChanged;
+            RefreshBuildStatusWorker.RunWorkerCompleted += RefreshBuildStatusWorker_RunWorkerCompleted;
+
+            RefreshBuildStatusWorker.RunWorkerAsync();
         }
 
         public void startLoading()
@@ -92,19 +100,6 @@ namespace Updater
             standNames.Content = standsList;
         }
 
-        private void cancelClosing(object sender, System.ComponentModel.CancelEventArgs e)
-        {
-            e.Cancel = true;
-            if (Data.IsCloseProgram)
-            {
-                e.Cancel = false;
-            }
-            SuccessBuilds.Children.Clear();
-            ProcessBuilds.Children.Clear();
-            Log.Info("Закрываем окно подготовки деплоев");
-            this.Visibility = Visibility.Hidden;
-        }
-
         private void CheckBox_Click(object sender, RoutedEventArgs e)
         {
             StackPanel somePanel = null;
@@ -141,8 +136,18 @@ namespace Updater
         {
             SuccessBuilds.Children.Clear();
             ProcessBuilds.Children.Clear();
-            Log.Info("Закрываем окно подготовки деплоев");
-            this.Visibility = Visibility.Hidden;
+            Log.Info("Закрываем окно подготовки деплоев (False)");
+            this.DialogResult = false;
+            this.Close();
+        }
+
+        private void Close(object sender, RoutedEventArgs e)
+        {
+            SuccessBuilds.Children.Clear();
+            ProcessBuilds.Children.Clear();
+            Log.Info("Закрываем окно подготовки деплоев (True)");
+            this.DialogResult = true;
+            this.Close();
         }
 
         private async void StartDeploy(object sender, RoutedEventArgs e)
@@ -174,7 +179,7 @@ namespace Updater
             }
 
             startDeployWorker.RunWorkerAsync();
-            Cancel(sender, e);
+            Close(sender, e);
         }
 
         private async Task<StartingDeployResult> Deploy(Stand standBuild, Project p)
@@ -235,10 +240,10 @@ namespace Updater
                 {
                     DeployResult = depRes,
                     Project = deploy.Project,
+                    Stand = deploy.StandEnvironment
                 };
                 Data.startedDeploys.Add(startedDeploy);
             }
-            
         }
 
         public void startDeploy_ProgressChanged(object sender, ProgressChangedEventArgs e)
@@ -251,6 +256,34 @@ namespace Updater
 
         public void startDeploy_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
+            stopLoading();
+            Log.Info("--- *** ---");
+        }
+
+        private void RefreshBuildStatusWorker_DoWork(object sender, DoWorkEventArgs e)
+        {
+            Log.Info("Обновляем статусы билдов");
+            RefreshBuildStatusWorker.ReportProgress(50);
+            foreach (Project project in Data.startedBuilds)
+            {
+                string buildResultkey = project.startingBuildResult.buildResultkey;
+                string result = Requests.getRequest("https://ci-sel.dks.lanit.ru/rest/api/latest/result/" + buildResultkey);
+                BuildStatus buildStatus = JsonConvert.DeserializeObject<BuildStatus>(result);
+                project.buildStatus = buildStatus;
+            }
+        }
+
+        private void RefreshBuildStatusWorker_ProgressChanged(object sender, ProgressChangedEventArgs e)
+        {
+            if (!loading)
+            {
+                startLoading();
+            }
+        }
+
+        private void RefreshBuildStatusWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            SetBuilds();
             stopLoading();
             Log.Info("--- *** ---");
         }
