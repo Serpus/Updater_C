@@ -231,7 +231,7 @@ namespace Updater
         public void startDeploy_DoWork(object sender, DoWorkEventArgs e)
         {
             Data.startedDeploys = new List<StartedDeploy>();
-            startDeployWorker.ReportProgress(1);
+            startDeployWorker.ReportProgress(50);
             Log.Info("--- Начало деплоев ---");
             foreach (PreparedDeploy deploy in Data.preparedDeploy)
             {
