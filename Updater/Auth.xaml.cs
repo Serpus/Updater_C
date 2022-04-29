@@ -142,9 +142,12 @@ namespace Updater
             String remoteVersion = reader.ReadToEnd().Replace("version/.\r\nversion/..\r\nversion/", "").Replace("\r\n", "");
 
             IFormatProvider formatter = new NumberFormatInfo { NumberDecimalSeparator = "." };
+            String LocalVersionFormatted = Data.localVersion.ToString("F2", formatter);
+
             if (double.Parse(remoteVersion, formatter) > Data.localVersion)
             {
-                if (MessageBox.Show($"Обнаружена новая версия программы ({remoteVersion}). Обновить?", "Обновление", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+                if (MessageBox.Show($"Обнаружена новая версия программы ({remoteVersion}). Ваша версия: {LocalVersionFormatted}. Обновить ?", 
+                    "Обновление", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
                 {
                     if (!Directory.Exists("InstallUpdateForUpdater"))
                     {
@@ -158,7 +161,7 @@ namespace Updater
                 }
             } else
             {
-                MessageBox.Show("Новых обновлений нет");
+                MessageBox.Show("Новых обновлений нет. Ваша версия: " + LocalVersionFormatted, "Обновление", MessageBoxButton.OK, MessageBoxImage.Information);
             }
         }
     }
