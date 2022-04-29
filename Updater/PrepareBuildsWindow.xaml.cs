@@ -13,6 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using System.ComponentModel;
 using Newtonsoft.Json;
+using Updater.CustomElements;
 
 namespace Updater
 {
@@ -82,11 +83,21 @@ namespace Updater
                 }
                 Log.Info(project.branch.name);
 
+                ContextMenu cm = new ContextMenu();
+                ResultMenuItem menuItem = new ResultMenuItem()
+                {
+                    Header = "Открыть в браузере",
+                    ResultUrl = $"https://ci-sel.dks.lanit.ru/browse/{project.branch.key}",
+                };
+                menuItem.Click += OpenCurrentBuild;
+                cm.Items.Add(menuItem);
+
                 if (project.planKey.key.Contains("EIS"))
                 {
                     ProjectCheckBox checkBox1 = new ProjectCheckBox();
                     checkBox1.Project = project;
                     checkBox1.Content = project.branch.name;
+                    checkBox1.ContextMenu = cm;
                     fcsBuilds.Children.Add(checkBox1);
                     continue;
                 }
@@ -96,6 +107,7 @@ namespace Updater
                     ProjectCheckBox checkBox1 = new ProjectCheckBox();
                     checkBox1.Project = project;
                     checkBox1.Content = project.branch.name;
+                    checkBox1.ContextMenu = cm;
                     lkpBuilds.Children.Add(checkBox1);
                     continue;
                 }
@@ -105,6 +117,7 @@ namespace Updater
                     ProjectCheckBox checkBox1 = new ProjectCheckBox();
                     checkBox1.Project = project;
                     checkBox1.Content = project.branch.name;
+                    checkBox1.ContextMenu = cm;
                     epzBuilds.Children.Add(checkBox1);
                     continue;
                 }
@@ -112,6 +125,7 @@ namespace Updater
                 ProjectCheckBox checkBox = new ProjectCheckBox();
                 checkBox.Project = project;
                 checkBox.Content = project.branch.name;
+                checkBox.ContextMenu = cm;
                 otherBuilds.Children.Add(checkBox);
             }
 
@@ -296,6 +310,14 @@ namespace Updater
             {
                 stopLoading();
                 this.Close();
+            }
+        }
+
+        private void OpenCurrentBuild(object sender, RoutedEventArgs e)
+        {
+            if (sender is ResultMenuItem Result)
+            {
+                System.Diagnostics.Process.Start(Result.ResultUrl);
             }
         }
     }
