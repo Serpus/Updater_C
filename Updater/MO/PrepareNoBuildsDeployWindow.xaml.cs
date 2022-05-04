@@ -172,11 +172,12 @@ namespace Updater.MO
              * String json = "{'planResultKey':'EIS-EISRDIKWF40-14'," +
                                 "'name':'release-11.0.0-14'," +
                                 "'nextVersionName':'release-11.0.0-15'}";*/
+            string standShortName = standBuild.Name.Replace("ЕИС-", "");
             CreateVersionBody body = new CreateVersionBody()
             {
                 planResultKey = p.startingBuildResult.buildResultkey,
-                name = p.branch.shortName + "-" + p.startingBuildResult.buildNumber + "-" + standBuild.Name,
-                nextVersionName = p.branch.shortName + "-" + (p.startingBuildResult.buildNumber + 1) + "-" + standBuild.Name
+                name = p.branch.shortName + "-" + p.startingBuildResult.buildNumber + "-" + standShortName,
+                nextVersionName = p.branch.shortName + "-" + (p.startingBuildResult.buildNumber + 1) + "-" + standShortName
             };
             String response = await Requests.postRequestAsync("https://ci-sel.dks.lanit.ru/rest/api/latest/deploy/project/" + standBuild.DeploymentProjectId + "/version", body);
             /*

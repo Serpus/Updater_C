@@ -393,7 +393,6 @@ namespace Updater
                 MessageBox.Show("Ни один билд не запущен");
                 return;
             }
-            RefreshBuildsStatus(sender, e);
             Log.Info("Открываем окно с подготовкой деплоев");
             PrepareDeployWindow PrepareDeployWindow = new PrepareDeployWindow();
             PrepareDeployWindow.Owner = this;
@@ -472,6 +471,32 @@ namespace Updater
                     deploysEIS7.Items.Add(label);
                 }
             }
+        }
+
+        private void OpenAllDeploys(object sender, RoutedEventArgs e)
+        {
+            Log.Info("--- Открываем все деплом в браузере ---");
+            foreach (TabItem item in DeploysTabControl.Items)
+            {
+                if (item is TabItem tabItem)
+                {
+                    if (!tabItem.IsSelected)
+                    {
+                        continue;
+                    }
+
+                    if(item.Content is ListView listView)
+                    {
+                        foreach (DeployStatusLabel deployStatusLabel in listView.Items)
+                        {
+                            string url = $"https://ci-sel.dks.lanit.ru/deploy/viewDeploymentResult.action?deploymentResultId={deployStatusLabel.DeployResult.deploymentResultId}";
+                            Log.Info($"Открываем {deployStatusLabel.Project.name}: " + url);
+                            System.Diagnostics.Process.Start(url);
+                        }
+                    }
+                }
+            }
+            Log.Info("--- *** ---");
         }
 
 

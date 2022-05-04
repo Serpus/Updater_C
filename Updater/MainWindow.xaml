@@ -137,9 +137,9 @@
                         <StackPanel Grid.Row="0" VerticalAlignment="Top" Orientation="Horizontal" Height="32">
                             <Label VerticalAlignment="Center">Статусы запущенных деплоев</Label>
                             <Button Content=" Обновить " Margin="10,3,0,3" Name="refreshDeploysButton" Click="refreshDeploysButton_Click"/>
-                            <Button Content=" Открыть все деплои в списке " Margin="15,3,0,3" />
+                            <Button Content=" Открыть все деплои в списке " Margin="15,3,0,3" Click="OpenAllDeploys"/>
                         </StackPanel>
-                        <TabControl Grid.Row="1" TabStripPlacement="Bottom" Background="#FFE5E5E5">
+                        <TabControl Grid.Row="1" TabStripPlacement="Bottom" Background="#FFE5E5E5" Name="DeploysTabControl">
                             <TabItem Header="ЕИС-3">
                                 <ListView d:ItemsSource="{d:SampleData ItemCount=10}" Name="deploysEIS3">
                                 </ListView>
