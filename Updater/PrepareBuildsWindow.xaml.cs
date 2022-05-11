@@ -74,7 +74,7 @@ namespace Updater
         public void settingBranchInList()
         {
             branchName.Content = Data.branchName;
-            Log.Info("---Отобранные билд-планы---");
+            Log.Info("--- Отобранные билд-планы ---");
             foreach (Project project in Data.projects)
             {
                 if (project.branch == null || !project.branch.shortName.Equals(Data.branchName))
@@ -131,6 +131,7 @@ namespace Updater
 
             setEnableDisableCheckBoxes();
             Data.IsPrepareBuildsDone = true;
+            Log.Info("--- *** ---");
         }
 
         private void setEnableDisableCheckBoxes()

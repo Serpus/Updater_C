@@ -55,21 +55,19 @@ namespace Updater.MO
                     continue;
                 }
 
-                ProjectCheckBox checkBox = new ProjectCheckBox();
-                checkBox.Project = project;
-                checkBox.Content = project.branch.name;
-
                 if (project.buildStatus == null)
                 {
                     TextBlock textBlock = new TextBlock()
                     {
                         Text = project.branch.name,
                     };
-                    checkBox.IsEnabled = false;
                     NoBuilds.Children.Add(textBlock);
                     continue;
                 }
 
+                ProjectCheckBox checkBox = new ProjectCheckBox();
+                checkBox.Project = project;
+                checkBox.Content = project.branch.name + " - #" + project.buildStatus.buildNumber;
                 if (project.buildStatus.state.Equals("Successful"))
                 {
                     SuccessBuilds.Children.Add(checkBox);
@@ -217,10 +215,10 @@ namespace Updater.MO
         {
             Data.startedBuilds = new List<Project>();
             preapareBuildsWorker.ReportProgress(1);
-            Log.Info("Отбираем из бамбу проекты с веткой " + Data.branchName);
+            Log.Info("Отбираем из бамбу билды с веткой " + Data.branchName);
             foreach(Project project in Data.projects)
             {
-                message = "Отбираем из бамбу проекты с веткой " + Data.branchName;
+                message = "Отбираем из бамбу билды с веткой " + Data.branchName;
                 if (project.planKey.key.Contains("EPZ-"))
                 {
                     continue;
