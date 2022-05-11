@@ -65,9 +65,20 @@ namespace Updater.MO
                     continue;
                 }
 
-                ProjectCheckBox checkBox = new ProjectCheckBox();
-                checkBox.Project = project;
-                checkBox.Content = project.branch.name + " - #" + project.buildStatus.buildNumber;
+                ContextMenu cm = new ContextMenu();
+                ResultMenuItem menuItem = new ResultMenuItem()
+                {
+                    Header = "Открыть в браузере",
+                    ResultUrl = "https://ci-sel.dks.lanit.ru/browse/" + project.buildStatus.buildResultKey
+                };
+                menuItem.Click += OpenCurrentBuild;
+                cm.Items.Add(menuItem);
+                ProjectCheckBox checkBox = new ProjectCheckBox()
+                {
+                    Project = project,
+                    Content = project.branch.name + " - #" + project.buildStatus.buildNumber,
+                    ContextMenu = cm
+                };
                 if (project.buildStatus.state.Equals("Successful"))
                 {
                     SuccessBuilds.Children.Add(checkBox);
@@ -92,6 +103,14 @@ namespace Updater.MO
             }
             standsList = standsList.Substring(0, standsList.Length - 2);
             standNames.Content = standsList;
+        }
+
+        private void OpenCurrentBuild(object sender, RoutedEventArgs e)
+        {
+            if (sender is ResultMenuItem Result)
+            {
+                System.Diagnostics.Process.Start(Result.ResultUrl);
+            }
         }
 
         private void CheckBox_Click(object sender, RoutedEventArgs e)
