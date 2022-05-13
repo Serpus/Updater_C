@@ -151,9 +151,26 @@ namespace Updater.MO
             this.Close();
         }
 
+        private void Close(object sender, RoutedEventArgs e)
+        {
+            Data.startedBuilds = null;
+            this.DialogResult = true;
+            this.Close();
+        }
+
         private void StartDeploys(object sender, RoutedEventArgs e)
         {
             Data.preparedDeploy = new List<PreparedDeploy>();
+
+            foreach (ProjectCheckBox projectCb in SuccessBuilds.Children)
+            {
+                if (projectCb.IsChecked == true)
+                {
+                        break;
+                }
+                MessageBox.Show("Выберите хотя бы один билд-план", "Выбор билдов", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
 
             foreach (Stand stand in Data.selectedStands)
             {
@@ -179,7 +196,7 @@ namespace Updater.MO
                 }
             }
             startDeployWorker.RunWorkerAsync();
-            Cancel(sender, e);
+            Close(sender, e);
         }
 
         private async Task<StartingDeployResult> Deploy(Stand standBuild, Project p)

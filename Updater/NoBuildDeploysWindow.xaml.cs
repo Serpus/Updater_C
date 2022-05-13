@@ -171,7 +171,10 @@ namespace Updater
             {
                 Owner = this,
             };
-            window.ShowDialog();
+            if (window.ShowDialog().Value)
+            {
+                DeployStatusGrid.IsEnabled = true;
+            }
         }
 
         private void refreshDeploysButton_Click(object sender, RoutedEventArgs e)

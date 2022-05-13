@@ -84,7 +84,7 @@
             <Label/>
             <Button x:Name="ResetStands" Content="Отменить выбор стендов и ветки" HorizontalAlignment="Center" Grid.Row="2" MinWidth="195" Width="190" Height="28" IsEnabled="False" Click="ResetStands_Click"/>
         </StackPanel>
-        <Grid Grid.Column="1" Grid.RowSpan="3" IsEnabled="False" VerticalAlignment="Stretch">
+        <Grid Grid.Column="1" Grid.RowSpan="3" IsEnabled="False" VerticalAlignment="Stretch" Name="DeployStatusGrid">
             <Grid.RowDefinitions>
                 <RowDefinition Height="35"/>
                 <RowDefinition Height="*"/>
@@ -92,8 +92,8 @@
             </Grid.RowDefinitions>
             <StackPanel Grid.Row="0" VerticalAlignment="Top" Orientation="Horizontal" Height="32">
                 <Label VerticalAlignment="Center">Статусы запущенных деплоев</Label>
-                <Button Content=" Обновить " Margin="10,3,0,3" Name="refreshDeploysButton"/>
-                <Button Content=" Открыть все деплои в списке " Margin="15,3,0,3" />
+                <Button Content=" Обновить " Margin="10,3,0,3" Name="refreshDeploysButton" Click="refreshDeploysButton_Click"/>
+                <Button Content=" Открыть все деплои в списке " Margin="15,3,0,3" Click="OpenAllDeploys"/>
             </StackPanel>
             <TabControl Grid.Row="1" TabStripPlacement="Bottom" Background="#FFE5E5E5" Name="DeploysTabControl">
                 <TabItem Header="ЕИС-3">
@@ -117,13 +117,13 @@
                     </ListView>
                 </TabItem>
             </TabControl>
-            <Grid Grid.Column="0" Grid.ColumnSpan="2" x:Name="LoadingGrid" Visibility="Hidden">
-                <StackPanel VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Background="#FFE5E5E5" Opacity="0.7" Visibility="Visible" x:Name="LoadingPanel">
-                </StackPanel>
-                <Grid x:Name="LoadingSpinner" Visibility="Visible">
-                    <Label x:Name="LoadingLabel" Content="Выбираем билды с указанной веткой. Ожидайте" Margin="0,90,0,0" HorizontalAlignment="Center" FontWeight="Bold" FontSize="15"/>
-                    <Image Width="150" Height="150" gif:ImageBehavior.AnimatedSource="/spinner-icon-0.gif" Stretch="Fill" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                </Grid>
+        </Grid>
+        <Grid Grid.Column="0" Grid.ColumnSpan="2" Grid.RowSpan="3"  x:Name="LoadingGrid" Visibility="Hidden">
+            <StackPanel VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Background="#FFE5E5E5" Opacity="0.7" Visibility="Visible" x:Name="LoadingPanel">
+            </StackPanel>
+            <Grid x:Name="LoadingSpinner" Visibility="Visible">
+                <Label x:Name="LoadingLabel" Content="Выбираем билды с указанной веткой. Ожидайте" Margin="0,90,0,0" HorizontalAlignment="Center" FontWeight="Bold" FontSize="15"/>
+                <Image Width="150" Height="150" gif:ImageBehavior.AnimatedSource="/spinner-icon-0.gif" Stretch="Fill" VerticalAlignment="Center" HorizontalAlignment="Center"/>
             </Grid>
         </Grid>
     </Grid>
