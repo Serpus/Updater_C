@@ -279,15 +279,19 @@ namespace Updater
                 if (label.BuildResult.Result == null)
                 {
                     label.Content = result.FullDisplayName + " - В очереди, либо статус неизвестен";
-                }
-                if (label.BuildResult.Result.Equals("SUCCESS"))
+                } 
+                else 
                 {
-                    label.Background = (SolidColorBrush)new BrushConverter().ConvertFrom("#12BF0F");
+                    if (label.BuildResult.Result.Equals("SUCCESS"))
+                    {
+                        label.Background = (SolidColorBrush)new BrushConverter().ConvertFrom("#12BF0F");
+                    }
+                    else if (label.BuildResult.Result.Equals("FAILURE"))
+                    {
+                        label.Background = (SolidColorBrush)new BrushConverter().ConvertFrom("#DF0E0E");
+                    }
                 }
-                else if (label.BuildResult.Result.Equals("FAILURE"))
-                {
-                    label.Background = (SolidColorBrush)new BrushConverter().ConvertFrom("#DF0E0E");
-                }
+                
 
                 StandSet.Add(label.BuildResult.getStand());
                 labelList.Add(label);
