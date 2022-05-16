@@ -93,6 +93,8 @@ namespace Updater
                 return;
             }
             SelectedBranchName.Text = "Выбранная ветка: " + BranchName.Text;
+            BranchHint.Visibility = Visibility.Visible;
+            BranchName.IsEnabled = false;
 
             getJobsWorker.RunWorkerAsync();
         }
@@ -140,6 +142,8 @@ namespace Updater
             Log.Info("Сброс выбранного проекта");
             jobsRegisterStackPanel.Children.Clear();
             SelectedBranchName.Text = "";
+            BranchHint.Visibility = Visibility.Hidden;
+            BranchName.IsEnabled = true;
             ProjectStackPanel.IsEnabled = true;
             RegisterList.IsEnabled = true;
             ConfirmButton.IsEnabled = true;
