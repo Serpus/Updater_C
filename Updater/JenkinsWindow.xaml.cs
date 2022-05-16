@@ -279,8 +279,7 @@ namespace Updater
                 if (label.BuildResult.Result == null)
                 {
                     label.Content = result.FullDisplayName + " - В очереди, либо статус неизвестен";
-                } 
-                else 
+                } else 
                 {
                     if (label.BuildResult.Result.Equals("SUCCESS"))
                     {
