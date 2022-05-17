@@ -70,7 +70,7 @@
                     <StackPanel Margin="5,5,0,5" x:Name="jobsRegisterStackPanel" VerticalAlignment="Top">
                     </StackPanel>
                 </ScrollViewer>
-                <Button Content="Подтвердить выбор" Name="ConfirmButton" 
+                <Button Content="Запустить сборки" Name="ConfirmButton" 
                     Grid.Row="4" MaxHeight="30" MinHeight="25" MinWidth="150" MaxWidth="150" 
                     HorizontalAlignment="Center" Click="Confirm" IsEnabled="False" VerticalAlignment="Bottom"/>
             </StackPanel>

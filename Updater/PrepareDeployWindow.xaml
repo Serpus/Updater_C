@@ -57,7 +57,7 @@
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
             <Button Grid.Column="0" Content="Отмена" Padding="5,0,5,0" Margin="0,17,0,17" HorizontalAlignment="Right" Click="Cancel"/>
-            <Button Grid.Column="2" Content="Подтвердить" HorizontalAlignment="Left" Padding="5,0,5,0" Margin="0,17,0,17" Click="StartDeploy"/>
+            <Button Grid.Column="2" Content="Запустить деплои" HorizontalAlignment="Left" Padding="5,0,5,0" Margin="0,17,0,17" Click="StartDeploy"/>
         </Grid>
         <Grid Grid.Row="0" Grid.RowSpan="3" x:Name="LoadingGrid" Visibility="Hidden">
             <StackPanel VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Background="#FFE5E5E5" Opacity="0.7" Visibility="Visible" x:Name="LoadingPanel">
