@@ -146,7 +146,7 @@ namespace Updater
             BranchName.IsEnabled = true;
             ProjectStackPanel.IsEnabled = true;
             RegisterList.IsEnabled = true;
-            ConfirmButton.IsEnabled = true;
+            ConfirmButton.IsEnabled = false;
             BuildStatusGrid.IsEnabled = false;
             BuildStatusTabs.Items.Clear();
 
@@ -475,6 +475,7 @@ namespace Updater
                 jobsRegisterStackPanel.Children.Add(checkBox);
             }
             stopLoading();
+            ConfirmButton.IsEnabled = true;
         }
 
         // Деплой
