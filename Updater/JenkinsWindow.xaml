@@ -6,12 +6,14 @@
         xmlns:l="clr-namespace:Updater"
         xmlns:gif="http://wpfanimatedgif.codeplex.com"
         mc:Ignorable="d"
-        Title="Jenkins" MinHeight="470" Height="470" Width="730" MinWidth="900" ResizeMode="CanResize" WindowStartupLocation="CenterScreen"
+        Title="Jenkins" 
+        MinHeight="470" Height="470" MaxHeight="900" Width="730" MinWidth="900" MaxWidth="1030" 
+        ResizeMode="CanResize" WindowStartupLocation="CenterScreen"
         Background="#FFE5E5E5">
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition MinWidth="70" Width="180" MaxWidth="600"/>
-            <ColumnDefinition MinWidth="80" Width="250" MaxWidth="600"/>
+            <ColumnDefinition MinWidth="180" Width="180" MaxWidth="600"/>
+            <ColumnDefinition MinWidth="250" Width="250" MaxWidth="600"/>
             <ColumnDefinition MinWidth="70" MaxWidth="600"/>
         </Grid.ColumnDefinitions>
         <StackPanel Grid.Column="0" VerticalAlignment="Center" Name="ProjectStackPanel">
@@ -71,7 +73,7 @@
                 </Grid.RowDefinitions>
                 <StackPanel Grid.Row="0">
                     <TextBlock Text="" Name="SelectedBranchName"/>
-                    <TextBlock Text="Если чекбокс неактивен, отсутствует ветка в проекте" TextWrapping="Wrap" Name="BranchHint" Visibility="Hidden"/>
+                    <TextBlock Text="Если чекбокс неактивен, то эта ветка отсутствует в проекте в Jenkins" TextWrapping="Wrap" Name="BranchHint" Visibility="Hidden"/>
                 </StackPanel>
                 <ScrollViewer Grid.Row="1" Margin="0,0,3,10" Name="RegisterList" MinHeight="270">
                     <StackPanel Margin="5,5,0,5" x:Name="jobsRegisterStackPanel">
