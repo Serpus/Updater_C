@@ -3,6 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:gif="http://wpfanimatedgif.codeplex.com"
         xmlns:local="clr-namespace:Updater"
         mc:Ignorable="d"
         Title="Авторизация" MinHeight="450" Height="470" Width="640" ResizeMode="CanMinimize" WindowStartupLocation="CenterScreen">
@@ -38,6 +39,14 @@
                 <Label Grid.Row="8" Grid.ColumnSpan="2" x:Name="errorText" HorizontalAlignment="Center" Foreground="#FFD21717"/>
             </Grid>
         </StackPanel>
+        <Grid Grid.Column="0" Grid.ColumnSpan="2" x:Name="LoadingGrid" Visibility="Hidden">
+            <StackPanel VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Background="#FFE5E5E5" Opacity="0.7" Visibility="Visible" x:Name="LoadingPanel">
+            </StackPanel>
+            <Grid x:Name="LoadingSpinner" Visibility="Visible">
+                <Label x:Name="LoadingLabel" Content="Проверяем наличие обновлений. Ожидайте" Margin="0,90,0,0" HorizontalAlignment="Center" FontWeight="Bold" FontSize="15"/>
+                <Image Width="150" Height="150" gif:ImageBehavior.AnimatedSource="/spinner-icon-0.gif" Stretch="Fill" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+            </Grid>
+        </Grid>
         <Label Content="v 0.0" HorizontalAlignment="Left" VerticalAlignment="Bottom" x:Name="Version"/>
     </Grid>
 </Window>

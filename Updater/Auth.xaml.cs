@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
@@ -16,10 +17,19 @@ namespace Updater
     public partial class Auth : Window
     {
         private static readonly NLog.Logger Log = NLog.LogManager.GetCurrentClassLogger();
+        private BackgroundWorker checkUpdatesWorker = new BackgroundWorker();
+        private bool loading = false;
+        private string remoteVersion = "-1";
 
         public Auth()
         {
             InitializeComponent();
+
+            checkUpdatesWorker.WorkerReportsProgress = true;
+            checkUpdatesWorker.WorkerSupportsCancellation = true;
+            checkUpdatesWorker.DoWork += CheckUpdatesWorker_DoWork; ;
+            checkUpdatesWorker.ProgressChanged += CheckUpdatesWorker_ProgressChanged; ;
+            checkUpdatesWorker.RunWorkerCompleted += CheckUpdatesWorker_RunWorkerCompleted; ;
 
             Version.Content = $"v. {Data.GetVersion()}";
         }
@@ -135,21 +145,17 @@ namespace Updater
 
         private void CheckUpdates(object sender, RoutedEventArgs e)
         {
-            FtpWebRequest request = (FtpWebRequest)WebRequest.Create("ftp://s101238@s101238.hostru10.fornex.host/public_ftp/version");
-            request.Method = WebRequestMethods.Ftp.ListDirectory;
-            request.Credentials = new NetworkCredential("du@s101238.hostru10.fornex.host", "emtzfwsn7q8stuw0xm");
-            FtpWebResponse response = (FtpWebResponse)request.GetResponse();
-            Stream responseStream = response.GetResponseStream();
+            checkUpdatesWorker.RunWorkerAsync();
+        }
 
-            StreamReader reader = new StreamReader(responseStream);
-            String remoteVersion = reader.ReadToEnd().Replace("version/.\r\nversion/..\r\nversion/", "").Replace("\r\n", "");
-
+        private void Update()
+        {
             IFormatProvider formatter = new NumberFormatInfo { NumberDecimalSeparator = "." };
             String LocalVersionFormatted = Data.GetVersion();
 
             if (double.Parse(remoteVersion, formatter) > Data.localVersion)
             {
-                if (MessageBox.Show($"Обнаружена новая версия программы ({remoteVersion}). Ваша версия: {LocalVersionFormatted}. Обновить ?", 
+                if (MessageBox.Show($"Обнаружена новая версия программы ({remoteVersion}). Ваша версия: {LocalVersionFormatted}. Обновить ?",
                     "Обновление", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
                 {
                     if (!Directory.Exists("InstallUpdateForUpdater"))
@@ -162,10 +168,69 @@ namespace Updater
                     Process.Start(Environment.CurrentDirectory + "/InstallUpdateForUpdater/InstallUpdateForUpdater.exe");
                     Application.Current.Shutdown();
                 }
+            }
+            else if (remoteVersion.Equals("-1"))
+            {
+                MessageBox.Show("Ошибка проверки обновлений", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
             } else
             {
                 MessageBox.Show("Новых обновлений нет. Ваша версия: " + LocalVersionFormatted, "Обновление", MessageBoxButton.OK, MessageBoxImage.Information);
             }
+        }
+
+
+
+
+
+        private void CheckUpdatesWorker_DoWork(object sender, DoWorkEventArgs e)
+        {
+            checkUpdatesWorker.ReportProgress(50);
+            Log.Info("UPDATE MODULE: get ftp://s101238@s101238.hostru10.fornex.host/public_ftp/version");
+            FtpWebRequest request = (FtpWebRequest)WebRequest.Create("ftp://s101238@s101238.hostru10.fornex.host/public_ftp/version");
+            Log.Info("UPDATE MODULE: request created");
+            request.Method = WebRequestMethods.Ftp.ListDirectory;
+            request.Credentials = new NetworkCredential("du@s101238.hostru10.fornex.host", "emtzfwsn7q8stuw0xm");
+            Log.Info("UPDATE MODULE: get response");
+            FtpWebResponse response = (FtpWebResponse)request.GetResponse();
+            Log.Info("UPDATE MODULE: response - " + response.WelcomeMessage);
+            Stream responseStream = response.GetResponseStream();
+
+            StreamReader reader = new StreamReader(responseStream);
+            remoteVersion = reader.ReadToEnd().Replace("version/.\r\nversion/..\r\nversion/", "").Replace("\r\n", "");
+        }
+
+
+        private void CheckUpdatesWorker_ProgressChanged(object sender, ProgressChangedEventArgs e)
+        {
+            if (!loading)
+            {
+                startLoading();
+            }
+        }
+
+        private void CheckUpdatesWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            stopLoading();
+            Update();
+        }
+
+        private void startLoading()
+        {
+            LoadingGrid.Visibility = Visibility.Visible;
+            loading = true;
+        }
+
+        private void startLoading(string loadingLabel)
+        {
+            LoadingGrid.Visibility = Visibility.Visible;
+            LoadingLabel.Content = loadingLabel;
+            loading = true;
+        }
+
+        private void stopLoading()
+        {
+            LoadingGrid.Visibility = Visibility.Hidden;
+            loading = false;
         }
     }
 }
