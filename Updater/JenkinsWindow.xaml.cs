@@ -82,6 +82,12 @@ namespace Updater
          */
         private void GetJobs(object sender, RoutedEventArgs e)
         {
+            if (BranchName.Text.Equals(""))
+            {
+                MessageBox.Show("Введите название ветки", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
             ProjectButton ProjectButton = new ProjectButton();
             if (sender is ProjectButton)
             {
