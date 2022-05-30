@@ -126,7 +126,7 @@
                         <Label/>
                         <Button Content="Деплой Jenkins" HorizontalAlignment="Center" Grid.Row="2" Width="150" Height="28" Click="OpenJenkinsWindow"/>
                         <Label/>
-                        <Button Content="Деплой ОЧ" HorizontalAlignment="Center" Grid.Row="2" Width="150" Height="28" Click="OpenOpDeploys"/>
+                        <Button Content="Деплой ОЧ" HorizontalAlignment="Center" Grid.Row="2" Width="150" Height="28" Click="OpenOpDeploys" Visibility="Hidden"/>
                     </StackPanel>
                     <Grid Grid.Column="1" Grid.RowSpan="3" IsEnabled="False" VerticalAlignment="Stretch" Name="DeployStatusPanel">
                         <Grid.RowDefinitions>
