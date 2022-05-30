@@ -38,5 +38,6 @@
                 <Label Grid.Row="8" Grid.ColumnSpan="2" x:Name="errorText" HorizontalAlignment="Center" Foreground="#FFD21717"/>
             </Grid>
         </StackPanel>
+        <Label Content="v 0.0" HorizontalAlignment="Left" VerticalAlignment="Bottom" x:Name="Version"/>
     </Grid>
 </Window>

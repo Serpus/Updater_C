@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -23,6 +24,12 @@ namespace Updater
         public static List<PreparedDeploy> preparedDeploy { get; set; }
         public static List<StartedDeploy> startedDeploys { get; set; }
 
-        public static double localVersion = 2.0;
+        public static double localVersion = 2.00;
+
+        public static string GetVersion()
+        {
+            IFormatProvider formatter = new NumberFormatInfo { NumberDecimalSeparator = "." };
+            return Data.localVersion.ToString("F2", formatter);
+        }
     }
 }

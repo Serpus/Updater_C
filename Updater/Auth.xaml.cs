@@ -5,6 +5,7 @@ using System.Globalization;
 using System.IO;
 using System.Net;
 using System.Windows;
+using System.Windows.Controls;
 using Newtonsoft.Json;
 
 namespace Updater
@@ -19,6 +20,8 @@ namespace Updater
         public Auth()
         {
             InitializeComponent();
+
+            Version.Content = $"v. {Data.GetVersion()}";
         }
 
         private void Login(object sender, RoutedEventArgs e)
@@ -142,7 +145,7 @@ namespace Updater
             String remoteVersion = reader.ReadToEnd().Replace("version/.\r\nversion/..\r\nversion/", "").Replace("\r\n", "");
 
             IFormatProvider formatter = new NumberFormatInfo { NumberDecimalSeparator = "." };
-            String LocalVersionFormatted = Data.localVersion.ToString("F2", formatter);
+            String LocalVersionFormatted = Data.GetVersion();
 
             if (double.Parse(remoteVersion, formatter) > Data.localVersion)
             {

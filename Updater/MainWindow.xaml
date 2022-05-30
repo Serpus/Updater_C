@@ -173,5 +173,6 @@
                 <Image Width="150" Height="150" gif:ImageBehavior.AnimatedSource="/spinner-icon-0.gif" Stretch="Fill" VerticalAlignment="Center" HorizontalAlignment="Center"/>
             </Grid>
         </Grid>
+        <Label Content="v 0.0" HorizontalAlignment="Left" VerticalAlignment="Bottom" x:Name="Version"/>
     </Grid>
 </Window>

@@ -43,6 +43,8 @@ namespace Updater.MO
             preapareBuildsWorker.RunWorkerCompleted += PreapareBuildsWorker_RunWorkerCompleted;
 
             preapareBuildsWorker.RunWorkerAsync();
+
+            Version.Content = $"v. {Data.GetVersion()}";
         }
 
         public void SetBuilds()

@@ -39,6 +39,8 @@ namespace Updater
             refreshDeployStatusWorker.DoWork += RefreshDeployStatusWorker_DoWork;
             refreshDeployStatusWorker.ProgressChanged += RefreshDeployStatusWorker_ProgressChanged;
             refreshDeployStatusWorker.RunWorkerCompleted += RefreshDeployStatusWorker_RunWorkerCompleted;
+
+            Version.Content = $"v. {Data.GetVersion()}";
         }
 
         private void OpDeploysWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)

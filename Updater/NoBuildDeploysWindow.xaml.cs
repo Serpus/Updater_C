@@ -40,6 +40,8 @@ namespace Updater
             refreshDeployStatusWorker.RunWorkerCompleted += RefreshDeployStatusWorker_RunWorkerCompleted;
 
             this.Closing += NoBuildDeploysTabWindow_Closed;
+
+            Version.Content = $"v. {Data.GetVersion()}";
         }
 
         private void NoBuildDeploysTabWindow_Closed(object sender, System.ComponentModel.CancelEventArgs e)

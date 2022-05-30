@@ -37,6 +37,8 @@ namespace Updater
             worker.DoWork += worker_DoWork;
             worker.ProgressChanged += worker_ProgressChanged;
             worker.RunWorkerCompleted += worker_RunWorkerCompleted;
+
+            Version.Content = $"v. {Data.GetVersion()}";
         }
 
         private void cancelClosing(object sender, System.ComponentModel.CancelEventArgs e)

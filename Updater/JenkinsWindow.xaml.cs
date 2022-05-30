@@ -62,6 +62,8 @@ namespace Updater
             refreshStatusWorker.DoWork += refreshStatus_DoWork;
             refreshStatusWorker.ProgressChanged += refreshStatus_ProgressChanged;
             refreshStatusWorker.RunWorkerCompleted += refreshStatus_RunWorkerCompleted;
+
+            Version.Content = $"v. {Data.GetVersion()}";
         }
 
         private void JenkinsWindow_Closing(object sender, CancelEventArgs e)

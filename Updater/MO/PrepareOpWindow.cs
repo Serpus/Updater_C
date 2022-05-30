@@ -48,6 +48,8 @@ namespace Updater.MO
             preapareBuildsWorker.RunWorkerCompleted += PreapareBuildsWorker_RunWorkerCompleted;
 
             preapareBuildsWorker.RunWorkerAsync();
+
+            Version.Content = $"v. {Data.GetVersion()}";
         }
 
         private void CheckBox_Click(object sender, RoutedEventArgs e)

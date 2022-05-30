@@ -45,6 +45,8 @@ namespace Updater
             RefreshBuildStatusWorker.RunWorkerCompleted += RefreshBuildStatusWorker_RunWorkerCompleted;
 
             RefreshBuildStatusWorker.RunWorkerAsync();
+
+            Version.Content = $"v. {Data.GetVersion()}";
         }
 
         public void startLoading()
