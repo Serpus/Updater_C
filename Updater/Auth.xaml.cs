@@ -32,9 +32,16 @@ namespace Updater
             checkUpdatesWorker.RunWorkerCompleted += CheckUpdatesWorker_RunWorkerCompleted; ;
 
             Version.Content = $"v. {Data.GetVersion()}";
+
             Log.Info("Environment Version: " + Environment.Version);
-            Log.Info("Environment OSVersion: " + Environment.OSVersion);
-            Log.Info("Environment Is64BitOperatingSystem: " + Environment.Is64BitOperatingSystem);
+
+            string subKey = @"SOFTWARE\Wow6432Node\Microsoft\Windows NT\CurrentVersion";
+            Microsoft.Win32.RegistryKey key = Microsoft.Win32.Registry.LocalMachine;
+            Microsoft.Win32.RegistryKey skey = key.OpenSubKey(subKey);
+            string name = skey.GetValue("ProductName").ToString();
+            Log.Info("Environment OSVersion: " + Environment.OSVersion + " - " + name);
+
+            Log.Info("Environment Is64BitOperatingSystem: " + Environment.Is64BitOperatingSystem);           
         }
 
         private void Login(object sender, RoutedEventArgs e)
