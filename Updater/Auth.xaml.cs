@@ -145,7 +145,13 @@ namespace Updater
 
         private void CheckUpdates(object sender, RoutedEventArgs e)
         {
-            checkUpdatesWorker.RunWorkerAsync();
+            try 
+            {
+                checkUpdatesWorker.RunWorkerAsync();
+            } catch (Exception ex)
+            {
+                Log.Error(ex);
+            }
         }
 
         private void Update()
@@ -185,18 +191,19 @@ namespace Updater
         private void CheckUpdatesWorker_DoWork(object sender, DoWorkEventArgs e)
         {
             checkUpdatesWorker.ReportProgress(50);
-            Log.Info("UPDATE MODULE: get ftp://du@s101238.hostru10.fornex.host/public_ftp/version");
-            FtpWebRequest request = (FtpWebRequest)WebRequest.Create("ftp://du@s101238.hostru10.fornex.host/public_ftp/version");
+            Log.Info("UPDATE MODULE: get ftp://intemulator@192.168.231.17/Updater/v");
+            FtpWebRequest request = (FtpWebRequest)WebRequest.Create("ftp://intemulator@192.168.231.17/Updater/v");
             Log.Info("UPDATE MODULE: request created");
             request.Method = WebRequestMethods.Ftp.ListDirectory;
-            request.Credentials = new NetworkCredential("du@s101238.hostru10.fornex.host", "emtzfwsn7q8stuw0xm");
+            request.Credentials = new NetworkCredential("intemulator", "5Whd4mqsYj");
             Log.Info("UPDATE MODULE: get response");
             FtpWebResponse response = (FtpWebResponse)request.GetResponse();
             Log.Info("UPDATE MODULE: response - " + response.WelcomeMessage);
             Stream responseStream = response.GetResponseStream();
 
             StreamReader reader = new StreamReader(responseStream);
-            remoteVersion = reader.ReadToEnd().Replace("version/.\r\nversion/..\r\nversion/", "").Replace("\r\n", "");
+            remoteVersion = reader.ReadToEnd().Replace("v/", "").Trim();
+            Log.Info("remote version - " + remoteVersion);
         }
 
 
