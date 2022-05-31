@@ -185,8 +185,8 @@ namespace Updater
         private void CheckUpdatesWorker_DoWork(object sender, DoWorkEventArgs e)
         {
             checkUpdatesWorker.ReportProgress(50);
-            Log.Info("UPDATE MODULE: get ftp://s101238@s101238.hostru10.fornex.host/public_ftp/version");
-            FtpWebRequest request = (FtpWebRequest)WebRequest.Create("ftp://s101238@s101238.hostru10.fornex.host/public_ftp/version");
+            Log.Info("UPDATE MODULE: get ftp://du@s101238.hostru10.fornex.host/public_ftp/version");
+            FtpWebRequest request = (FtpWebRequest)WebRequest.Create("ftp://du@s101238.hostru10.fornex.host/public_ftp/version");
             Log.Info("UPDATE MODULE: request created");
             request.Method = WebRequestMethods.Ftp.ListDirectory;
             request.Credentials = new NetworkCredential("du@s101238.hostru10.fornex.host", "emtzfwsn7q8stuw0xm");
