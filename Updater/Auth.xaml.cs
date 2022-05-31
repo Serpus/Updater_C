@@ -32,6 +32,9 @@ namespace Updater
             checkUpdatesWorker.RunWorkerCompleted += CheckUpdatesWorker_RunWorkerCompleted; ;
 
             Version.Content = $"v. {Data.GetVersion()}";
+            Log.Info("Environment Version: " + Environment.Version);
+            Log.Info("Environment OSVersion: " + Environment.OSVersion);
+            Log.Info("Environment Is64BitOperatingSystem: " + Environment.Is64BitOperatingSystem);
         }
 
         private void Login(object sender, RoutedEventArgs e)
