@@ -58,9 +58,15 @@ namespace Updater
 
             foreach (Project project in Data.projects)
             {
+                Log.Info(project.name);
                 string url = $"https://ci-sel.dks.lanit.ru/rest/api/latest/plan/{project.planKey.key}/branch";
                 string result = Requests.getRequest(url);
-                Log.Info(project.name);
+                
+                if (result == null)
+                {
+                    Log.Info($"result of {project.planKey.key} is null");
+                    continue;
+                }
 
                 BranchList branchList = JsonConvert.DeserializeObject<BranchList>(result);
                 foreach (Branch branch in branchList.branches.branch)
@@ -70,6 +76,7 @@ namespace Updater
                         project.branch = branch;
                     }
                 }
+                Log.Info("-");
             }
         }
 
