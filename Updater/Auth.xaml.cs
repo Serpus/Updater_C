@@ -4,9 +4,11 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
+using System.Management;
 using System.Net;
 using System.Windows;
 using System.Windows.Controls;
+using Microsoft.Win32;
 using Newtonsoft.Json;
 
 namespace Updater
@@ -33,15 +35,62 @@ namespace Updater
 
             Version.Content = $"v. {Data.GetVersion()}";
 
+            Log.Info("\n--- *** Launch Updater *** ---");
             Log.Info("Environment Version: " + Environment.Version);
 
             string subKey = @"SOFTWARE\Wow6432Node\Microsoft\Windows NT\CurrentVersion";
-            Microsoft.Win32.RegistryKey key = Microsoft.Win32.Registry.LocalMachine;
-            Microsoft.Win32.RegistryKey skey = key.OpenSubKey(subKey);
+            RegistryKey key = Microsoft.Win32.Registry.LocalMachine;
+            RegistryKey skey = key.OpenSubKey(subKey);
             string name = skey.GetValue("ProductName").ToString();
             Log.Info("Environment OSVersion: " + Environment.OSVersion + " - " + name);
 
-            Log.Info("Environment Is64BitOperatingSystem: " + Environment.Is64BitOperatingSystem);           
+            Log.Info("Environment Is64BitOperatingSystem: " + Environment.Is64BitOperatingSystem);
+
+            CultureInfo ci = CultureInfo.InstalledUICulture;
+            Log.Info("Default Language Info:");
+            Log.Info("* Name: {0}", ci.Name);
+            Log.Info("* Display Name: {0}", ci.DisplayName);
+            Log.Info("* English Name: {0}", ci.EnglishName);
+            Log.Info("* 2-letter ISO Name: {0}", ci.TwoLetterISOLanguageName);
+            Log.Info("* 3-letter ISO Name: {0}", ci.ThreeLetterISOLanguageName);
+            Log.Info("* 3-letter Win32 API Name: {0}", ci.ThreeLetterWindowsLanguageName);
+
+            getOperatingSystemInfo();
+            getProcessorInfo();
+        }
+
+        public void getOperatingSystemInfo()
+        {
+            //Create an object of ManagementObjectSearcher class and pass query as parameter.
+            ManagementObjectSearcher mos = new ManagementObjectSearcher("select * from Win32_OperatingSystem");
+            foreach (ManagementObject managementObject in mos.Get())
+            {
+                if (managementObject["Caption"] != null)
+                {
+                    Log.Info("Operating System Name  :  " + managementObject["Caption"].ToString());   //Display operating system caption
+                }
+                if (managementObject["OSArchitecture"] != null)
+                {
+                    Log.Info("Operating System Architecture  :  " + managementObject["OSArchitecture"].ToString());   //Display operating system architecture.
+                }
+                if (managementObject["CSDVersion"] != null)
+                {
+                    Log.Info("Operating System Service Pack   :  " + managementObject["CSDVersion"].ToString());     //Display operating system version.
+                }
+            }
+        }
+
+        public void getProcessorInfo()
+        {
+            RegistryKey processor_name = Registry.LocalMachine.OpenSubKey(@"Hardware\Description\System\CentralProcessor\0", RegistryKeyPermissionCheck.ReadSubTree);   //This registry entry contains entry for processor info.
+
+            if (processor_name != null)
+            {
+                if (processor_name.GetValue("ProcessorNameString") != null)
+                {
+                    Log.Info(processor_name.GetValue("ProcessorNameString"));   //Display processor ingo.
+                }
+            }
         }
 
         private void Login(object sender, RoutedEventArgs e)

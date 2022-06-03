@@ -109,6 +109,7 @@
       <HintPath>..\packages\System.Drawing.Common.4.5.1\lib\net461\System.Drawing.Common.dll</HintPath>
     </Reference>
     <Reference Include="System.IO.Compression" />
+    <Reference Include="System.Management" />
     <Reference Include="System.Memory, Version=4.0.1.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Memory.4.5.4\lib\net461\System.Memory.dll</HintPath>
     </Reference>
@@ -275,7 +276,7 @@
     <Compile Include="ProjectParser\PlanKey.cs" />
     <Compile Include="ProjectParser\Key.cs" />
     <Compile Include="CustomElements\Project.cs" />
-    <Compile Include="ProjectParser\Requests.cs" />
+    <Compile Include="Requests.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ProjectParser\Stands\EIS3.cs" />
