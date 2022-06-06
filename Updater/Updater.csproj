@@ -89,6 +89,9 @@
     <Reference Include="Jenkins.Net, Version=1.0.4.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\jenkinsnet.1.0.4\lib\net45\Jenkins.Net.dll</HintPath>
     </Reference>
+    <Reference Include="Meziantou.Framework.Win32.CredentialManager, Version=1.4.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Meziantou.Framework.Win32.CredentialManager.1.4.2\lib\net461\Meziantou.Framework.Win32.CredentialManager.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Bcl.AsyncInterfaces, Version=6.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Bcl.AsyncInterfaces.6.0.0\lib\net461\Microsoft.Bcl.AsyncInterfaces.dll</HintPath>
     </Reference>

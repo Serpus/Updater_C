@@ -8,6 +8,7 @@ using System.Management;
 using System.Net;
 using System.Windows;
 using System.Windows.Controls;
+using Meziantou.Framework.Win32;
 using Microsoft.Win32;
 using Newtonsoft.Json;
 
@@ -57,6 +58,12 @@ namespace Updater
 
             getOperatingSystemInfo();
             getProcessorInfo();
+
+            if (CredentialManager.ReadCredential("Updater - " + Environment.UserName) != null)
+            {
+                username.Text = CredentialManager.ReadCredential(Environment.UserName).UserName.ToString();
+                password.Password = CredentialManager.ReadCredential(Environment.UserName).Password.ToString();
+            }
         }
 
         public void getOperatingSystemInfo()
@@ -115,6 +122,8 @@ namespace Updater
                 MessageBox.Show($"Что-то пошло не так: {Requests.error}. Попробуйте ещё раз");
                 return;
             }
+            CredentialManager.WriteCredential("Updater - " + Environment.UserName, username.Text, password.Password, CredentialPersistence.LocalMachine);
+
 
             Data.projects = JsonConvert.DeserializeObject<Project[]>(result);
 
