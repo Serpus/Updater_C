@@ -61,8 +61,8 @@ namespace Updater
 
             if (CredentialManager.ReadCredential("Updater - " + Environment.UserName) != null)
             {
-                username.Text = CredentialManager.ReadCredential(Environment.UserName).UserName.ToString();
-                password.Password = CredentialManager.ReadCredential(Environment.UserName).Password.ToString();
+                username.Text = CredentialManager.ReadCredential("Updater - " + Environment.UserName).UserName.ToString();
+                password.Password = CredentialManager.ReadCredential("Updater - " + Environment.UserName).Password.ToString();
             }
         }
 
