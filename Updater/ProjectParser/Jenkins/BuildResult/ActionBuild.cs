@@ -8,6 +8,7 @@ namespace Updater.ProjectParser.Jenkins.BuildResult
 {
     internal class ActionBuild
     {
+        public Cause[] Causes { get; set; }
         public Parameter[] Parameters { get; set; }
 
         public Parameter getStandParameter()

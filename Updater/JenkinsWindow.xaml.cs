@@ -542,12 +542,12 @@ namespace Updater
                     responseResult = Requests.getRequest(buildUrl);
                     BuildResult BuildResult = JsonConvert.DeserializeObject<BuildResult>(responseResult);
 
-                    var standParameter = BuildResult.getFirstAction().getStandParameter();
-                    if (standParameter == null)
+                    string stand = BuildResult.getStand();
+                    if (stand == null)
                     {
                         continue;
                     }
-                    if (standParameter.Value.Equals(de.Stand))
+                    if (stand.Equals(de.Stand))
                     {
                         Log.Info("Найден билд - " + BuildResult.FullDisplayName + " - " + de.Stand);
                         DataJenkins.BuildResults.Add(BuildResult);

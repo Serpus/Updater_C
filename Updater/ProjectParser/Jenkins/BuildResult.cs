@@ -15,14 +15,16 @@ namespace Updater
         public string Url { get; set; }
         public string Result { get; set; }
 
-        public ActionBuild getFirstAction()
+        public string getStand()
         {
-            return actions[0];
-        }
-
-        public String getStand()
-        {
-            return actions[0].getStandParameter().Value;
+            foreach (ActionBuild action in actions)
+            {
+                if (action.getStandParameter() != null)
+                {
+                    return action.getStandParameter().Value;
+                }
+            }
+            return null;
         }
     }
 }

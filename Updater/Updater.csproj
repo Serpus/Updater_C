@@ -212,6 +212,7 @@
     <Compile Include="ProjectParser\Jenkins\Build.cs" />
     <Compile Include="ProjectParser\Jenkins\BuildResult.cs" />
     <Compile Include="ProjectParser\Jenkins\BuildResult\ActionBuild.cs" />
+    <Compile Include="ProjectParser\Jenkins\BuildResult\Cause.cs" />
     <Compile Include="ProjectParser\Jenkins\BuildResult\Parameter.cs" />
     <Compile Include="ProjectParser\Jenkins\BuildResult\Parameters.cs" />
     <Compile Include="ProjectParser\Jenkins\BuildsList.cs" />
