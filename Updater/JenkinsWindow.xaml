@@ -58,9 +58,9 @@
                 <RowDefinition/>
             </Grid.RowDefinitions>
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Grid.Row="0">
-                <Button MaxHeight="25" MinWidth="90" MaxWidth="90" HorizontalAlignment="Left" Content="Отметить все" Click="CheckAll"/>
+                <Button x:Name="CheckAllButton" MaxHeight="25" MinWidth="90" MaxWidth="90" HorizontalAlignment="Left" Content="Отметить все" Click="CheckAll"/>
                 <Label/>
-                <Button MaxHeight="25" MinWidth="90" MaxWidth="90" HorizontalAlignment="Left" Content="Снять все" Click="UncheckAll"/>
+                <Button x:Name="UncheckAllButton" MaxHeight="25" MinWidth="90" MaxWidth="90" HorizontalAlignment="Left" Content="Снять все" Click="UncheckAll"/>
             </StackPanel>
             <Button Grid.Row="1" Content="Сбросить" MaxHeight="25" MinHeight="25" MinWidth="150" MaxWidth="150" 
                     VerticalAlignment="Top" HorizontalAlignment="Center" Click="ResetProject"/>

@@ -148,15 +148,17 @@ namespace Updater
         private void ResetProject(object sender, RoutedEventArgs e)
         {
             Log.Info("Сброс выбранного проекта");
-            jobsRegisterStackPanel.Children.Clear();
             SelectedBranchName.Text = "";
+            jobsRegisterStackPanel.Children.Clear();
+            BuildStatusTabs.Items.Clear();
             BranchHint.Visibility = Visibility.Hidden;
+            ConfirmButton.IsEnabled = false;
+            BuildStatusGrid.IsEnabled = false;
             BranchName.IsEnabled = true;
             ProjectStackPanel.IsEnabled = true;
             RegisterList.IsEnabled = true;
-            ConfirmButton.IsEnabled = false;
-            BuildStatusGrid.IsEnabled = false;
-            BuildStatusTabs.Items.Clear();
+            CheckAllButton.IsEnabled = true;
+            UncheckAllButton.IsEnabled= true;
 
             foreach (var obj in ProjectStackPanel.Children)
             {
@@ -248,6 +250,8 @@ namespace Updater
                 RegisterList.IsEnabled = false;
                 ConfirmButton.IsEnabled = false;
                 BuildStatusGrid.IsEnabled = true;
+                CheckAllButton.IsEnabled = false;
+                UncheckAllButton.IsEnabled = false;
                 startDeployWorker.RunWorkerAsync();
             }
         }
