@@ -85,6 +85,9 @@
     <LangVersion>7.3</LangVersion>
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>Updater_icon.ico</ApplicationIcon>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Jenkins.Net, Version=1.0.4.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\jenkinsnet.1.0.4\lib\net45\Jenkins.Net.dll</HintPath>
@@ -302,6 +305,7 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <Resource Include="Updater_icon.ico" />
     <None Include="Updater_TemporaryKey.pfx" />
     <Resource Include="simbol.png" />
     <EmbeddedResource Include="Properties\Resources.resx">
