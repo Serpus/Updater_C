@@ -288,14 +288,15 @@ namespace Updater
             foreach (ProjectCheckBox checkBox in Data.checkedBoxes)
             {
                 string startBuildUrl = $"https://ci-sel.dks.lanit.ru/rest/api/latest/queue/{checkBox.Project.branch.key}";
+                Log.Info("request: " + startBuildUrl);
                 string result = await Requests.postRequestAsync(startBuildUrl);
                 // Пример ответа:
                 // {"planKey":"EIS-EISBTKWF42","buildNumber":17,"buildResultKey":"EIS-EISBTKWF42-17","triggerReason":"Manual build",
                 // "link":{"href":"https://ci-sel.dks.lanit.ru/rest/api/latest/result/EIS-EISBTKWF42-17","rel":"self"}}
-                Log.Info(result);
                 StartingBuildResult buildResult = JsonConvert.DeserializeObject<StartingBuildResult>(result);
                 checkBox.Project.startingBuildResult = buildResult;
                 startedBuilds.Add(checkBox.Project);
+                Log.Info("---");
             }
 
             Data.startedBuilds = startedBuilds;

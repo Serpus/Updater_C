@@ -67,7 +67,7 @@ namespace Updater
             foreach (Project project in Data.startedBuilds)
             {
 
-                if (project.branch.name.Contains("EPZ-"))
+                if (project.branch.name.Contains("EPZ -"))
                 {
                     continue;
                 }
@@ -143,7 +143,7 @@ namespace Updater
             this.Close();
         }
 
-        private void Close(object sender, RoutedEventArgs e)
+        private void CloseWindow()
         {
             SuccessBuilds.Children.Clear();
             ProcessBuilds.Children.Clear();
@@ -181,7 +181,6 @@ namespace Updater
             }
 
             startDeployWorker.RunWorkerAsync();
-            Close(sender, e);
         }
 
         private async Task<StartingDeployResult> Deploy(Stand standBuild, Project p)
@@ -224,6 +223,7 @@ namespace Updater
              */
             StartingDeployResult startingDeployResult = JsonConvert.DeserializeObject<StartingDeployResult>(response);
 
+            Log.Info("---");
             return startingDeployResult;
         }
 
@@ -260,6 +260,7 @@ namespace Updater
         public void startDeploy_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             stopLoading();
+            CloseWindow();
             Log.Info("--- *** ---");
         }
 
@@ -269,6 +270,11 @@ namespace Updater
             RefreshBuildStatusWorker.ReportProgress(50);
             foreach (Project project in Data.startedBuilds)
             {
+                if (project.branch.name.Contains("EPZ -"))
+                {
+                    continue;
+                }
+
                 string buildResultkey = project.startingBuildResult.buildResultkey;
                 string result = Requests.getRequest("https://ci-sel.dks.lanit.ru/rest/api/latest/result/" + buildResultkey);
                 BuildStatus buildStatus = JsonConvert.DeserializeObject<BuildStatus>(result);
