@@ -61,7 +61,14 @@ namespace Updater
             refreshDeployStatusWorker.ProgressChanged += RefreshDeployStatusWorker_ProgressChanged;
             refreshDeployStatusWorker.RunWorkerCompleted += RefreshDeployStatusWorker_RunWorkerCompleted;
 
+            Application.Current.DispatcherUnhandledException += Current_DispatcherUnhandledException;
+
             Version.Content = $"v. {Data.GetVersion()}";
+        }
+
+        private void Current_DispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
+        {
+            Log.Error(e.Exception.Message + e.Exception.StackTrace);
         }
 
         private void MainWindow_Closed(object sender, EventArgs e)
