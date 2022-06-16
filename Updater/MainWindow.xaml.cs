@@ -68,7 +68,7 @@ namespace Updater
 
         private void Current_DispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
         {
-            Log.Error(e.Exception.Message + e.Exception.StackTrace);
+            Log.Error(e.Exception.Message + "\n" + e.Exception.StackTrace);
         }
 
         private void MainWindow_Closed(object sender, EventArgs e)
