@@ -100,17 +100,13 @@ namespace Updater
                 MessageBox.Show("sender in GetJobs method is not ProjectButton");
                 return;
             }
-            SelectedBranchName.Text = "Выбранная ветка: " + BranchName.Text;
-            BranchHint.Visibility = Visibility.Visible;
-            BranchName.IsEnabled = false;
-
             getJobsWorker.RunWorkerAsync();
         }
 
         /**
          * Создание чекбоксов в части окна (с реестрами)
          */
-        public void CreateProjectCheckBoxes(List<Register> jobslist)
+        public void CreateProjectCheckBoxes()
         {
             getBranchesWorker.RunWorkerAsync();
         }
@@ -147,7 +143,8 @@ namespace Updater
          */
         private void ResetProject(object sender, RoutedEventArgs e)
         {
-            Log.Info("Сброс выбранного проекта");
+            Log.Info("Сброс выбранных проекток");
+            DataJenkins.Registers = null;
             SelectedBranchName.Text = "";
             jobsRegisterStackPanel.Children.Clear();
             BuildStatusTabs.Items.Clear();
@@ -322,7 +319,7 @@ namespace Updater
                         listBox.Items.Add(label);
                     }
                 }
-                BuildStatusTabs.Items.Add(new TabItem { Header = stand, Content = listBox });
+                BuildStatusTabs.Items.Add(new TabItem { Header = stand, Content = listBox, IsSelected = true });
             }
         }
 
@@ -396,12 +393,18 @@ namespace Updater
 
         public void getJobs_DoWork(object sender, DoWorkEventArgs e)
         {
+            DataJenkins.Registers = new List<Register>();
             getJobsWorker.ReportProgress(1);
             var response = Requests.getRequest($"https://ci-sel.dks.lanit.ru/jenkins/job/{DataJenkins.ProjectName}/api/json?pretty=true");
+            if (response == null)
+            {
+                MessageBox.Show("Не получилось получить пайплайны для проекта " + DataJenkins.ProjectName, "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                Log.Error("Не получилось получить пайплайны для проекта " + DataJenkins.ProjectName);
+                return;
+            }
             Jobs jobsList = JsonConvert.DeserializeObject<Jobs>(response);
             if (jobsList != null)
             {
-                DataJenkins.Registers = new List<Register>();
                 foreach (Job job in jobsList.jobs)
                 {
                     Register register = new Register()
@@ -413,6 +416,11 @@ namespace Updater
                     };
                     DataJenkins.Registers.Add(register);
                 }
+            } else
+            {
+                MessageBox.Show("Не получилось получить пайплайны для проекта " + DataJenkins.ProjectName, "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                Log.Error("Не получилось получить пайплайны для проекта " + DataJenkins.ProjectName);
+                return;
             }
         }
 
@@ -426,6 +434,11 @@ namespace Updater
 
         public void getJobs_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
+            if (DataJenkins.Registers == null)
+            {
+                stopLoading();
+                return;
+            }
             Log.Info("--- Реестры на докерах ---");
             int i = 0;
             foreach (Register register in DataJenkins.Registers)
@@ -434,7 +447,10 @@ namespace Updater
                 Log.Info(i + " job - " + register.name);
             }
             Log.Info("--- *** ---");
-            CreateProjectCheckBoxes(DataJenkins.Registers);
+            CreateProjectCheckBoxes();
+            SelectedBranchName.Text = "Выбранная ветка: " + BranchName.Text;
+            BranchHint.Visibility = Visibility.Visible;
+            BranchName.IsEnabled = false;
             stopLoading();
         }
 
@@ -445,7 +461,7 @@ namespace Updater
             getBranchesWorker.ReportProgress(1);
             foreach (Register register in DataJenkins.Registers)
             {
-                Log.Debug("Получачем ветки для джоба " + register.name + ", jobURL - " + register.url);
+                Log.Info("Получачем ветки для джоба " + register.name + ", jobURL - " + register.url);
                 var response = Requests.getRequest($"https://ci-sel.dks.lanit.ru/jenkins/job/{DataJenkins.ProjectName}/job/{register.name}/api/json?pretty=true");
                 Jobs branchList = JsonConvert.DeserializeObject<Jobs>(response);
                 register.BranchList = branchList;
@@ -466,12 +482,18 @@ namespace Updater
             {
                 JobCheckBox checkBox = new JobCheckBox()
                 {
-                    Content = regJob.name,
+                    Content = regJob.project + " - " + regJob.name,
                     JobName = regJob.name,
                     JobUrl = regJob.url,
                     JobProject = regJob.project,
                     IsEnabled = false
                 };
+
+                if (regJob.BranchList == null)
+                {
+                    Log.Error("Не удаётся найти ветки для джоба " + checkBox.Content);
+                    continue;
+                }
 
                 foreach (Job branch in regJob.BranchList.jobs)
                 {
