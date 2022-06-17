@@ -484,7 +484,7 @@ namespace Updater
             {
                 JobCheckBox checkBox = new JobCheckBox()
                 {
-                    Content = regJob.project + " - " + regJob.name,
+                    Content = regJob.name,
                     JobName = regJob.name,
                     JobUrl = regJob.url,
                     JobProject = regJob.project,
