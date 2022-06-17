@@ -464,7 +464,9 @@ namespace Updater
                 Log.Info("Получачем ветки для джоба " + register.name + ", jobURL - " + register.url);
                 var response = Requests.getRequest($"https://ci-sel.dks.lanit.ru/jenkins/job/{DataJenkins.ProjectName}/job/{register.name}/api/json?pretty=true");
                 Jobs branchList = JsonConvert.DeserializeObject<Jobs>(response);
+                Log.Info("Ветки: " + branchList.ToString());
                 register.BranchList = branchList;
+                Log.Info(" --- ");
             }
         }
 
@@ -489,7 +491,7 @@ namespace Updater
                     IsEnabled = false
                 };
 
-                if (regJob.BranchList == null)
+                if (regJob.BranchList == null || regJob.BranchList.jobs == null)
                 {
                     Log.Error("Не удаётся найти ветки для джоба " + checkBox.Content);
                     continue;
