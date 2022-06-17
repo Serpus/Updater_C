@@ -42,8 +42,8 @@
             <Label/>
             <l:ProjectButton Content="ЕПЗ" Grid.Column="0" MaxHeight="28" MinHeight="28" MinWidth="50" Click="GetJobs" l:ProjectName="epz" Margin="10, 0, 10 ,0"/>
             <Label/>
-            <l:ProjectButton Content="223 ФЗ" Grid.Column="0" MaxHeight="28" MinHeight="28" MinWidth="50" Click="GetJobs" l:ProjectName="fz223" Margin="10, 0, 10 ,0"/>
-            <Label/>
+            <!--<l:ProjectButton Content="223 ФЗ" Grid.Column="0" MaxHeight="28" MinHeight="28" MinWidth="50" Click="GetJobs" l:ProjectName="fz223" Margin="10, 0, 10 ,0"/>
+            <Label/>-->
             <l:ProjectButton Content="ЛКП" Grid.Column="0" MaxHeight="28" MinHeight="28" MinWidth="50" Click="GetJobs" l:ProjectName="lkp" Margin="10, 0, 10 ,0"/>
             <Label/>
             <l:ProjectButton Content="ЗЧ" Grid.Column="0" MaxHeight="28" MinHeight="28" MinWidth="50" Click="GetJobs" l:ProjectName="priv" Margin="10, 0, 10 ,0"/>

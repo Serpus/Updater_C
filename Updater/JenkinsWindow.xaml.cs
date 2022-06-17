@@ -491,7 +491,7 @@ namespace Updater
                     IsEnabled = false
                 };
 
-                if (regJob.BranchList == null || regJob.BranchList.jobs == null)
+                if (regJob.BranchList == null)
                 {
                     Log.Error("Не удаётся найти ветки для джоба " + checkBox.Content);
                     continue;
