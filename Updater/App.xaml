@@ -1,9 +1,16 @@
 ﻿<Application x:Class="Updater.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:local="clr-namespace:Updater"
+             xmlns:custom="clr-namespace:Updater.CustomElements"
              StartupUri="Auth.xaml">
     <Application.Resources>
-         
+        <Style TargetType="custom:BuildDeployCountTextBox">
+            <Setter Property="IsReadOnly" Value="True" />
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Background" Value="#FFE5E5E5"/>
+            <Setter Property="Margin" Value="0,0,0,0"/>
+            <Setter Property="MaxWidth" Value="170"/>
+            <Setter Property="HorizontalAlignment" Value="Left"/>
+        </Style>
     </Application.Resources>
 </Application>

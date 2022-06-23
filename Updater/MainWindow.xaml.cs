@@ -189,6 +189,7 @@ namespace Updater
 
                 buildsStatusList.Items.Add(label);
             }
+            BuildCount.Text += Data.startedBuilds.Count().ToString();
         }
 
         private void ChangeBranch(Object sender, RoutedEventArgs args)
@@ -418,6 +419,28 @@ namespace Updater
             ClearDeployStatusList();
             refreshDeployStatusWorker.RunWorkerAsync();
         }
+        private void TabHeaderTextBlock_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (((sender as TextBlock).Parent as TabItem).Content is ListView list)
+            {
+                TextBlock tb = ((sender as TextBlock).Parent as TabItem).Header as TextBlock;
+                DeployCount.Text = "Всего запущено на " + tb.Text + ": " + list.Items.Count.ToString();
+            }
+        }
+
+        private void RefreshDeployCount()
+        {
+            foreach (TabItem tabItem in DeploysTabControl.Items)
+            {
+                if (tabItem.IsSelected)
+                {
+                    if (tabItem.Content is ListView list)
+                    {
+                        DeployCount.Text = "Всего запущено на " + (tabItem.Header as TextBlock).Text + ": " + list.Items.Count.ToString();
+                    };
+                }
+            }
+        }
 
         private void ClearDeployStatusList()
         {
@@ -563,6 +586,7 @@ namespace Updater
         private void RefreshDeployStatusWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             SetDeployResultInPanel();
+            RefreshDeployCount();
             stopLoading();
             Log.Info("--- *** ---");
         }

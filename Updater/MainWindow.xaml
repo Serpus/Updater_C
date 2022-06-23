@@ -5,8 +5,9 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:gif="http://wpfanimatedgif.codeplex.com"
         xmlns:local="clr-namespace:Updater"
+        xmlns:custom="clr-namespace:Updater.CustomElements"
         mc:Ignorable="d"
-        Title="Updater" MinHeight="470" Height="470" Width="665" MinWidth="665" ResizeMode="CanResize" WindowStartupLocation="CenterScreen">
+        Title="Updater" MinHeight="500" Height="470" Width="665" MinWidth="665" ResizeMode="CanResize" WindowStartupLocation="CenterScreen">
     <Grid>
         <TabControl Background="#FFE5E5E5">
             <TabItem Header="Билды" MouseMove="buildsGeneralSettings">
@@ -43,14 +44,19 @@
                     </StackPanel>
                     <Grid Grid.Column="1" IsEnabled="False" VerticalAlignment="Stretch" x:Name="buildsStatusGrid">
                         <Grid.RowDefinitions>
-                            <RowDefinition Height="35"/>
+                            <RowDefinition Height="45"/>
                             <RowDefinition Height="*"/>
                             <RowDefinition Height="20"/>
                         </Grid.RowDefinitions>
-                        <StackPanel Grid.Row="0" VerticalAlignment="Top" Orientation="Horizontal" Height="32">
-                            <Label VerticalAlignment="Center">Статусы запущенных билдов</Label>
-                            <Button Content=" Обновить " Margin="10,3,0,3" Click="RefreshBuildsStatus"/>
-                            <Button Content=" Открыть все билды в списке " Margin="15,3,0,3" Name="OpenAllBuildsButton" Click="OpenAllBuildsButton_Click"/>
+                        <StackPanel>
+                            <StackPanel Grid.Row="0" VerticalAlignment="Top" Orientation="Horizontal" Height="32">
+                                <Label VerticalAlignment="Center">Статусы запущенных билдов</Label>
+                                <Button Content=" Обновить " Margin="10,3,0,3" Click="RefreshBuildsStatus"/>
+                                <Button Content=" Открыть все билды в списке " Margin="15,3,0,3" Name="OpenAllBuildsButton" Click="OpenAllBuildsButton_Click"/>
+                            </StackPanel>
+                            <StackPanel>
+                                <custom:BuildDeployCountTextBox Margin="3,-5,0,0" Text="Всего запущено: " VerticalAlignment="Top" x:Name="BuildCount"/>
+                            </StackPanel>
                         </StackPanel>
                         <ListBox Grid.Row="1" MinHeight="363" VerticalAlignment="Stretch" Margin="0,0,6,8"
                              d:ItemsSource="{d:SampleData ItemCount=10}" x:Name="buildsStatusList"/>
@@ -130,33 +136,53 @@
                     </StackPanel>
                     <Grid Grid.Column="1" Grid.RowSpan="3" IsEnabled="False" VerticalAlignment="Stretch" Name="DeployStatusPanel">
                         <Grid.RowDefinitions>
-                            <RowDefinition Height="35"/>
+                            <RowDefinition Height="45"/>
                             <RowDefinition Height="*"/>
                             <RowDefinition Height="20"/>
                         </Grid.RowDefinitions>
-                        <StackPanel Grid.Row="0" VerticalAlignment="Top" Orientation="Horizontal" Height="32">
-                            <Label VerticalAlignment="Center">Статусы запущенных деплоев</Label>
-                            <Button Content=" Обновить " Margin="10,3,0,3" Name="refreshDeploysButton" Click="refreshDeploysButton_Click"/>
-                            <Button Content=" Открыть все деплои в списке " Margin="15,3,0,3" Click="OpenAllDeploys"/>
+                        <StackPanel>
+                            <StackPanel Grid.Row="0" VerticalAlignment="Top" Orientation="Horizontal" Height="32">
+                                <Label VerticalAlignment="Center">Статусы запущенных деплоев</Label>
+                                <Button Content=" Обновить " Margin="10,3,0,3" Name="refreshDeploysButton" Click="refreshDeploysButton_Click"/>
+                                <Button Content=" Открыть все деплои в списке " Margin="15,3,0,3" Click="OpenAllDeploys"/>
+                            </StackPanel>
+                            <StackPanel>
+                                <custom:BuildDeployCountTextBox Margin="3,-5,0,0" Text="Всего запущено: " VerticalAlignment="Top" x:Name="DeployCount"/>
+                            </StackPanel>
                         </StackPanel>
                         <TabControl Grid.Row="1" TabStripPlacement="Bottom" Background="#FFE5E5E5" Name="DeploysTabControl">
-                            <TabItem Header="ЕИС-3">
+                            <TabItem  Name="EIS3Tab">
+                                <TabItem.Header>
+                                    <TextBlock Text="ЕИС-3" MouseDown="TabHeaderTextBlock_MouseDown"/>
+                                </TabItem.Header>
                                 <ListView d:ItemsSource="{d:SampleData ItemCount=10}" Name="deploysEIS3">
                                 </ListView>
                             </TabItem>
-                            <TabItem Header="ЕИС-4">
+                            <TabItem>
+                                <TabItem.Header>
+                                    <TextBlock Text="ЕИС-4" MouseDown="TabHeaderTextBlock_MouseDown"/>
+                                </TabItem.Header>
                                 <ListView d:ItemsSource="{d:SampleData ItemCount=10}" Name="deploysEIS4">
                                 </ListView>
                             </TabItem>
-                            <TabItem Header="ЕИС-5">
+                            <TabItem>
+                                <TabItem.Header>
+                                    <TextBlock Text="ЕИС-5" MouseDown="TabHeaderTextBlock_MouseDown"/>
+                                </TabItem.Header>
                                 <ListView d:ItemsSource="{d:SampleData ItemCount=10}" Name="deploysEIS5">
                                 </ListView>
                             </TabItem>
-                            <TabItem Header="ЕИС-6">
+                            <TabItem>
+                                <TabItem.Header>
+                                    <TextBlock Text="ЕИС-6" MouseDown="TabHeaderTextBlock_MouseDown"/>
+                                </TabItem.Header>
                                 <ListView d:ItemsSource="{d:SampleData ItemCount=10}" Name="deploysEIS6">
                                 </ListView>
                             </TabItem>
-                            <TabItem Header="ЕИС-7">
+                            <TabItem>
+                                <TabItem.Header>
+                                    <TextBlock Text="ЕИС-7" MouseDown="TabHeaderTextBlock_MouseDown"/>
+                                </TabItem.Header>
                                 <ListView d:ItemsSource="{d:SampleData ItemCount=10}" Name="deploysEIS7">
                                 </ListView>
                             </TabItem>

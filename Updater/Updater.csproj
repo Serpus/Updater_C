@@ -176,6 +176,7 @@
     <Compile Include="ConfirmMo.xaml.cs">
       <DependentUpon>ConfirmMo.xaml</DependentUpon>
     </Compile>
+    <Compile Include="CustomElements\BuildDeployCountTextBox.cs" />
     <Compile Include="CustomElements\BuildStatusLabel.cs" />
     <Compile Include="CustomElements\CompareProjects.cs" />
     <Compile Include="CustomElements\DeployStatusLabel.cs" />
