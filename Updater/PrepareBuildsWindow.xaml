@@ -62,13 +62,16 @@
             </Border>
         </Grid>
         <Grid Grid.Row="2" >
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition/>
-                <ColumnDefinition Width="70"/>
-                <ColumnDefinition/>
-            </Grid.ColumnDefinitions>
-            <Button Grid.Column="0" Content="Отмена" Padding="5,0,5,0" Margin="0,17,0,17" HorizontalAlignment="Right" Click="CancelPrepareBuildsWindow"/>
-            <Button Grid.Column="2" Content="Запустить билды" HorizontalAlignment="Left" Padding="5,0,5,0" Margin="0,17,0,17" Click="StartBuilds"/>
+            <Grid.RowDefinitions>
+                <RowDefinition MaxHeight="20"/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <CheckBox Grid.ColumnSpan="3"  VerticalAlignment="Center" Name="BuildsNotification" Content="Уведомления об упавших билдах" HorizontalAlignment="Center"/>
+            <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center">
+                <Button Content="Отмена" Padding="5,0,5,0" Click="CancelPrepareBuildsWindow" MaxHeight="30"/>
+                <Label MinWidth="50"/>
+                <Button Content="Запустить билды" Padding="5,0,5,0" Click="StartBuilds" MaxHeight="30"/>
+            </StackPanel>
         </Grid>
         <Grid Grid.Row="0" Grid.RowSpan="3" x:Name="LoadingGrid" Visibility="Hidden">
             <StackPanel VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Background="#FFE5E5E5" Opacity="0.7" Visibility="Visible" x:Name="LoadingPanel">

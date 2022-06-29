@@ -14,6 +14,9 @@ using System.Windows.Shapes;
 using System.ComponentModel;
 using Newtonsoft.Json;
 using Updater.CustomElements;
+using System.Threading;
+using Notifications.Wpf;
+using System.Diagnostics;
 
 namespace Updater
 {
@@ -204,7 +207,7 @@ namespace Updater
             }
         }
 
-        internal void setCheckedBoxesInData()
+        public void setCheckedBoxesInData()
         {
             List<ProjectCheckBox> boxes = new List<ProjectCheckBox>();
 
@@ -242,6 +245,8 @@ namespace Updater
 
             Data.checkedBoxes = boxes;
         }
+
+        private bool buildNotification = false;
         private void StartBuilds(object sender, RoutedEventArgs e)
         {
             setCheckedBoxesInData();
@@ -252,6 +257,7 @@ namespace Updater
                 return;
             }
             Log.Info("---Старт билдов---");
+            buildNotification = BuildsNotification.IsChecked.Value;
             worker.RunWorkerAsync();
         }
 
@@ -296,11 +302,31 @@ namespace Updater
                 StartingBuildResult buildResult = JsonConvert.DeserializeObject<StartingBuildResult>(result);
                 checkBox.Project.startingBuildResult = buildResult;
                 startedBuilds.Add(checkBox.Project);
+                if (buildNotification)
+                {
+                    Log.Info("Build notification is Enabled");
+                    CreateBuildNotification(buildResult.buildResultkey, checkBox.Project.name);
+                }
                 Log.Info("---");
             }
 
             Data.startedBuilds = startedBuilds;
             Data.IsBuildsStarted = true;
+        }
+
+        private void CreateBuildNotification(string key, string projectName)
+        {
+            Log.Info("Create build notification for " + key);
+            CheckStatusWorker getStatusWorker = new CheckStatusWorker();
+            getStatusWorker.DoWork += GetStatusWorker_DoWork;
+            getStatusWorker.RunWorkerCompleted += GetStatusWorker_RunWorkerCompleted;
+            getStatusWorker.Key = key;
+            getStatusWorker.Link = "https://ci-sel.dks.lanit.ru/browse/";
+            getStatusWorker.RequestLink = "https://ci-sel.dks.lanit.ru/rest/api/latest/result/";
+            getStatusWorker.StatusType = "Статус билда " + projectName;
+            getStatusWorker.SuccessMessage = "Билд успешный";
+            getStatusWorker.FailedMessage = "Билд упал";
+            getStatusWorker.RunWorkerAsync();
         }
 
         private void worker_ProgressChanged(object sender, ProgressChangedEventArgs e)
@@ -328,8 +354,50 @@ namespace Updater
         {
             if (sender is ResultMenuItem Result)
             {
-                System.Diagnostics.Process.Start(Result.ResultUrl);
+                Process.Start(Result.ResultUrl);
             }
+        }
+
+        private void GetStatusWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            CheckStatusWorker worker = sender as CheckStatusWorker;
+            var notificationManager = new NotificationManager();
+
+            NotificationType notifType = NotificationType.Error;
+            string message = worker.FailedMessage;
+            string title = worker.StatusType;
+
+            if (worker.Status.Equals("Successful") || worker.Status.Equals("SUCCESS"))
+            {
+                notifType = NotificationType.Success;
+                message = worker.SuccessMessage;
+            }
+
+            notificationManager.Show(new NotificationContent
+            {
+                Title = title,
+                Message = message,
+                Type = notifType,
+            },
+            expirationTime: TimeSpan.FromSeconds(30),
+            onClick: () =>
+            {
+                Process.Start(worker.Link + worker.Key);
+            });
+        }
+
+        private void GetStatusWorker_DoWork(object sender, DoWorkEventArgs e)
+        {
+            CheckStatusWorker worker = sender as CheckStatusWorker;
+            string status;
+            do
+            {
+                Thread.Sleep(5000);
+                string result = Requests.getSilenceRequest(worker.RequestLink + worker.Key);
+                BuildStatus buildStatus = JsonConvert.DeserializeObject<BuildStatus>(result);
+                status = buildStatus.state;
+            } while (status.Equals("Unknown") || status.Equals("UNKNOWN"));
+            worker.Status = status;
         }
     }
 }
