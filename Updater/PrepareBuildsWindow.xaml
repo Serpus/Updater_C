@@ -66,7 +66,7 @@
                 <RowDefinition MaxHeight="20"/>
                 <RowDefinition/>
             </Grid.RowDefinitions>
-            <CheckBox Grid.ColumnSpan="3"  VerticalAlignment="Center" Name="BuildsNotification" Content="Уведомления об результатах билдов" HorizontalAlignment="Center"/>
+            <CheckBox Grid.ColumnSpan="3"  VerticalAlignment="Center" Name="BuildsNotification" Content="Уведомления об упавших билдах" HorizontalAlignment="Center"/>
             <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center">
                 <Button Content="Отмена" Padding="5,0,5,0" Click="CancelPrepareBuildsWindow" MaxHeight="30"/>
                 <Label MinWidth="50"/>
