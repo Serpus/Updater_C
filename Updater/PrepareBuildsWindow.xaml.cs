@@ -246,7 +246,8 @@ namespace Updater
             Data.checkedBoxes = boxes;
         }
 
-        private bool buildNotification = false;
+        private bool SuccessNotification = false;
+        private bool FailedNotification = false;
         private void StartBuilds(object sender, RoutedEventArgs e)
         {
             setCheckedBoxesInData();
@@ -257,7 +258,8 @@ namespace Updater
                 return;
             }
             Log.Info("---Старт билдов---");
-            buildNotification = BuildsNotification.IsChecked.Value;
+            SuccessNotification = SuccessBuildNotif.IsChecked.Value;
+            FailedNotification = FailedBuildNotif.IsChecked.Value;
             worker.RunWorkerAsync();
         }
 
@@ -301,8 +303,13 @@ namespace Updater
                 // "link":{"href":"https://ci-sel.dks.lanit.ru/rest/api/latest/result/EIS-EISBTKWF42-17","rel":"self"}}
                 StartingBuildResult buildResult = JsonConvert.DeserializeObject<StartingBuildResult>(result);
                 checkBox.Project.startingBuildResult = buildResult;
+                if (buildResult.buildResultkey == null)
+                {
+                    Log.Error($"{checkBox.Project.branch.key}({checkBox.Project.name}): Build resilt key is null");
+                    continue;
+                }
                 startedBuilds.Add(checkBox.Project);
-                if (buildNotification)
+                if (SuccessNotification || FailedNotification)
                 {
                     Log.Info("Build notification is Enabled");
                     CreateBuildNotification(buildResult.buildResultkey, checkBox.Project.name);
@@ -367,10 +374,15 @@ namespace Updater
             string message = worker.FailedMessage;
             string title = worker.StatusType;
 
-            if (worker.Status.Equals("Successful") || worker.Status.Equals("SUCCESS"))
+            if ((worker.Status.Equals("Successful") || worker.Status.Equals("SUCCESS")) & SuccessNotification)
             {
                 notifType = NotificationType.Success;
                 message = worker.SuccessMessage;
+            }
+
+            if (!(worker.Status.Equals("Successful") || worker.Status.Equals("SUCCESS")) & !FailedNotification)
+            {
+                return;
             }
 
             notificationManager.Show(new NotificationContent
