@@ -14,9 +14,6 @@ using System.Windows.Shapes;
 using System.ComponentModel;
 using Newtonsoft.Json;
 using Updater.CustomElements;
-using System.Threading;
-using Notifications.Wpf;
-using System.Diagnostics;
 
 namespace Updater
 {
@@ -207,7 +204,7 @@ namespace Updater
             }
         }
 
-        public void setCheckedBoxesInData()
+        internal void setCheckedBoxesInData()
         {
             List<ProjectCheckBox> boxes = new List<ProjectCheckBox>();
 
@@ -245,7 +242,6 @@ namespace Updater
 
             Data.checkedBoxes = boxes;
         }
-
         private bool SuccessNotification = false;
         private bool FailedNotification = false;
         private void StartBuilds(object sender, RoutedEventArgs e)
@@ -258,8 +254,10 @@ namespace Updater
                 return;
             }
             Log.Info("---Старт билдов---");
+
             SuccessNotification = SuccessBuildNotif.IsChecked.Value;
             FailedNotification = FailedBuildNotif.IsChecked.Value;
+
             worker.RunWorkerAsync();
         }
 
@@ -319,21 +317,6 @@ namespace Updater
 
             Data.startedBuilds = startedBuilds;
             Data.IsBuildsStarted = true;
-        }
-
-        private void CreateBuildNotification(string key, string projectName)
-        {
-            Log.Info("Create build notification for " + key);
-            CheckStatusWorker getStatusWorker = new CheckStatusWorker();
-            getStatusWorker.DoWork += GetStatusWorker_DoWork;
-            getStatusWorker.RunWorkerCompleted += GetStatusWorker_RunWorkerCompleted;
-            getStatusWorker.Key = key;
-            getStatusWorker.Link = "https://ci-sel.dks.lanit.ru/browse/";
-            getStatusWorker.RequestLink = "https://ci-sel.dks.lanit.ru/rest/api/latest/result/";
-            getStatusWorker.StatusType = "Статус билда " + projectName;
-            getStatusWorker.SuccessMessage = "Билд успешный";
-            getStatusWorker.FailedMessage = "Билд упал";
-            getStatusWorker.RunWorkerAsync();
         }
 
         private void worker_ProgressChanged(object sender, ProgressChangedEventArgs e)

@@ -24,7 +24,7 @@ namespace Updater
         public static List<PreparedDeploy> preparedDeploy { get; set; }
         public static List<StartedDeploy> startedDeploys { get; set; }
 
-        public static double localVersion = 2.09;
+        public static double localVersion = 2.10;
 
         public static string GetVersion()
         {
