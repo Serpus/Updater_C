@@ -58,6 +58,47 @@ namespace Updater
             return s;
         }
 
+        public static String getSilenceRequest(String url)
+        {
+            username = Data.username;
+            password = Data.password;
+
+            Log.Debug("Запрос: " + url);
+
+            WebClient client = new WebClient();
+            string base64 = Convert.ToBase64String(Encoding.UTF8.GetBytes($"{username}:{password}"));
+            client.Headers.Add("user-agent", "Updater");
+            client.Headers.Add("Cookie", "bamboouserauth=triangle-happier-ecard-climate-scoreless-stubborn");
+            client.Headers.Add("Accept", "application/json");
+            client.Headers.Add("Authorization", $"Basic {base64}");
+            String s = "";
+
+            try
+            {
+                Stream data = client.OpenRead(url);
+                StreamReader reader = new StreamReader(data);
+                s = reader.ReadToEnd();
+                data.Close();
+                reader.Close();
+            }
+            catch (WebException ex)
+            {
+                WebExceptionStatus status = ex.Status;
+
+                if (status == WebExceptionStatus.ProtocolError)
+                {
+                    HttpWebResponse httpResponse = (HttpWebResponse)ex.Response;
+                    Log.Debug("Статусный код ошибки: {0} - {1}",
+                            (int)httpResponse.StatusCode, httpResponse.StatusCode);
+                    error = $"{(int)httpResponse.StatusCode} - {httpResponse.StatusCode}";
+                }
+
+                return null;
+            };
+            // Log.Debug("Ответ на запрос: " + s);
+            return s;
+        }
+
         public static async Task<String> postRequestAsync(String url)
         {
             username = Data.username;
