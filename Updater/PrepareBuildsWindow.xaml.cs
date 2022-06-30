@@ -242,6 +242,8 @@ namespace Updater
 
             Data.checkedBoxes = boxes;
         }
+        private bool SuccessNotification = false;
+        private bool FailedNotification = false;
         private void StartBuilds(object sender, RoutedEventArgs e)
         {
             setCheckedBoxesInData();
@@ -252,6 +254,10 @@ namespace Updater
                 return;
             }
             Log.Info("---Старт билдов---");
+
+            SuccessNotification = SuccessBuildNotif.IsChecked.Value;
+            FailedNotification = FailedBuildNotif.IsChecked.Value;
+
             worker.RunWorkerAsync();
         }
 
@@ -295,7 +301,17 @@ namespace Updater
                 // "link":{"href":"https://ci-sel.dks.lanit.ru/rest/api/latest/result/EIS-EISBTKWF42-17","rel":"self"}}
                 StartingBuildResult buildResult = JsonConvert.DeserializeObject<StartingBuildResult>(result);
                 checkBox.Project.startingBuildResult = buildResult;
+                if (buildResult.buildResultkey == null)
+                {
+                    Log.Error($"{checkBox.Project.branch.key}({checkBox.Project.name}): Build resilt key is null");
+                    continue;
+                }
                 startedBuilds.Add(checkBox.Project);
+                if (SuccessNotification || FailedNotification)
+                {
+                    Log.Info("Build notification is Enabled");
+                    CreateBuildNotification(buildResult.buildResultkey, checkBox.Project.name);
+                }
                 Log.Info("---");
             }
 
@@ -328,8 +344,55 @@ namespace Updater
         {
             if (sender is ResultMenuItem Result)
             {
-                System.Diagnostics.Process.Start(Result.ResultUrl);
+                Process.Start(Result.ResultUrl);
             }
+        }
+
+        private void GetStatusWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            CheckStatusWorker worker = sender as CheckStatusWorker;
+            var notificationManager = new NotificationManager();
+
+            NotificationType notifType = NotificationType.Error;
+            string message = worker.FailedMessage;
+            string title = worker.StatusType;
+
+            if ((worker.Status.Equals("Successful") || worker.Status.Equals("SUCCESS")) & SuccessNotification)
+            {
+                notifType = NotificationType.Success;
+                message = worker.SuccessMessage;
+            }
+
+            if (!(worker.Status.Equals("Successful") || worker.Status.Equals("SUCCESS")) & !FailedNotification)
+            {
+                return;
+            }
+
+            notificationManager.Show(new NotificationContent
+            {
+                Title = title,
+                Message = message,
+                Type = notifType,
+            },
+            expirationTime: TimeSpan.FromSeconds(30),
+            onClick: () =>
+            {
+                Process.Start(worker.Link + worker.Key);
+            });
+        }
+
+        private void GetStatusWorker_DoWork(object sender, DoWorkEventArgs e)
+        {
+            CheckStatusWorker worker = sender as CheckStatusWorker;
+            string status;
+            do
+            {
+                Thread.Sleep(5000);
+                string result = Requests.getSilenceRequest(worker.RequestLink + worker.Key);
+                BuildStatus buildStatus = JsonConvert.DeserializeObject<BuildStatus>(result);
+                status = buildStatus.state;
+            } while (status.Equals("Unknown") || status.Equals("UNKNOWN"));
+            worker.Status = status;
         }
     }
 }
