@@ -16,6 +16,8 @@ using System.Windows.Shapes;
 using System.Threading;
 using Updater.CustomElements;
 using Newtonsoft.Json;
+using Notifications.Wpf;
+using System.Diagnostics;
 
 namespace Updater
 {
@@ -184,8 +186,12 @@ namespace Updater
         /**
          * Начинаем деплой
          */
+        private bool SuccessNotification = false;
+        private bool FailedNotification = false;
         private void Confirm(object sender, RoutedEventArgs e)
         {
+            SuccessNotification = SuccessBuildNotif.IsChecked.Value;
+            FailedNotification = FailedBuildNotif.IsChecked.Value;
             int i = 0;
             foreach (CheckBox checkBox in jobsRegisterStackPanel.Children)
             {
@@ -349,7 +355,7 @@ namespace Updater
                     foreach (BuildStatusLabel label in listBox.Items)
                     {
                         Log.Info("Открываем все билды Дженкинса для стенда " + item.Header.ToString());
-                        System.Diagnostics.Process.Start(label.BuildResult.Url);
+                        Process.Start(label.BuildResult.Url);
                     }
                 }
             }
@@ -523,10 +529,32 @@ namespace Updater
             {
                 String url = $"https://ci-sel.dks.lanit.ru/jenkins/job/{de.Project}/job/{de.RegisterName}/job/{de.Branch}/buildWithParameters?STAND={de.Stand}&SKIP_DB={de.SKIP_DB}&OLD_BUILD=";
                 Log.Info($"deploy \"{de.RegisterName}\" on \"{de.Stand}\" url: " + url);
+                // Раскомментить для запуска сборок:
                 Requests.postRequestAsyncJenkins(url);
+                if (SuccessNotification || FailedNotification)
+                {
+                    Log.Info("Build notification is Enabled");
+                    CreateBuildNotification(de.Project, de.RegisterName, de.Branch, de.Stand);
+                }
                 // Для отладки без запуска делпоя: 
                 //Thread.Sleep(2000);
+
             }
+        }
+        private void CreateBuildNotification(string projectName, string registerName, string branch, string stand)
+        {
+            Log.Info($"Create build notification for {projectName}/{registerName}/{branch}");
+            CheckStatusJenkinsWorker getStatusWorker = new CheckStatusJenkinsWorker();
+            getStatusWorker.DoWork += GetStatusWorker_DoWork;
+            getStatusWorker.RunWorkerCompleted += GetStatusWorker_RunWorkerCompleted;
+            getStatusWorker.ProjectName = projectName;
+            getStatusWorker.RegisterName = registerName;
+            getStatusWorker.Branch = branch;
+            getStatusWorker.Stand = stand;
+            getStatusWorker.StatusType = $"Статус сборки {projectName}/{registerName}/{branch.Replace("%252F", "-")}";
+            getStatusWorker.SuccessMessage = "Сборка успешна";
+            getStatusWorker.FailedMessage = "Сборка упала";
+            getStatusWorker.RunWorkerAsync();
         }
 
         public void startDeploy_ProgressChanged(object sender, ProgressChangedEventArgs e)
@@ -598,6 +626,98 @@ namespace Updater
             stopLoading();
             setBuildResultInUi();
             Log.Info("--- *** ---");
+        }
+
+        private void GetStatusWorker_DoWork(object sender, DoWorkEventArgs e)
+        {
+            CheckStatusJenkinsWorker worker = sender as CheckStatusJenkinsWorker;
+            string status = null;
+            do
+            {
+                Thread.Sleep(5000);
+                String url = $"https://ci-sel.dks.lanit.ru/jenkins/job/{worker.ProjectName}/job/{worker.RegisterName}/job/{worker.Branch}/api/json?pretty=true";
+                string responseLastBuild = Requests.getSilenceRequest(url);
+                BuildsList BuildsList = JsonConvert.DeserializeObject<BuildsList>(responseLastBuild);
+
+                string responseResult = "";
+                int i = 0;
+                foreach (Build build in BuildsList.builds)
+                {
+                    i++;
+                    if (i > 10)
+                    {
+                        break;
+                    }
+
+                    string buildUrl = build.url + "api/json?pretty=true";
+                    responseResult = Requests.getSilenceRequest(buildUrl);
+                    BuildResult BuildResult = JsonConvert.DeserializeObject<BuildResult>(responseResult);
+
+                    string stand = BuildResult.getStand();
+                    if (stand == null)
+                    {
+                        continue;
+                    }
+                    if (stand.Equals(worker.Stand))
+                    {
+                        status = BuildResult.Result;
+                        worker.Link = BuildResult.Url;
+                        break;
+                    }
+                }
+            } while (status == null);
+            worker.Status = status;
+        }
+
+        private void GetStatusWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            CheckStatusJenkinsWorker worker = sender as CheckStatusJenkinsWorker;
+            var notificationManager = new NotificationManager();
+
+            NotificationType notifType = NotificationType.Error;
+            string message = worker.FailedMessage;
+            string title = worker.StatusType;
+
+            if (worker.Status == null & !FailedNotification)
+            {
+                return;
+            }
+
+            if (worker.Status.Equals("SUCCESS")  & SuccessNotification)
+            {
+                notifType = NotificationType.Success;
+                message = worker.SuccessMessage;
+
+                notificationManager.Show(new NotificationContent
+                {
+                    Title = title,
+                    Message = message,
+                    Type = notifType,
+                },
+                expirationTime: TimeSpan.FromSeconds(30),
+                onClick: () =>
+                {
+                    Process.Start(worker.Link);
+                });
+            }
+
+            if (!worker.Status.Equals("SUCCESS") & FailedNotification)
+            {
+                notifType = NotificationType.Error;
+                message = worker.FailedMessage;
+
+                notificationManager.Show(new NotificationContent
+                {
+                    Title = title,
+                    Message = message,
+                    Type = notifType,
+                },
+                expirationTime: TimeSpan.FromSeconds(30),
+                onClick: () =>
+                {
+                    Process.Start(worker.Link);
+                });
+            }
         }
     }
 }

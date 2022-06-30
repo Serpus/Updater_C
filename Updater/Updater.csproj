@@ -181,6 +181,9 @@
     </Compile>
     <Compile Include="CustomElements\BuildDeployCountTextBox.cs" />
     <Compile Include="CustomElements\BuildStatusLabel.cs" />
+    <Compile Include="CustomElements\CheckStatusJenkinsWorker.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="CustomElements\CheckStatusWorker.cs">
       <SubType>Component</SubType>
     </Compile>

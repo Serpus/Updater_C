@@ -16,10 +16,10 @@
             <ColumnDefinition MinWidth="250" Width="250" MaxWidth="600"/>
             <ColumnDefinition MinWidth="70" MaxWidth="600"/>
         </Grid.ColumnDefinitions>
-        <StackPanel Grid.Column="0" VerticalAlignment="Center" Name="ProjectStackPanel">
-            <Label Content="Ветка в формате hotfix/x.x.x" HorizontalAlignment="Left" Margin="5,0,0,0"/>
+        <StackPanel Grid.Column="0" VerticalAlignment="Center" Name="ProjectStackPanel" Margin="5,0,0,0">
+            <Label Content="Ветка в формате hotfix/x.x.x" HorizontalAlignment="Left"/>
             <StackPanel Orientation="Horizontal">
-                <TextBox Margin="10, 0, 5, 0" Name="BranchName" Text="" Width="130"/>
+                <TextBox Margin="5, 0, 5, 0" Name="BranchName" Text="" Width="130"/>
                 <Menu Height="20" Width="20" HorizontalAlignment="Right">
                     <MenuItem Header="V">
                         <MenuItem Header="hotfix/" Click="SetBranchName"/>
@@ -29,10 +29,10 @@
                 </Menu>
             </StackPanel>
             <Label/>
-            <CheckBox Content="SKIP_DB" x:Name="SKIP_DB" Margin="10, 0, 0, 0" Width="60" HorizontalAlignment="Left"/>
+            <CheckBox Content="SKIP_DB" x:Name="SKIP_DB" Margin="5,0,0,0" Width="60" HorizontalAlignment="Left"/>
             <Label/>
-            <TextBlock Text="Стенд:" Margin="10,0,0,3"/>
-            <StackPanel Width="120" HorizontalAlignment="Left" Margin="10,0,0,0" Name="StandCheckBoxes">
+            <TextBlock Text="Стенд:" Margin="5,0,0,3"/>
+            <StackPanel Width="120" HorizontalAlignment="Left" Margin="5,0,0,0" Name="StandCheckBoxes">
                 <CheckBox Content="eis3.lanit.ru"/>
                 <CheckBox Content="eis4.roskazna.ru"/>
                 <CheckBox Content="eis5.roskazna.ru"/>
@@ -40,13 +40,17 @@
                 <CheckBox Content="eis7.lanit.ru"/>
             </StackPanel>
             <Label/>
-            <l:ProjectButton Content="ЕПЗ" Grid.Column="0" MaxHeight="28" MinHeight="28" MinWidth="50" Click="GetJobs" l:ProjectName="epz" Margin="10, 0, 10 ,0"/>
+            <l:ProjectButton Content="ЕПЗ" Grid.Column="0" MaxHeight="28" MinHeight="28" MinWidth="50" Click="GetJobs" l:ProjectName="epz" Margin="5, 0, 10 ,0"/>
             <Label/>
             <!--<l:ProjectButton Content="223 ФЗ" Grid.Column="0" MaxHeight="28" MinHeight="28" MinWidth="50" Click="GetJobs" l:ProjectName="fz223" Margin="10, 0, 10 ,0"/>
             <Label/>-->
-            <l:ProjectButton Content="ЛКП" Grid.Column="0" MaxHeight="28" MinHeight="28" MinWidth="50" Click="GetJobs" l:ProjectName="lkp" Margin="10, 0, 10 ,0"/>
+            <l:ProjectButton Content="ЛКП" Grid.Column="0" MaxHeight="28" MinHeight="28" MinWidth="50" Click="GetJobs" l:ProjectName="lkp" Margin="5, 0, 10 ,0"/>
             <Label/>
-            <l:ProjectButton Content="ЗЧ" Grid.Column="0" MaxHeight="28" MinHeight="28" MinWidth="50" Click="GetJobs" l:ProjectName="priv" Margin="10, 0, 10 ,0"/>
+            <l:ProjectButton Content="ЗЧ" Grid.Column="0" MaxHeight="28" MinHeight="28" MinWidth="50" Click="GetJobs" l:ProjectName="priv" Margin="5, 0, 10 ,0"/>
+            <Label/>
+            <TextBlock Text="Уведомления о сборках:" Margin="0,0,0,3"/>
+            <CheckBox Content="Успешных" Name="SuccessBuildNotif" Foreground="DarkGreen"/>
+            <CheckBox Content="Упавших" Name="FailedBuildNotif" IsChecked="True" Foreground="DarkRed"/>
         </StackPanel>
         
         <GridSplitter Grid.Column="0" ShowsPreview="False" Width="3" Background="#5C5C5C"/>

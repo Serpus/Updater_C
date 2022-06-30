@@ -379,24 +379,37 @@ namespace Updater
             {
                 notifType = NotificationType.Success;
                 message = worker.SuccessMessage;
+
+                notificationManager.Show(new NotificationContent
+                {
+                    Title = title,
+                    Message = message,
+                    Type = notifType,
+                },
+                expirationTime: TimeSpan.FromSeconds(30),
+                onClick: () =>
+                {
+                    Process.Start(worker.Link + worker.Key);
+                });
             }
 
-            if (!(worker.Status.Equals("Successful") || worker.Status.Equals("SUCCESS")) & !FailedNotification)
+            if (!(worker.Status.Equals("Successful") || worker.Status.Equals("SUCCESS")) & FailedNotification)
             {
-                return;
-            }
+                notifType = NotificationType.Error;
+                message = worker.FailedMessage;
 
-            notificationManager.Show(new NotificationContent
-            {
-                Title = title,
-                Message = message,
-                Type = notifType,
-            },
-            expirationTime: TimeSpan.FromSeconds(30),
-            onClick: () =>
-            {
-                Process.Start(worker.Link + worker.Key);
-            });
+                notificationManager.Show(new NotificationContent
+                {
+                    Title = title,
+                    Message = message,
+                    Type = notifType,
+                },
+                expirationTime: TimeSpan.FromSeconds(30),
+                onClick: () =>
+                {
+                    Process.Start(worker.Link + worker.Key);
+                });
+            }
         }
 
         private void GetStatusWorker_DoWork(object sender, DoWorkEventArgs e)
