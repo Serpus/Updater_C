@@ -61,6 +61,12 @@ namespace Updater
 
             foreach (Project project in Data.projects)
             {
+                if (project.planKey == null)
+                {
+                    Log.Error("Не удаётся найти данные для проекта " + project.name);
+                    continue;
+                }
+
                 Log.Info(project.name);
                 string url = $"https://ci-sel.dks.lanit.ru/rest/api/latest/plan/{project.planKey.key}/branch";
                 string result = Requests.getRequest(url);
@@ -312,7 +318,6 @@ namespace Updater
                 startedBuilds.Add(checkBox.Project);
                 if (SuccessNotification || FailedNotification)
                 {
-                    Log.Info("Build notification is Enabled");
                     CreateBuildNotification(buildResult.buildResultkey, checkBox.Project.name);
                 }
                 Log.Info("---");
@@ -380,6 +385,8 @@ namespace Updater
                 notifType = NotificationType.Success;
                 message = worker.SuccessMessage;
 
+                Log.Info($"Показ уведомления: {title} - {notifType}. worker.Status: {worker.Status}. success notif: {SuccessNotification}");
+
                 notificationManager.Show(new NotificationContent
                 {
                     Title = title,
@@ -397,6 +404,8 @@ namespace Updater
             {
                 notifType = NotificationType.Error;
                 message = worker.FailedMessage;
+
+                Log.Info($"Показ уведомления: {title} - {notifType}. worker.Status: {worker.Status}. failed notif: {FailedNotification}");
 
                 notificationManager.Show(new NotificationContent
                 {

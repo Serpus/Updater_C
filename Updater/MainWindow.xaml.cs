@@ -189,7 +189,8 @@ namespace Updater
 
                 buildsStatusList.Items.Add(label);
             }
-            BuildCount.Text += Data.startedBuilds.Count().ToString();
+            BuildCount.Text = "Всего запущено: " + Data.startedBuilds.Count().ToString();
+            Log.Info("Всего запущено: " + Data.startedBuilds.Count().ToString());
         }
 
         private void ChangeBranch(Object sender, RoutedEventArgs args)
