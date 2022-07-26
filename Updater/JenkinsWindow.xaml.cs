@@ -634,7 +634,7 @@ namespace Updater
             string status = null;
             do
             {
-                Thread.Sleep(5000);
+                Thread.Sleep(10000);
                 String url = $"https://ci-sel.dks.lanit.ru/jenkins/job/{worker.ProjectName}/job/{worker.RegisterName}/job/{worker.Branch}/api/json?pretty=true";
                 string responseLastBuild = Requests.getSilenceRequest(url);
                 BuildsList BuildsList = JsonConvert.DeserializeObject<BuildsList>(responseLastBuild);
