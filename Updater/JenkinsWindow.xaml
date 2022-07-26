@@ -48,9 +48,9 @@
             <Label/>
             <l:ProjectButton Content="ЗЧ" Grid.Column="0" MaxHeight="28" MinHeight="28" MinWidth="50" Click="GetJobs" l:ProjectName="priv" Margin="5, 0, 10 ,0"/>
             <Label/>
-            <TextBlock Text="Уведомления о сборках:" Margin="0,0,0,3"/>
-            <CheckBox Content="Успешных" Name="SuccessBuildNotif" Foreground="DarkGreen"/>
-            <CheckBox Content="Упавших" Name="FailedBuildNotif" IsChecked="True" Foreground="DarkRed"/>
+            <TextBlock Text="Уведомления о сборках:" Margin="0,0,0,3" Visibility="Hidden"/>
+            <CheckBox Content="Успешных" Name="SuccessBuildNotif" Foreground="DarkGreen" Visibility="Hidden"/>
+            <CheckBox Content="Упавших" Name="FailedBuildNotif" IsChecked="True" Foreground="DarkRed" Visibility="Hidden"/>
         </StackPanel>
         
         <GridSplitter Grid.Column="0" ShowsPreview="False" Width="3" Background="#5C5C5C"/>
