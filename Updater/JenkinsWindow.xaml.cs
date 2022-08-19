@@ -90,12 +90,11 @@ namespace Updater
                 return;
             }
 
-            ProjectButton ProjectButton = new ProjectButton();
-            if (sender is ProjectButton)
+            if (sender is ProjectButton projectButton)
             {
-                ProjectButton = (ProjectButton)sender;
-                DataJenkins.ProjectName = ProjectButton.ProjectName;
-                ProjectButton.IsEnabled = false;
+                projectButton = (ProjectButton)sender;
+                DataJenkins.ProjectName = projectButton.ProjectName;
+                projectButton.IsEnabled = false;
             } else
             {
                 Log.Info("sender in GetJobs method is not ProjectButton");
@@ -470,6 +469,12 @@ namespace Updater
                 Log.Info("Получачем ветки для джоба " + register.name + ", jobURL - " + register.url);
                 var response = Requests.getRequest($"https://ci-sel.dks.lanit.ru/jenkins/job/{DataJenkins.ProjectName}/job/{register.name}/api/json?pretty=true");
                 Jobs branchList = JsonConvert.DeserializeObject<Jobs>(response);
+                if (branchList.jobs == null)
+                {
+                    Log.Error("Не можем найти ветки для " + register.name + ", jobURL - " + register.url);
+                    Log.Info(" --- ");
+                    continue;
+                }
                 Log.Info("Ветки: " + branchList.ToString());
                 register.BranchList = branchList;
                 Log.Info(" --- ");
@@ -497,7 +502,7 @@ namespace Updater
                     IsEnabled = false
                 };
 
-                if (regJob.BranchList == null)
+                if (regJob.BranchList == null || regJob.BranchList.jobs == null)
                 {
                     Log.Error("Не удаётся найти ветки для джоба " + checkBox.Content);
                     continue;
