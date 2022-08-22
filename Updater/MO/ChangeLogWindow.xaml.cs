@@ -47,6 +47,8 @@ namespace Updater.MO
 
             _changes.Add("2.14", new List<string> { "Удаление db-adm(Golden Gate)", "Добавление ченджлога" });
             _changes.Add("2.13", new List<string> { "Добавление папки COMMON в сборку Дженкинса" });
+            _changes.Add("2.11 - 2.12", new List<string> { "Добавление уведомлений для сборок в бамбу", "Исправление ошибок" });
+            _changes.Add("2.10", new List<string> { "Исправлен отбор билдов для бамбу" });
 
             return _changes;
         }
