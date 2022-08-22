@@ -181,6 +181,8 @@
     </Compile>
     <Compile Include="CustomElements\BuildDeployCountTextBox.cs" />
     <Compile Include="CustomElements\BuildStatusLabel.cs" />
+    <Compile Include="CustomElements\ChangeLogVersion.cs" />
+    <Compile Include="CustomElements\ChangesTextBox.cs" />
     <Compile Include="CustomElements\CheckStatusJenkinsWorker.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -201,6 +203,9 @@
     </Compile>
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="MO\ChangeLogWindow.xaml.cs">
+      <DependentUpon>ChangeLogWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="MO\PrepareOpWindow.cs">
       <DependentUpon>PrepareOpWindow.xaml</DependentUpon>
@@ -250,6 +255,10 @@
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="MO\ChangeLogWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="MO\PrepareOpWindow.xaml">
       <SubType>Designer</SubType>

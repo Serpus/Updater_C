@@ -9,6 +9,7 @@
         Title="Авторизация" MinHeight="450" Height="470" Width="640" ResizeMode="CanMinimize" WindowStartupLocation="CenterScreen">
     <Grid>
         <Button Content="Проверить наличие обновлений" VerticalAlignment="Top" HorizontalAlignment="Left" Height="30" MinHeight="30" Width="230" MinWidth="200" Click="CheckUpdates" Margin="10,10"/>
+        <Button Content="Список последних изменений" VerticalAlignment="Top" HorizontalAlignment="Right" Height="30" MinHeight="30" Width="200" MinWidth="200" Margin="10,10" Name="ChangeLogButton" Click="ChangeLogButton_Click"/>
         <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
             <Grid>
                 <Grid.ColumnDefinitions>

@@ -11,6 +11,7 @@ using System.Windows.Controls;
 using Meziantou.Framework.Win32;
 using Microsoft.Win32;
 using Newtonsoft.Json;
+using Updater.MO;
 
 namespace Updater
 {
@@ -306,6 +307,13 @@ namespace Updater
         {
             LoadingGrid.Visibility = Visibility.Hidden;
             loading = false;
+        }
+
+        private void ChangeLogButton_Click(object sender, RoutedEventArgs e)
+        {
+            ChangeLogWindow changeLogWindow = new ChangeLogWindow();
+            changeLogWindow.Owner = this;
+            changeLogWindow.Show();
         }
     }
 }
