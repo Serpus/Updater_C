@@ -16,6 +16,7 @@
             <Setter Property="IsReadOnly" Value="True" />
             <Setter Property="BorderThickness" Value="0"/>
             <Setter Property="Margin" Value="10,0,0,0"/>
+            <Setter Property="TextWrapping" Value="Wrap"/>
         </Style>
         <Style TargetType="custom:ChangeLogVersion">
             <Setter Property="TextDecorations" Value="Underline"/>

@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Updater.CustomElements"
         mc:Ignorable="d"
-        Title="ChangeLogWindow" Height="500" Width="400" WindowStartupLocation="CenterOwner">
+        Title="ChangeLogWindow" Height="500" Width="600" MinWidth="600" WindowStartupLocation="CenterOwner">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="30"/>

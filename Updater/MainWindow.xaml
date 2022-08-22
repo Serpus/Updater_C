@@ -22,7 +22,7 @@
                     <StackPanel Margin="10,50,10,10" MinHeight="150" Height="130" Grid.Column="0" Grid.Row="0" VerticalAlignment="Top">
                         <Label HorizontalAlignment="Center">Название ветки</Label>
                         <StackPanel Orientation="Horizontal" Name="branchStackPanel">
-                            <TextBox Width="160" x:Name="branchName" Keyboard.KeyDown="branchName_KeyDown" Text="hotfix-12.2.3">
+                            <TextBox Width="160" x:Name="branchName" Keyboard.KeyDown="branchName_KeyDown" Text="hotfix-12.2.6">
                                 <TextBox.ToolTip>
                                     <ToolTip Content="Введите название ветки"></ToolTip>
                                 </TextBox.ToolTip>

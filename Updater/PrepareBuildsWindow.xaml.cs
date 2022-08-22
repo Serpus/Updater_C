@@ -59,11 +59,20 @@ namespace Updater
             Log.Info("Ветка: " + Data.branchName);
             Log.Info("---Обработка билд-планов---");
 
+            // Список из БП, которые не нужно отображать (project.planKey.key)
+            List<string> planToDrop = new List<string>() { "DBF-DBFGG" , "DBF-DBFEXP", "DBF-DBFSCHED", "DBF-DBFADM", "TESTS-LIQ" };
+
             foreach (Project project in Data.projects)
             {
                 if (project.planKey == null)
                 {
                     Log.Error("Не удаётся найти данные для проекта " + project.name);
+                    continue;
+                }
+
+                if (planToDrop.Contains(project.planKey.key))
+                {
+                    Log.Info("Пропускаем БП - " + project.planKey.key);
                     continue;
                 }
 
