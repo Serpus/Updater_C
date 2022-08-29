@@ -45,7 +45,7 @@ namespace Updater.MO
         {
             Dictionary<string, List<string>> _changes = new Dictionary<string, List<string>>();
 
-            _changes.Add("2.15", new List<string> { "Добавление уведомлений для Дженкинса", "Увеличена минимальная высота окна Дженкинса" });
+            _changes.Add("2.15", new List<string> { "Реализация уведомлений для Дженкинса", "Увеличена минимальная высота окна Дженкинса", "Добавление разделения по проектам для чекбоксов реестров в окне Дженкинс" });
             _changes.Add("2.14", new List<string> { "Удаление билд-планов https://ci-sel.dks.lanit.ru/browse/DBF, кроме DB-FUNC (Exports)", "Добавление ченджлога" });
             _changes.Add("2.13", new List<string> { "Добавление папки COMMON в сборку Дженкинса" });
             _changes.Add("2.11 - 2.12", new List<string> { "Добавление уведомлений для сборок в бамбу", "Исправление ошибок" });
