@@ -254,6 +254,31 @@ namespace Updater
                         }
                     }
                 }
+
+
+                // Код для теста. Эмулирует отмеченные чекбоксы. Далее по коду нужно отключить запрос для начала деплоя
+                //DataJenkins.DeployEnvironments.Add(new DeployEnvironment()
+                //{
+                //    RegisterName = "psk",
+                //    Project = "priv",
+                //    Branch = "develop",
+                //    Stand = "eis3.lanit.ru",
+                //});
+                //DataJenkins.DeployEnvironments.Add(new DeployEnvironment()
+                //{
+                //    RegisterName = "audit",
+                //    Project = "priv",
+                //    Branch = "develop",
+                //    Stand = "eis3.lanit.ru",
+                //});
+                //DataJenkins.DeployEnvironments.Add(new DeployEnvironment()
+                //{
+                //    RegisterName = "rec",
+                //    Project = "priv",
+                //    Branch = "develop",
+                //    Stand = "eis3.lanit.ru",
+                //});
+
                 RegisterList.IsEnabled = false;
                 ConfirmButton.IsEnabled = false;
                 BuildStatusGrid.IsEnabled = true;
@@ -688,7 +713,7 @@ namespace Updater
             string message = worker.FailedMessage;
             string title = worker.StatusType;
 
-            if (worker.Status == null & !FailedNotificationValue)
+            if (worker.Status == null || (!FailedNotificationValue & !SuccessNotificationValue))
             {
                 return;
             }

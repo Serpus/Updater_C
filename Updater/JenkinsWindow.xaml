@@ -7,7 +7,7 @@
         xmlns:gif="http://wpfanimatedgif.codeplex.com"
         mc:Ignorable="d"
         Title="Jenkins" 
-        MinHeight="470" Height="470" MaxHeight="900" Width="730" MinWidth="900" MaxWidth="1030" 
+        MinHeight="675" Height="470" MaxHeight="900" Width="730" MinWidth="900" MaxWidth="1030" 
         ResizeMode="CanResize" WindowStartupLocation="CenterScreen"
         Background="#FFE5E5E5">
     <Grid>
@@ -48,9 +48,9 @@
             <Label/>
             <l:ProjectButton Content="ЗЧ" Grid.Column="0" MaxHeight="28" MinHeight="28" MinWidth="50" Click="GetJobs" l:ProjectName="priv" Margin="5, 0, 10 ,0"/>
             <Label/>
-            <TextBlock Text="Уведомления о сборках:" Margin="0,0,0,3" Visibility="Hidden"/>
-            <CheckBox Content="Успешных" Name="SuccessBuildNotif" Foreground="DarkGreen" Visibility="Hidden"/>
-            <CheckBox Content="Упавших" Name="FailedBuildNotif" IsChecked="False" Foreground="DarkRed" Visibility="Hidden"/>
+            <TextBlock Text="Уведомления о сборках:" Margin="0,0,0,3" Visibility="Visible"/>
+            <CheckBox Content="Успешных" Name="SuccessBuildNotif" Foreground="DarkGreen" Visibility="Visible"/>
+            <CheckBox Content="Упавших" Name="FailedBuildNotif" IsChecked="True" Foreground="DarkRed" Visibility="Visible"/>
         </StackPanel>
         
         <GridSplitter Grid.Column="0" ShowsPreview="False" Width="3" Background="#5C5C5C"/>
