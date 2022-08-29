@@ -230,7 +230,7 @@ namespace Updater
 
             if (double.Parse(remoteVersion, formatter) > Data.localVersion)
             {
-                if (MessageBox.Show($"Обнаружена новая версия программы ({remoteVersion}). Ваша версия: {LocalVersionFormatted}. Обновить ?",
+                if (MessageBox.Show($"Обнаружена новая версия программы ({remoteVersion}). Ваша версия: {LocalVersionFormatted}. Обновить?",
                     "Обновление", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
                 {
                     if (!Directory.Exists("InstallUpdateForUpdater"))
