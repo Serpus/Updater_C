@@ -522,6 +522,7 @@ namespace Updater
         public void getBranches_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             string project = DataJenkins.Registers[0].project;
+            // Добавляем разделение для проекта
             if (project != null)
             {
                 jobsRegisterStackPanel.Children.Add(new Label()
@@ -530,6 +531,8 @@ namespace Updater
                     FontWeight = FontWeights.Bold
                 });
             }
+
+            // Отбор реестров с указанной веткой
             foreach (Register regJob in DataJenkins.Registers) 
             {
                 JobCheckBox checkBox = new JobCheckBox()
