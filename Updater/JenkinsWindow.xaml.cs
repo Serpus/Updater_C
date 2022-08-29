@@ -185,12 +185,15 @@ namespace Updater
         /**
          * Начинаем деплой
          */
-        private bool SuccessNotification = false;
-        private bool FailedNotification = false;
+        private bool SuccessNotificationValue = false;
+        private bool FailedNotificationValue = false;
         private void Confirm(object sender, RoutedEventArgs e)
         {
-            SuccessNotification = SuccessBuildNotif.IsChecked.Value;
-            FailedNotification = FailedBuildNotif.IsChecked.Value;
+            // Сетим значения чекбоксов с уведомлениями в переменную
+            SuccessNotificationValue = SuccessBuildNotif.IsChecked.Value;
+            FailedNotificationValue = FailedBuildNotif.IsChecked.Value;
+
+            // Проверяем, что отмечен хотя бы один чекбокс с реестром
             int i = 0;
             foreach (CheckBox checkBox in jobsRegisterStackPanel.Children)
             {
@@ -206,6 +209,7 @@ namespace Updater
                 }
             }
 
+            // Проверяем, что выбран хотя бы один стенд
             i = 0;
             foreach (CheckBox checkBox in StandCheckBoxes.Children)
             {
@@ -221,6 +225,7 @@ namespace Updater
                 }
             }
 
+            // Запускаем сборки
             ConfirmMo confirm = new ConfirmMo();
             confirm.ShowDialog();
             if (confirm.DialogResult.Value)
@@ -536,7 +541,7 @@ namespace Updater
                 Log.Info($"deploy \"{de.RegisterName}\" on \"{de.Stand}\" url: " + url);
                 // Раскомментить для запуска сборок:
                 Requests.postRequestAsyncJenkins(url);
-                if (SuccessNotification || FailedNotification)
+                if (SuccessNotificationValue || FailedNotificationValue)
                 {
                     Log.Info("Build notification is Enabled");
                     CreateBuildNotification(de.Project, de.RegisterName, de.Branch, de.Stand);
@@ -683,12 +688,12 @@ namespace Updater
             string message = worker.FailedMessage;
             string title = worker.StatusType;
 
-            if (worker.Status == null & !FailedNotification)
+            if (worker.Status == null & !FailedNotificationValue)
             {
                 return;
             }
 
-            if (worker.Status.Equals("SUCCESS")  & SuccessNotification)
+            if (worker.Status.Equals("SUCCESS") & SuccessNotificationValue)
             {
                 notifType = NotificationType.Success;
                 message = worker.SuccessMessage;
@@ -706,7 +711,7 @@ namespace Updater
                 });
             }
 
-            if (!worker.Status.Equals("SUCCESS") & FailedNotification)
+            if (!worker.Status.Equals("SUCCESS") & FailedNotificationValue)
             {
                 notifType = NotificationType.Error;
                 message = worker.FailedMessage;
