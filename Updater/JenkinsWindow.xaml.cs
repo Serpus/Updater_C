@@ -117,11 +117,14 @@ namespace Updater
          */
         private void CheckAll(object sender, RoutedEventArgs e)
         {
-            foreach(JobCheckBox checkBox in jobsRegisterStackPanel.Children)
+            foreach(var element in jobsRegisterStackPanel.Children)
             {
-                if (checkBox.IsEnabled)
+                if (element is JobCheckBox checkBox)
                 {
-                    checkBox.IsChecked = true;
+                    if (checkBox.IsEnabled)
+                    {
+                        checkBox.IsChecked = true;
+                    }
                 }
             }
             Log.Info("Отмечены все чекбоксы");
@@ -132,9 +135,11 @@ namespace Updater
          */
         private void UncheckAll(object sender, RoutedEventArgs e)
         {
-            foreach (JobCheckBox checkBox in jobsRegisterStackPanel.Children)
+            foreach (var element in jobsRegisterStackPanel.Children)
             {
-                checkBox.IsChecked = false;
+                if (element is JobCheckBox checkBox) {
+                    checkBox.IsChecked = false;
+                }
             }
             Log.Info("Все чекбоксы сняты");
         }
@@ -195,33 +200,39 @@ namespace Updater
 
             // Проверяем, что отмечен хотя бы один чекбокс с реестром
             int i = 0;
-            foreach (CheckBox checkBox in jobsRegisterStackPanel.Children)
+            foreach (var element in jobsRegisterStackPanel.Children)
             {
-                i++;
-                if (checkBox.IsChecked.Value)
+                if (element is CheckBox checkBox)
                 {
-                    break;
-                }
-                if (i == jobsRegisterStackPanel.Children.Count) 
-                {
-                    MessageBox.Show("Необходимо отметить хотя бы один чекбокс");
-                    return;
+                    i++;
+                    if (checkBox.IsChecked.Value)
+                    {
+                        break;
+                    }
+                    if (i == jobsRegisterStackPanel.Children.Count)
+                    {
+                        MessageBox.Show("Необходимо отметить хотя бы один чекбокс");
+                        return;
+                    }
                 }
             }
 
             // Проверяем, что выбран хотя бы один стенд
             i = 0;
-            foreach (CheckBox checkBox in StandCheckBoxes.Children)
+            foreach (var element in StandCheckBoxes.Children)
             {
-                i++;
-                if (checkBox.IsChecked.Value)
+                if (element is CheckBox checkBox)
                 {
-                    break;
-                }
-                if (i == StandCheckBoxes.Children.Count)
-                {
-                    MessageBox.Show("Необходимо выбрать хотя бы один стенд");
-                    return;
+                    i++;
+                    if (checkBox.IsChecked.Value)
+                    {
+                        break;
+                    }
+                    if (i == StandCheckBoxes.Children.Count)
+                    {
+                        MessageBox.Show("Необходимо выбрать хотя бы один стенд");
+                        return;
+                    }
                 }
             }
 
@@ -236,21 +247,25 @@ namespace Updater
                 {
                     if (checkBox.IsChecked.Value)
                     {
-                        foreach (JobCheckBox regCB in jobsRegisterStackPanel.Children)
+                        foreach (var element in jobsRegisterStackPanel.Children)
                         {
-                            if (regCB.IsChecked.Value)
+                            if (element is JobCheckBox regCB)
                             {
-                                DeployEnvironment de = new DeployEnvironment()
+                                if (regCB.IsChecked.Value)
                                 {
-                                    RegisterName = regCB.Content.ToString(),
-                                    Project = regCB.JobProject,
-                                    Branch = HttpUtility.UrlEncode(BranchName.Text),
-                                    Stand = checkBox.Content.ToString(),
-                                    SKIP_DB = SKIP_DB.IsChecked.Value.ToString().ToLower()
-                                };
-                                de.Branch = HttpUtility.UrlEncode(de.Branch).Replace("%252f", "%252F");
-                                DataJenkins.DeployEnvironments.Add(de);
+                                    DeployEnvironment de = new DeployEnvironment()
+                                    {
+                                        RegisterName = regCB.Content.ToString(),
+                                        Project = regCB.JobProject,
+                                        Branch = HttpUtility.UrlEncode(BranchName.Text),
+                                        Stand = checkBox.Content.ToString(),
+                                        SKIP_DB = SKIP_DB.IsChecked.Value.ToString().ToLower()
+                                    };
+                                    de.Branch = HttpUtility.UrlEncode(de.Branch).Replace("%252f", "%252F");
+                                    DataJenkins.DeployEnvironments.Add(de);
+                                }
                             }
+                            
                         }
                     }
                 }
