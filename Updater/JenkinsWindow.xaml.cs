@@ -39,8 +39,6 @@ namespace Updater
         {
             InitializeComponent();
 
-            this.Closing += JenkinsWindow_Closing;
-
             getJobsWorker.WorkerReportsProgress = true;
             getJobsWorker.WorkerSupportsCancellation = true;
             getJobsWorker.DoWork += getJobs_DoWork;
@@ -347,7 +345,7 @@ namespace Updater
 
                 if (label.BuildResult.Result == null)
                 {
-                    label.Content = result.FullDisplayName + " - В очереди, либо собирается";
+                    label.Content = result.FullDisplayName + " - В процессе";
                 } else 
                 {
                     if (label.BuildResult.Result.Equals("SUCCESS"))

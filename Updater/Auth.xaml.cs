@@ -116,7 +116,7 @@ namespace Updater
 
             Log.Info("Авторизация под логином: " + username.Text);
 
-            string result = Requests.getRequest("https://ci-sel.dks.lanit.ru/rest/api/latest/deploy/project/all");
+            string result = Requests.getRequest("https://ci-sel.dks.lanit.ru/jenkins/api/json?pretty=true");
 
             if (result == null)
             {
@@ -126,14 +126,9 @@ namespace Updater
             }
             CredentialManager.WriteCredential("Updater - " + Environment.UserName, username.Text, password.Password, CredentialPersistence.LocalMachine);
 
-
-            Data.projects = JsonConvert.DeserializeObject<Project[]>(result);
-
-            SetEnvironmetsStands();
-
-            MainWindow mainWindow = new MainWindow();
+            JenkinsWindow jenkinsWindow = new JenkinsWindow();
             this.Close();
-            mainWindow.Show();
+            jenkinsWindow.Show();
         }
 
         private void SetEnvironmetsStands()
