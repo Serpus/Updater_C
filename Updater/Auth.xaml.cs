@@ -38,6 +38,7 @@ namespace Updater
             Version.Content = $"v. {Data.GetVersion()}";
 
             Log.Info("\n--- *** Launch Updater *** ---");
+            Log.Info("Версия сборщика: " + Data.localVersion);
             Log.Info("Environment Version: " + Environment.Version);
 
             string subKey = @"SOFTWARE\Wow6432Node\Microsoft\Windows NT\CurrentVersion";

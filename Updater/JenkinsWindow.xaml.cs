@@ -306,7 +306,13 @@ namespace Updater
         private void RefreshStatus(object sender, RoutedEventArgs e)
         {
             Log.Info("Обновляем статусы запущенных билдов");
-            refreshStatusWorker.RunWorkerAsync();
+            try
+            {
+                refreshStatusWorker.RunWorkerAsync();
+            } catch (Exception ex)
+            {
+                Log.Info(ex.Message);
+            }
         }
 
         private void setBuildResultInUi()
