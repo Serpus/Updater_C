@@ -103,7 +103,7 @@
             <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center">
                 <Button Content="Обновить статусы" MaxHeight="28" MinHeight="25" MinWidth="110" Click="RefreshStatus"/>
                 <Label/>
-                <Button Content="Открыть все в браузере" MaxHeight="28" MinHeight="25" MinWidth="145" Click="OpenBuildsInBrowser"/>
+                <Button Content="Открыть все в браузере" MaxHeight="28" MinHeight="25" MinWidth="145" Click="OpenBuildsInBrowser" ToolTip="Открывает все билды из списка ниже"/>
             </StackPanel>
             <TabControl Grid.Row="2" Name="BuildStatusTabs"/>
         </Grid>
