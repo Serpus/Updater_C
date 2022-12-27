@@ -68,6 +68,11 @@ namespace Updater
             refreshStatusWorker.RunWorkerCompleted += refreshStatus_RunWorkerCompleted;
 
             Version.Content = $"v. {Data.GetVersion()}";
+
+            if (Data.username.Equals("Kazankin"))
+            {
+                OpenTestMoButton.Visibility = Visibility.Visible;
+            }
         }
 
         private void JenkinsWindow_Closing(object sender, CancelEventArgs e)
