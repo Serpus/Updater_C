@@ -18,6 +18,7 @@ using Updater.CustomElements;
 using Newtonsoft.Json;
 using Notifications.Wpf;
 using System.Diagnostics;
+using Updater.MO;
 
 namespace Updater
 {
@@ -26,6 +27,8 @@ namespace Updater
     /// </summary>
     public partial class JenkinsWindow : Window
     {
+        private const string FailureBuildStatus = "FAILURE";
+        private const string SuccessBuildStatus = "SUCCESS";
         public bool loading = false;
         private Job branchListLocal = new Job();
 
@@ -348,11 +351,11 @@ namespace Updater
                     label.Content = result.FullDisplayName + " - В процессе";
                 } else 
                 {
-                    if (label.BuildResult.Result.Equals("SUCCESS"))
+                    if (label.BuildResult.Result.Equals(SuccessBuildStatus))
                     {
                         label.Background = (SolidColorBrush)new BrushConverter().ConvertFrom("#12BF0F");
                     }
-                    else if (label.BuildResult.Result.Equals("FAILURE"))
+                    else if (label.BuildResult.Result.Equals(FailureBuildStatus))
                     {
                         label.Background = (SolidColorBrush)new BrushConverter().ConvertFrom("#DF0E0E");
                     }
@@ -377,19 +380,29 @@ namespace Updater
             }
         }
 
-        public void SetBuildResultInUiTest(object sender, RoutedEventArgs e)
+        public void TestSetBuildResultInUi(object sender, RoutedEventArgs e)
         {
             HashSet<string> StandSet = new HashSet<string>();
             List<BuildStatusLabel> labelList = new List<BuildStatusLabel>();
 
             labelList = TestData.GetBuildStatusLabels(4, TestData.FailedResultBuild);
+            labelList.AddRange(TestData.GetBuildStatusLabels(4, TestData.SuccessResultBuild));
 
             ListBox listBox = new ListBox();
             foreach (BuildStatusLabel label in labelList)
             {
                 listBox.Items.Add(label);
             }
-            BuildStatusTabs.Items.Add(new TabItem { Header = "ЕИС-TEST", Content = listBox, IsSelected = true });
+            BuildStatusTabs.Items.Add(new TabItem { Header = $"ЕИС-TEST {++TestData.TestStandCounter}", Content = listBox, IsSelected = true });
+        }
+
+        private void ShowFailedBuilds_Click(object sender, RoutedEventArgs e)
+        {
+            FailedBuildsMo failedBuildsMo = new FailedBuildsMo(BuildStatusTabs.Items)
+            {
+                Owner = this
+            };
+            failedBuildsMo.ShowDialog();
         }
 
         public void ClearBuildResultInUiTest(object sender, RoutedEventArgs e)
@@ -402,7 +415,7 @@ namespace Updater
             if (sender is ResultMenuItem)
             {
                 ResultMenuItem Result = (ResultMenuItem)sender;
-                System.Diagnostics.Process.Start(Result.ResultUrl);
+                Process.Start(Result.ResultUrl);
             }
         }
 
@@ -769,7 +782,7 @@ namespace Updater
                 return;
             }
 
-            if (worker.Status.Equals("SUCCESS") & SuccessNotificationValue)
+            if (worker.Status.Equals(SuccessBuildStatus) & SuccessNotificationValue)
             {
                 notifType = NotificationType.Success;
                 message = worker.SuccessMessage;
@@ -787,7 +800,7 @@ namespace Updater
                 });
             }
 
-            if (!worker.Status.Equals("SUCCESS") & FailedNotificationValue)
+            if (!worker.Status.Equals(SuccessBuildStatus) & FailedNotificationValue)
             {
                 notifType = NotificationType.Error;
                 message = worker.FailedMessage;
@@ -804,11 +817,6 @@ namespace Updater
                     Process.Start(worker.Link);
                 });
             }
-        }
-
-        private void ShowFailedBuilds_Click(object sender, RoutedEventArgs e)
-        {
-            
         }
     }
 }

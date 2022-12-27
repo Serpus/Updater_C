@@ -207,6 +207,9 @@
     <Compile Include="MO\ChangeLogWindow.xaml.cs">
       <DependentUpon>ChangeLogWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="MO\FailedBuildsMo.xaml.cs">
+      <DependentUpon>FailedBuildsMo.xaml</DependentUpon>
+    </Compile>
     <Compile Include="MO\PrepareOpWindow.cs">
       <DependentUpon>PrepareOpWindow.xaml</DependentUpon>
     </Compile>
@@ -258,6 +261,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="MO\ChangeLogWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="MO\FailedBuildsMo.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
