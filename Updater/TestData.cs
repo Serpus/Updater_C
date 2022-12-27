@@ -14,6 +14,7 @@ namespace Updater
     {
         public static String SuccessResultBuild = "SUCCESS";
         public static String FailedResultBuild = "FAILURE";
+        public static int TestStandCounter = 0;
         public static List<BuildStatusLabel> GetBuildStatusLabels(int size, String buildResult)
         {
             List<BuildStatusLabel> labelList = new List<BuildStatusLabel>();
@@ -64,7 +65,7 @@ namespace Updater
             {
                 Result = resultName,
                 FullDisplayName = $"Test Build {buildNumber} FullDisplayName",
-                Url = $"Test Build {buildNumber} Result URl"
+                Url = $"https://test-debug.comru/jenkins/test_build_result_url_{buildNumber}"
             };
 
             return result;
