@@ -48,6 +48,7 @@
             <Label/>
             <l:ProjectButton Content="ЗЧ" Grid.Column="0" MaxHeight="28" MinHeight="28" MinWidth="50" Click="GetJobs" l:ProjectName="priv" Margin="5, 0, 10 ,0"/>
             <Label/>
+            <Button Content="Test" Click="OpenTestMo" Visibility="Collapsed"/>
             <TextBlock Text="Уведомления о сборках:" Margin="0,0,0,3" Visibility="Visible"/>
             <CheckBox Content="Успешных" Name="SuccessBuildNotif" Foreground="DarkGreen" Visibility="Visible"/>
             <CheckBox Content="Упавших" Name="FailedBuildNotif" IsChecked="True" Foreground="DarkRed" Visibility="Visible"/>
@@ -107,8 +108,6 @@
                 <Label Visibility="Visible"/>
                 <Button Content="Показать упавшие билды" MaxHeight="28" MinHeight="25" MinWidth="150" Click="ShowFailedBuilds_Click" 
                         ToolTip="Открывает упавшие билды из списка ниже, как ссылки" Visibility="Visible"/>
-                <Button Content="Заполнить билды" MaxHeight="28" MinHeight="25" MinWidth="145" Click="TestSetBuildResultInUi" Visibility="Collapsed"/>
-                <Button Content="Очистить список" MaxHeight="28" MinHeight="25" MinWidth="145" Click="TestClearBuildResultInUi" Visibility="Collapsed"/>
             </StackPanel>
             <TabControl Grid.Row="2" Name="BuildStatusTabs"/>
         </Grid>

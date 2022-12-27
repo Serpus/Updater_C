@@ -216,6 +216,9 @@
     <Compile Include="MO\PrepareNoBuildsDeployWindow.xaml.cs">
       <DependentUpon>PrepareNoBuildsDeployWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="MO\TestMo.xaml.cs">
+      <DependentUpon>TestMo.xaml</DependentUpon>
+    </Compile>
     <Compile Include="NoBuildDeploysWindow.xaml.cs">
       <DependentUpon>NoBuildDeploysWindow.xaml</DependentUpon>
     </Compile>
@@ -273,6 +276,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="MO\PrepareNoBuildsDeployWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="MO\TestMo.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

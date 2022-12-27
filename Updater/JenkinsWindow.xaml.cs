@@ -40,6 +40,7 @@ namespace Updater
         private static readonly NLog.Logger Log = NLog.LogManager.GetCurrentClassLogger();
         public JenkinsWindow()
         {
+            App.jenkinsWindow = this;
             InitializeComponent();
 
             getJobsWorker.WorkerReportsProgress = true;
@@ -380,22 +381,6 @@ namespace Updater
             }
         }
 
-        public void TestSetBuildResultInUi(object sender, RoutedEventArgs e)
-        {
-            HashSet<string> StandSet = new HashSet<string>();
-            List<BuildStatusLabel> labelList = new List<BuildStatusLabel>();
-
-            labelList = TestData.GetBuildStatusLabels(4, TestData.FailedResultBuild);
-            labelList.AddRange(TestData.GetBuildStatusLabels(4, TestData.SuccessResultBuild));
-
-            ListBox listBox = new ListBox();
-            foreach (BuildStatusLabel label in labelList)
-            {
-                listBox.Items.Add(label);
-            }
-            BuildStatusTabs.Items.Add(new TabItem { Header = $"ЕИС-TEST {++TestData.TestStandCounter}", Content = listBox, IsSelected = true });
-        }
-
         private void ShowFailedBuilds_Click(object sender, RoutedEventArgs e)
         {
             FailedBuildsMo failedBuildsMo = new FailedBuildsMo(BuildStatusTabs.Items)
@@ -403,11 +388,6 @@ namespace Updater
                 Owner = this
             };
             failedBuildsMo.ShowDialog();
-        }
-
-        public void TestClearBuildResultInUi(object sender, RoutedEventArgs e)
-        {
-            BuildStatusTabs.Items.Clear();
         }
 
         public static void OpenCurrentBuild(object sender, RoutedEventArgs e)
@@ -817,6 +797,13 @@ namespace Updater
                     Process.Start(worker.Link);
                 });
             }
+        }
+
+        private void OpenTestMo(object sender, RoutedEventArgs e)
+        {
+            TestMo testMo = new TestMo();
+            testMo.Owner = this;
+            testMo.Show();
         }
     }
 }
