@@ -377,7 +377,27 @@ namespace Updater
             }
         }
 
-        private void OpenCurrentBuild(object sender, RoutedEventArgs e)
+        public void SetBuildResultInUiTest(object sender, RoutedEventArgs e)
+        {
+            HashSet<string> StandSet = new HashSet<string>();
+            List<BuildStatusLabel> labelList = new List<BuildStatusLabel>();
+
+            labelList = TestData.GetBuildStatusLabels(4, TestData.FailedResultBuild);
+
+            ListBox listBox = new ListBox();
+            foreach (BuildStatusLabel label in labelList)
+            {
+                listBox.Items.Add(label);
+            }
+            BuildStatusTabs.Items.Add(new TabItem { Header = "ЕИС-TEST", Content = listBox, IsSelected = true });
+        }
+
+        public void ClearBuildResultInUiTest(object sender, RoutedEventArgs e)
+        {
+            BuildStatusTabs.Items.Clear();
+        }
+
+        public static void OpenCurrentBuild(object sender, RoutedEventArgs e)
         {
             if (sender is ResultMenuItem)
             {
@@ -784,6 +804,11 @@ namespace Updater
                     Process.Start(worker.Link);
                 });
             }
+        }
+
+        private void ShowFailedBuilds_Click(object sender, RoutedEventArgs e)
+        {
+            
         }
     }
 }
