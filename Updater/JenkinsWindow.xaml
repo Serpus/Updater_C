@@ -105,7 +105,7 @@
                 <Label/>
                 <Button Content="Открыть все в браузере" MaxHeight="28" MinHeight="25" MinWidth="145" Click="OpenBuildsInBrowser" ToolTip="Открывает все билды из списка ниже"/>
                 <Label Visibility="Visible"/>
-                <Button Content="Показать упавшие билды" MaxHeight="28" MinHeight="25" MinWidth="145" Click="ShowFailedBuilds_Click" 
+                <Button Content="Показать упавшие билды" MaxHeight="28" MinHeight="25" MinWidth="150" Click="ShowFailedBuilds_Click" 
                         ToolTip="Открывает упавшие билды из списка ниже, как ссылки" Visibility="Visible"/>
                 <Button Content="Заполнить билды" MaxHeight="28" MinHeight="25" MinWidth="145" Click="TestSetBuildResultInUi" Visibility="Collapsed"/>
                 <Button Content="Очистить список" MaxHeight="28" MinHeight="25" MinWidth="145" Click="ClearBuildResultInUiTest" Visibility="Collapsed"/>
