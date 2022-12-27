@@ -269,7 +269,7 @@ namespace Updater
                 }
 
 
-                // Код для теста. Эмулирует отмеченные чекбоксы. Далее по коду нужно отключить запрос для начала деплоя
+                // Код для теста. Эмулирует отмеченные чекбоксы. Далее по коду нужно отключить запрос начала деплоя
                 //DataJenkins.DeployEnvironments.Add(new DeployEnvironment()
                 //{
                 //    RegisterName = "psk",
@@ -297,7 +297,7 @@ namespace Updater
                 BuildStatusGrid.IsEnabled = true;
                 CheckAllButton.IsEnabled = false;
                 UncheckAllButton.IsEnabled = false;
-                startDeployWorker.RunWorkerAsync();
+                startDeployWorker.RunWorkerAsync(); // Отключаем для дебага
             }
         }
 
