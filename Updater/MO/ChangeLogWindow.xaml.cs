@@ -45,6 +45,7 @@ namespace Updater.MO
         {
             Dictionary<string, List<string>> _changes = new Dictionary<string, List<string>>();
 
+            _changes.Add("2.19", new List<string> { "Убран функционал Bamboo", "Изменён статус для билдов в процессе" });
             _changes.Add("2.18", new List<string> { "Добавлен вывод версии в лог", "Исправление ошибки при обновлении статусов (Jenkins)" });
             _changes.Add("2.17", new List<string> { "Исправлена проблема с запуском сборок через Дженкинс" });
             _changes.Add("2.16", new List<string> { "Исправлена ошибка в МО запроса обновления" });
