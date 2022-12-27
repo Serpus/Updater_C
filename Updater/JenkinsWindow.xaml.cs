@@ -405,7 +405,7 @@ namespace Updater
             failedBuildsMo.ShowDialog();
         }
 
-        public void ClearBuildResultInUiTest(object sender, RoutedEventArgs e)
+        public void TestClearBuildResultInUi(object sender, RoutedEventArgs e)
         {
             BuildStatusTabs.Items.Clear();
         }
