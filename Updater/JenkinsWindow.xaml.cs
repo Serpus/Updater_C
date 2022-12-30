@@ -592,14 +592,7 @@ namespace Updater
             // Отбор реестров с указанной веткой
             foreach (Register regJob in DataJenkins.Registers) 
             {
-                JobCheckBox checkBox = new JobCheckBox()
-                {
-                    Content = regJob.name,
-                    JobName = regJob.name,
-                    JobUrl = regJob.url,
-                    JobProject = regJob.project,
-                    IsEnabled = false
-                };
+                JobCheckBox checkBox = new JobCheckBox(regJob);
 
                 if (regJob.BranchList == null || regJob.BranchList.jobs == null)
                 {

@@ -45,7 +45,8 @@ namespace Updater.MO
         {
             Dictionary<string, List<string>> _changes = new Dictionary<string, List<string>>();
 
-            _changes.Add("2.20", new List<string> { "Добавлен показ упавших сборок", "Добавлена кнопка для сборки приложений вне k8s" });
+            _changes.Add("2.20", new List<string> { "Добавлен показ упавших сборок", "Добавлена кнопка для сборки приложений вне k8s", 
+                "В окно с чекбоксами отобранных сборок добавлено КМ для открытия их в браузере" });
             _changes.Add("2.19", new List<string> { "Убран функционал Bamboo", "Изменён статус для билдов в процессе" });
             _changes.Add("2.18", new List<string> { "Добавлен вывод версии в лог", "Исправление ошибки при обновлении статусов (Jenkins)" });
             _changes.Add("2.17", new List<string> { "Исправлена проблема с запуском сборок через Дженкинс" });
