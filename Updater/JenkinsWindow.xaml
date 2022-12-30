@@ -44,6 +44,8 @@
             <Label/>
             <l:ProjectButton Content="Common" Grid.Column="0" MaxHeight="28" MinHeight="28" MinWidth="50" Click="GetJobs" l:ProjectName="common" Margin="5, 0, 10 ,0"/>
             <Label/>
+            <l:ProjectButton Content="Приложения вне k8s" Grid.Column="0" MaxHeight="28" MinHeight="28" MinWidth="50" Click="GetJobs" l:ProjectName="common/job/standalone/" Margin="5, 0, 10 ,0"/>
+            <Label/>
             <l:ProjectButton Content="ЛКП" Grid.Column="0" MaxHeight="28" MinHeight="28" MinWidth="50" Click="GetJobs" l:ProjectName="lkp" Margin="5, 0, 10 ,0"/>
             <Label/>
             <l:ProjectButton Content="ЗЧ" Grid.Column="0" MaxHeight="28" MinHeight="28" MinWidth="50" Click="GetJobs" l:ProjectName="priv" Margin="5, 0, 10 ,0"/>

@@ -99,7 +99,6 @@ namespace Updater
 
             if (sender is ProjectButton projectButton)
             {
-                projectButton = (ProjectButton)sender;
                 DataJenkins.ProjectName = projectButton.ProjectName;
                 projectButton.IsEnabled = false;
             } else
@@ -156,7 +155,7 @@ namespace Updater
          */
         private void ResetProject(object sender, RoutedEventArgs e)
         {
-            Log.Info("Сброс выбранных проекток");
+            Log.Info("Сброс выбранных проектов");
             DataJenkins.Registers = null;
             SelectedBranchName.Text = "";
             jobsRegisterStackPanel.Children.Clear();
@@ -462,7 +461,6 @@ namespace Updater
         }
 
         // Получение джобов
-
         public void getJobs_DoWork(object sender, DoWorkEventArgs e)
         {
             DataJenkins.Registers = new List<Register>();
@@ -479,14 +477,25 @@ namespace Updater
             {
                 foreach (Job job in jobsList.jobs)
                 {
-                    Register register = new Register()
+                    if (job._class.Contains("WorkflowMultiBranchProject"))
                     {
-                        name = job.name,
-                        url = job.url,
-                        project = DataJenkins.ProjectName,
-                        BranchList = new Jobs()
-                    };
-                    DataJenkins.Registers.Add(register);
+                        // Убираем сборки UA-RECORD-PLUGIN (Плагин записи действий пользователя)
+                        // и WORKSTATION-SETUP (Автонастройка АРМ)
+                        if (job.name.Contains("ua-record-plugin") || job.name.Contains("workstation-setup"))
+                        {
+                            continue;
+                        }
+
+                        // Сетим сборку в DataKenkins
+                        Register register = new Register()
+                        {
+                            name = job.name,
+                            url = job.url,
+                            project = DataJenkins.ProjectName,
+                            BranchList = new Jobs()
+                        };
+                        DataJenkins.Registers.Add(register);
+                    }
                 }
             } else
             {
@@ -527,7 +536,6 @@ namespace Updater
         }
 
         // Получение веток
-
         public void getBranches_DoWork(object sender, DoWorkEventArgs e)
         {
             getBranchesWorker.ReportProgress(1);
@@ -558,7 +566,19 @@ namespace Updater
 
         public void getBranches_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            string project = DataJenkins.Registers[0].project;
+            string project;
+            try
+            {
+                project = DataJenkins.Registers[0].project;
+            } catch (Exception ex)
+            {
+                Log.Info($"Нет собранных сборок. DataJenkins.Registers.Count - {DataJenkins.Registers.Count}");
+                MessageBox.Show("Нет собранных сборок", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                stopLoading();
+                ResetProject(e, new RoutedEventArgs());
+                return;
+            }
+
             // Добавляем разделение для проекта
             if (project != null)
             {
@@ -605,7 +625,6 @@ namespace Updater
         }
 
         // Деплой
-
         public void startDeploy_DoWork(object sender, DoWorkEventArgs e)
         {
             startDeployWorker.ReportProgress(1);

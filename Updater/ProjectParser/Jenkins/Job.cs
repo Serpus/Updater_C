@@ -8,6 +8,7 @@ namespace Updater
 {
     public class Job
     {
+        public String _class { get; set; }
         public String name { get; set; }
         public String url { get; set; }
     }
